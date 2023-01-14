@@ -1,7 +1,8 @@
 import SelectRole from "@components/SelectRole/SelectRole"
+import SignIn from "@components/SignIn/SignIn"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { SignUp1InputProps, signUp1Schema } from "@schema/signup.schema"
+import { SignInInputProps, signInSchema } from "@schema/signin.schema"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -14,9 +15,8 @@ const signin = () => {
         register,
         formState: { errors },
         handleSubmit,
-        getValues,
-    } = useForm<SignUp1InputProps>({
-        resolver: zodResolver(signUp1Schema),
+    } = useForm<SignInInputProps>({
+        resolver: zodResolver(signInSchema),
     })
 
     const handleBack = () => {
@@ -27,8 +27,8 @@ const signin = () => {
         setPart((e) => e + 1)
     }
 
-    const handleSignUp = (e: SignUp1InputProps) => {
-        const data = { ...e, ...getValues(), role }
+    const handleSignIn = (e: SignInInputProps) => {
+        const data = { ...e, role }
         console.log(data)
     }
 
@@ -47,6 +47,19 @@ const signin = () => {
                 />
             )}
             {/*         End Part - 0         */}
+
+            {/*      Part - 1    */}
+            {part == 1 && (
+                <SignIn
+                    role={role}
+                    handleBack={handleBack}
+                    handleSubmit={handleSubmit}
+                    errors={errors}
+                    register={register}
+                    handleSignIn={handleSignIn}
+                />
+            )}
+            {/*      End Part - 1    */}
         </main>
     )
 }

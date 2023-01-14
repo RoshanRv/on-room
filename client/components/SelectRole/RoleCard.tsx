@@ -4,11 +4,11 @@ const RoleCard = ({ role, img, name, setRole }: CardRoleProps) => {
     return (
         <div
             onClick={() => setRole(name)}
-            className={`flex flex-col p-4 text-center bg-gray-800 rounded-md  cursor-pointer  w-max gap-y-6 transition-all border-4 shadow-black shadow-xl
+            className={`flex flex-col p-2 md:p-4 text-center bg-gray-800 rounded-md  cursor-pointer  w-max gap-y-6 transition-all border-2 md:border-4 shadow-black shadow-xl
              ${role == name ? "border-dPri scale-105 " : " border-gray-800"}`}
         >
             {/*   Img   */}
-            <div className="w-[20vw] overflow-hidden rounded-md">
+            <div className="md:w-[20vw] w-[33vw] overflow-hidden rounded-md">
                 <Image
                     src={img}
                     alt={name + "_img"}
@@ -16,7 +16,9 @@ const RoleCard = ({ role, img, name, setRole }: CardRoleProps) => {
                 />
             </div>
             {/*   Role   */}
-            <h1 className="capitalize">{name}</h1>
+            <h1 className="text-lg capitalize md:text-2xl lg:text-3xl">
+                {name}
+            </h1>
         </div>
     )
 }

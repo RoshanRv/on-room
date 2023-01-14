@@ -35,7 +35,7 @@ const SignUp1 = ({
                 <IoChevronBack className="text-2xl font-bold rounded-full text-dPri" />
             </button>
 
-            <h1 className="font-semibold capitalize lg:text-3xl md:text-2xl text-dPri">
+            <h1 className="text-xl font-semibold capitalize lg:text-3xl md:text-2xl text-dPri">
                 Sign Up As {role || " "}
             </h1>
 

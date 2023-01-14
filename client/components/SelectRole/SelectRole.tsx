@@ -8,10 +8,10 @@ const SelectRole = ({ role, setRole, handleNext, page }: SelectRoleProps) => {
     return (
         <>
             {/*    Choice Headign  */}
-            <h1 className="text-3xl font-semibold md:text-5xl text-dPri text-shadow-lg">
+            <h1 className="text-3xl font-semibold md:text-5xl text-dPri text-shadow-sm">
                 Choose Between
             </h1>
-            <div className="flex items-center justify-center text-4xl font-semibold text-dPri gap-x-10">
+            <div className="flex items-center justify-center text-4xl font-semibold text-dPri gap-x-4 md:gap-x-10">
                 {/*   Student Card   */}
                 <RoleCard
                     img={STUDENT_IMG}
@@ -20,7 +20,7 @@ const SelectRole = ({ role, setRole, handleNext, page }: SelectRoleProps) => {
                     role={role}
                 />
 
-                <h1>Or</h1>
+                <h1 className="text-xl md:text-3xl lg:text-4xl">Or</h1>
 
                 {/*   Teacher Card   */}
 

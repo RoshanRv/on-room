@@ -8,7 +8,7 @@ export type ClickButtonProp = VariantProps<typeof buttonClass> & {
 
 const buttonClass = cva(
     [
-        "px-10 py-3 rounded-md outline-0 text-xl md:text-2xl font-semibold shadow-lg shadow-black hover:scale-110 active:scale-95 transition-all",
+        "px-10 py-3 rounded-md outline-0 text-xl md:text-2xl font-semibold shadow-lg shadow-black/50 hover:scale-105 active:scale-95 transition-all",
     ],
     {
         variants: {
@@ -22,7 +22,7 @@ const buttonClass = cva(
             },
 
             disabled: {
-                true: [""],
+                true: ["hover:scale-100 active:scale-100 cursor-not-allowed"],
             },
         },
 
@@ -35,9 +35,7 @@ const buttonClass = cva(
             {
                 variant: "primary",
                 disabled: true,
-                className: [
-                    "bg-dPri/50 hover:scale-100 active:scale-100 cursor-not-allowed text-gray-400",
-                ],
+                className: ["bg-dPri/50  text-gray-400"],
             },
         ],
     }

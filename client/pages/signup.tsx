@@ -3,6 +3,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import SelectRole from "@components/SelectRole/SelectRole"
+import { omit } from "lodash"
 
 import {
     SignUp1InputProps,
@@ -12,6 +13,7 @@ import {
 } from "@schema/signup.schema"
 import SignUp1 from "@components/SignUp/SignUp1"
 import SignUp2 from "@components/SignUp/SignUp2"
+import axios from "axios"
 
 const DEFAULT_IMG =
     "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000"
@@ -51,9 +53,20 @@ const signUp = () => {
         setPart((e) => e + 1)
     }
 
-    const handleSignUp = (e: SignUp2InputProps) => {
+    const handleSignUp = async (e: SignUp2InputProps) => {
         const data = { ...e, ...getValues(), role }
-        console.log(data)
+
+        const filteredData = omit(data, ["confirmPassword"])
+
+        try {
+            const user = await axios.post(
+                "http://localhost:3002/api/users",
+                filteredData
+            )
+            console.log(user)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (

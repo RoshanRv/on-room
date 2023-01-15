@@ -20,6 +20,6 @@ model User{
   name String
   password String
   role Role
-  email String
-  img String
+  email String @unique
+  img String @default("https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000")
 }

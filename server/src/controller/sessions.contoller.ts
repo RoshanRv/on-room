@@ -1,9 +1,9 @@
 import { CookieOptions, Request, Response } from "express"
-import { createSessionSchemaType } from "../schema/sessions.schema"
-import { findUserByEmail, findUserById } from "../service/users.services"
+import { createSessionSchemaType } from "@schema/sessions.schema"
+import { findUserByEmail, findUserById } from "@service/users.services"
 import { compareSync } from "bcryptjs"
-import { createSession } from "../service/sessions.services"
-import { signToken, verifyToken } from "../utils/jwt"
+import { createSession } from "@service/sessions.services"
+import { signToken, verifyToken } from "@utils/jwt"
 import { omit } from "lodash"
 import config from "config"
 

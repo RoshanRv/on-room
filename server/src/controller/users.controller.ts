@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import { createUserSchemaType } from "../schema/users.schema"
-import { createUser, findUserByEmail } from "../service/users.services"
+import { createUserSchemaType } from "@schema/users.schema"
+import { createUser, findUserByEmail } from "@service/users.services"
 import { hashSync } from "bcryptjs"
 import { omit } from "lodash"
 

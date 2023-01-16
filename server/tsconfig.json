@@ -32,9 +32,8 @@
         "paths": {
             "@controller/*": ["src/controller/*"],
             "@middleware/*": ["src/middleware/*"],
-            "@models/*": ["src/models/*"],
             "@schema/*": ["src/schema/*"],
-            "@services/*": ["src/services/*"],
+            "@service/*": ["src/service/*"],
             "@utils/*": ["src/utils/*"]
         } /* Specify a set of entries that re-map imports to additional lookup locations. */,
         // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

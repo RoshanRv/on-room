@@ -1,4 +1,4 @@
-import { createUserSchemaType } from "../schema/users.schema"
+import { createUserSchemaType } from "@schema/users.schema"
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 

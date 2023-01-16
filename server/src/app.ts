@@ -3,17 +3,21 @@ import express from "express"
 import routes from "./routes"
 import cors from "cors"
 import * as dotenv from "dotenv"
+import cookieParser from "cookie-parser"
+import config from "config"
 dotenv.config()
 
 const app = express()
+app.use(cookieParser())
+
 app.use(
     cors({
-        origin: "*",
+        origin: config.get("origin"),
         credentials: true,
     })
 )
 app.use(express.json())
-const PORT = process.env.PORT || 3002
+const PORT = config.get<number>("port")
 
 app.listen(PORT, () => {
     console.log(`Server is running at ${PORT}`)

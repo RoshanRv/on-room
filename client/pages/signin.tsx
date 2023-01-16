@@ -3,6 +3,7 @@ import SignIn from "@components/SignIn/SignIn"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SignInInputProps, signInSchema } from "@schema/signin.schema"
+import axios from "axios"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -27,9 +28,33 @@ const signin = () => {
         setPart((e) => e + 1)
     }
 
-    const handleSignIn = (e: SignInInputProps) => {
+    const handleSignIn = async (e: SignInInputProps) => {
         const data = { ...e, role }
-        console.log(data)
+        try {
+            const session = await axios.post(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
+                data,
+                {
+                    withCredentials: true,
+                }
+            )
+            console.log(session)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const getCurrentUser = async () => {
+        console.log(process.env.NEXT_PUBLIC_SERVER_ENDPOINT)
+
+        const user = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`,
+            {
+                withCredentials: true,
+            }
+        )
+
+        console.log(user)
     }
 
     return (

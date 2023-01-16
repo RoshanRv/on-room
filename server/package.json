@@ -46,7 +46,7 @@
         "@middleware": "src/middleware",
         "@models": "src/models",
         "@schema": "src/schema",
-        "@services": "src/services",
+        "@service": "src/service",
         "@utils": "src/utils"
     }
 }

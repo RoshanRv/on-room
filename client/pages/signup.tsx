@@ -60,8 +60,11 @@ const signUp = () => {
 
         try {
             const user = await axios.post(
-                "http://localhost:3002/api/users",
-                filteredData
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`,
+                filteredData,
+                {
+                    withCredentials: true,
+                }
             )
             console.log(user)
         } catch (e) {

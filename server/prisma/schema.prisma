@@ -22,4 +22,12 @@ model User{
   role Role
   email String @unique
   img String @default("https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000")
+  sessions Session[]
+}
+
+model Session{
+  id String @id @default(cuid())
+  user User @relation(fields: [userId],references: [id])
+  userId String
+  valid Boolean @default(true)
 }

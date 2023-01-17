@@ -4,6 +4,7 @@ import { ReactNode } from "react"
 export type ClickButtonProp = VariantProps<typeof buttonClass> & {
     onClick: () => void
     children: ReactNode
+    isLoading?: boolean
 }
 
 const buttonClass = cva(
@@ -47,6 +48,7 @@ const ClickButton = ({
     disabled = false,
     onClick,
     children,
+    isLoading = false,
 }: ClickButtonProp) => {
     return (
         <button
@@ -54,7 +56,11 @@ const ClickButton = ({
             className={buttonClass({ variant, width, disabled })}
             onClick={onClick}
         >
-            {children}
+            {!isLoading ? (
+                children
+            ) : (
+                <div className="w-6 h-6 mx-auto border-4 border-white rounded-full border-t-transparent animate-spin"></div>
+            )}
         </button>
     )
 }

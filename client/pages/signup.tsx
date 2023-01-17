@@ -15,6 +15,8 @@ import SignUp1 from "@components/SignUp/SignUp1"
 import SignUp2 from "@components/SignUp/SignUp2"
 import axios from "axios"
 
+import { useMutation } from "@tanstack/react-query"
+
 const DEFAULT_IMG =
     "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000"
 
@@ -23,6 +25,17 @@ const signUp = () => {
     const [part, setPart] = useState(0)
     const [imgUrl, setImgUrl] = useState(DEFAULT_IMG)
     const [parent] = useAutoAnimate<any>()
+
+    const mutateFunc = async (data: Data) => {
+        const filteredData = omit(data, ["confirmPassword"])
+
+        return await axios.post(
+            `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`,
+            filteredData
+        )
+    }
+
+    const { mutateAsync, isLoading } = useMutation({ mutationFn: mutateFunc })
 
     const {
         register,
@@ -53,19 +66,17 @@ const signUp = () => {
         setPart((e) => e + 1)
     }
 
+    type Data = SignUp1InputProps &
+        SignUp2InputProps & {
+            role: typeof role
+        }
+
     const handleSignUp = async (e: SignUp2InputProps) => {
         const data = { ...e, ...getValues(), role }
 
-        const filteredData = omit(data, ["confirmPassword"])
-
         try {
-            const user = await axios.post(
-                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`,
-                filteredData,
-                {
-                    withCredentials: true,
-                }
-            )
+            const user = await mutateAsync(data)
+
             console.log(user)
         } catch (e) {
             console.log(e)

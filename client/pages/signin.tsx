@@ -3,6 +3,7 @@ import SignIn from "@components/SignIn/SignIn"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SignInInputProps, signInSchema } from "@schema/signin.schema"
+import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -28,16 +29,29 @@ const signin = () => {
         setPart((e) => e + 1)
     }
 
+    type Data = SignInInputProps & {
+        role: Role
+    }
+
+    const mutateFunc = async (data: Data) => {
+        return await axios.post(
+            `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
+            data,
+            {
+                withCredentials: true,
+            }
+        )
+    }
+
+    const { mutateAsync, isLoading } = useMutation({
+        mutationFn: mutateFunc,
+    })
+
     const handleSignIn = async (e: SignInInputProps) => {
         const data = { ...e, role }
         try {
-            const session = await axios.post(
-                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
-                data,
-                {
-                    withCredentials: true,
-                }
-            )
+            const session = await mutateAsync(data)
+
             console.log(session)
         } catch (e) {
             console.log(e)

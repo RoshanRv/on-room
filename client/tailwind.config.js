@@ -11,6 +11,9 @@ module.exports = {
                 dPri: "#eab308",
                 back: "#111827",
             },
+            fontFamily: {
+                disp: ["Raleway", " sans-serif"],
+            },
         },
     },
     plugins: [],

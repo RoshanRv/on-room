@@ -1,4 +1,4 @@
-import ClickButton from "@components/Button/ClickButton"
+import { ClickButton } from "@components/Button/Button"
 import { FieldErrorsImpl } from "react-hook-form/dist/types/errors"
 import {
     UseFormHandleSubmit,

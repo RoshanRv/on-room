@@ -1,4 +1,4 @@
-import ClickButton from "@components/Button/ClickButton"
+import { ClickButton } from "@components/Button/Button"
 import { SignInInputProps } from "@schema/signin.schema"
 import React from "react"
 import { FieldErrorsImpl } from "react-hook-form/dist/types/errors"

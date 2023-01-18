@@ -1,5 +1,5 @@
 import React from "react"
-import ClickButton from "@components/Button/ClickButton"
+import { ClickButton } from "@components/Button/Button"
 import RoleCard from "@components/SelectRole/RoleCard"
 import TEACHER_IMG from "@public/teacher_role.jpeg"
 import STUDENT_IMG from "@public/student_role.webp"

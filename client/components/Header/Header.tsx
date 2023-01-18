@@ -1,4 +1,4 @@
-import LinkButton from "@components/Button/LinkButton"
+import { LinkButton } from "@components/Button/Button"
 import Link from "next/link"
 import React from "react"
 

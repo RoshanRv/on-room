@@ -77,11 +77,13 @@ export const generateAccessToken = async (refreshToken: string) => {
 
         if (!user) throw new Error("User not found")
 
-        const session = await findSessionById(user.id)
+        const session = await findSessionById(decoded.sessionId)
 
         if (!session?.valid || !session) throw new Error("Session ended")
 
-        const newAccessToken = signToken(decoded, "access")
+        const payload = omit({ ...user, sessionId: session.id }, ["password"])
+
+        const newAccessToken = signToken(payload, "access")
 
         return { newAccessToken }
     } catch (e) {

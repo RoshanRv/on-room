@@ -5,6 +5,7 @@ import cors from "cors"
 import * as dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import config from "config"
+import deserializeUser from "@middleware/deserializeUser"
 dotenv.config()
 
 const app = express()
@@ -18,6 +19,8 @@ app.use(
 )
 app.use(express.json())
 const PORT = config.get<number>("port")
+
+app.use(deserializeUser)
 
 app.listen(PORT, () => {
     console.log(`Server is running at ${PORT}`)

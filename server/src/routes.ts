@@ -7,6 +7,7 @@ import {
     createSessionHandler,
     getCurrentUserHandler,
 } from "@controller/sessions.contoller"
+import requireUser from "@middleware/requireUser"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
@@ -23,7 +24,7 @@ const routes = (app: Express) => {
         createSessionHandler
     )
 
-    app.get("/api/me", getCurrentUserHandler)
+    app.get("/api/me", requireUser, getCurrentUserHandler)
 }
 
 export default routes

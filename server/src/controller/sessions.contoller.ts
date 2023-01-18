@@ -2,12 +2,12 @@ import { CookieOptions, Request, Response } from "express"
 import { createSessionSchemaType } from "@schema/sessions.schema"
 import { findUserByEmail, findUserById } from "@service/users.services"
 import { compareSync } from "bcryptjs"
-import { createSession } from "@service/sessions.services"
+import { createSession, findSessionById } from "@service/sessions.services"
 import { signToken, verifyToken } from "@utils/jwt"
 import { omit } from "lodash"
 import config from "config"
 
-const accessTokenOptions: CookieOptions = {
+export const accessTokenOptions: CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
@@ -62,15 +62,30 @@ export const createSessionHandler = async (
 }
 
 export const getCurrentUserHandler = async (req: Request, res: Response) => {
-    const token = req.cookies.accessToken
+    const { user } = res.locals
 
-    console.log(req.cookies)
+    return res.send(user)
+}
 
-    const { decoded, valid } = verifyToken(token, "access")
+export const generateAccessToken = async (refreshToken: string) => {
+    try {
+        const { decoded, expired } = verifyToken(refreshToken, "refresh")
 
-    if (decoded) {
-        return res.send(decoded)
+        if (!decoded || expired) throw new Error("Invalid Refresh Token")
+
+        const user = await findUserById(decoded.id)
+
+        if (!user) throw new Error("User not found")
+
+        const session = await findSessionById(user.id)
+
+        if (!session?.valid || !session) throw new Error("Session ended")
+
+        const newAccessToken = signToken(decoded, "access")
+
+        return { newAccessToken }
+    } catch (e) {
+        console.log(e)
+        return { newAccessToken: null }
     }
-
-    return res.send("Invalid Token")
 }

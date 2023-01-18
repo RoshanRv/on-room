@@ -13,3 +13,12 @@ interface SelectRoleProps {
     handleNext: () => void
     page: "signin" | "signup"
 }
+
+interface UserProps {
+    name: string
+    img: string
+    role: Exclude<Role, "">
+    email: string
+    sessionId: string
+    id: string
+}

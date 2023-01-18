@@ -13,3 +13,17 @@ export const createSession = async (userId: string) => {
         throw new Error(e)
     }
 }
+
+export const findSessionById = async (sessionId: string) => {
+    try {
+        const session = await prisma.session.findUnique({
+            where: {
+                id: sessionId,
+            },
+        })
+
+        return session
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}

@@ -13,7 +13,7 @@ const deserializeUser = async (
     const accessToken = req.cookies.accessToken
     const refreshToken = req.cookies.refreshToken
 
-    if (!accessToken) return next()
+    if (!accessToken && !refreshToken) return next()
 
     const { decoded, expired } = verifyToken(accessToken, "access")
 

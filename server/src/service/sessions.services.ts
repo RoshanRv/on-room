@@ -27,3 +27,17 @@ export const findSessionById = async (sessionId: string) => {
         throw new Error(e)
     }
 }
+
+export const deleteSessionById = async (sessionId: string) => {
+    try {
+        const session = await prisma.session.delete({
+            where: {
+                id: sessionId,
+            },
+        })
+
+        return session
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}

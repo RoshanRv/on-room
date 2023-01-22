@@ -2,7 +2,11 @@ import { CookieOptions, Request, Response } from "express"
 import { createSessionSchemaType } from "@schema/sessions.schema"
 import { findUserByEmail, findUserById } from "@service/users.services"
 import { compareSync } from "bcryptjs"
-import { createSession, findSessionById } from "@service/sessions.services"
+import {
+    createSession,
+    deleteSessionById,
+    findSessionById,
+} from "@service/sessions.services"
 import { signToken, verifyToken } from "@utils/jwt"
 import { omit } from "lodash"
 import config from "config"
@@ -65,6 +69,23 @@ export const getCurrentUserHandler = async (req: Request, res: Response) => {
     const { user } = res.locals
 
     return res.send(user)
+}
+
+export const deleteSessionHandler = async (req: Request, res: Response) => {
+    const { user } = res.locals
+
+    console.log({ user })
+
+    try {
+        const session = await deleteSessionById(user.sessionId)
+
+        res.clearCookie("accessToken", accessTokenOptions)
+        res.clearCookie("refreshToken", refreshTokenOptions)
+
+        return res.send(session)
+    } catch (e: any) {
+        res.status(400).send(e.message)
+    }
 }
 
 export const generateAccessToken = async (refreshToken: string) => {

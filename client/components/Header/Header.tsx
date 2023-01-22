@@ -1,9 +1,11 @@
 import { LinkButton } from "@components/Button/Button"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
-import { QueryObserver, useQueryClient } from "@tanstack/react-query"
-import { QueryCache, useQuery } from "@tanstack/react-query"
+import { QueryCache, useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
+import { queryClient } from "pages/_app"
+import useToggle from "@hooks/useToggle"
+import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md"
 
 export interface UserResponse {
     data: UserProps
@@ -20,33 +22,35 @@ const Header = () => {
             axios.get(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`, {
                 withCredentials: true,
             }),
+        retry: 1,
     })
 
-    const [showProfile, setShowProfile] = useState(false)
+    const { isOn: showProfile, toggleOn: toggleProfile } = useToggle()
+    const { isOn: isDark, toggleOn: toggleDark } = useToggle()
 
-    console.log(isSuccess)
+    const { mutate } = useMutation({
+        mutationFn: () =>
+            axios.delete(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
+                {
+                    withCredentials: true,
+                }
+            ),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+    })
 
-    // useEffect(() => {
-    //     const observer = new QueryObserver(queryClient, {
-    //         queryKey: ["users"],
-    //         enabled: false,
-    //     })
-    //     const unsubscribe = observer.subscribe((queryResult: any) => {
-    //         if (queryResult.data) {
-    //             setUser(queryResult.data.data)
-    //         }
-    //     })
+    useEffect(() => {
+        console.log(isDark)
 
-    //     return () => {
-    //         unsubscribe()
-    //     }
-    // }, [queryClient])
+        if (isDark) document.documentElement.classList.add("dark")
+        else document.documentElement.classList.remove("dark")
+    }, [isDark])
 
     return (
-        <header className="top-0 left-0 z-50 flex items-center justify-between w-full px-3 py-2 shadow-md md:px-8 lg:px-16 bg-back md:py-4 shadow-black/30 ">
+        <header className="top-0 left-0 z-50 flex items-center justify-between w-full px-3 py-2 bg-white shadow-md md:px-8 lg:px-16 dark:bg-back md:py-4 shadow-black/30 ">
             <div>
                 <Link href={"/"}>
-                    <h1 className="text-4xl font-bold text-white text-shadow-sm ">
+                    <h1 className="text-4xl font-bold text-gray-700 dark:text-white dark:text-shadow-sm ">
                         On-Room
                     </h1>
                 </Link>
@@ -79,7 +83,7 @@ const Header = () => {
                     <div className="relative z-50">
                         {/* img */}
                         <div
-                            onClick={() => setShowProfile((e) => !e)}
+                            onClick={toggleProfile}
                             className="w-12 h-12 rounded-full cursor-pointer"
                         >
                             <img
@@ -90,16 +94,33 @@ const Header = () => {
                         </div>
                         {/*   Dropdown   */}
                         <div
-                            className={`shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-4 translate-y-5 bg-gray-800 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 ${
+                            className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 ${
                                 showProfile ? "scale-100" : "scale-0"
                             } gap-y-2 transition-all `}
                         >
-                            <h1 className="transition-all hover:text-dPri">
-                                Profile
-                            </h1>
-                            <h1>Logout</h1>
+                            <Link href={""}>
+                                <h1 className="transition-all hover:text-dPri">
+                                    Profile
+                                </h1>
+                            </Link>
+                            <Link href={""}>
+                                <h1
+                                    onClick={() => mutate()}
+                                    className="transition-all hover:text-dPri"
+                                >
+                                    Logout
+                                </h1>
+                            </Link>
                         </div>
                     </div>
+                    {/*    Light/Dark      */}
+                    <button onClick={toggleDark} className=" text-dPri">
+                        {isDark ? (
+                            <MdOutlineDarkMode className="" />
+                        ) : (
+                            <MdOutlineLightMode />
+                        )}
+                    </button>
                 </div>
             )}
         </header>

@@ -8,11 +8,14 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
+import { queryClient } from "./_app"
+import { useRouter } from "next/navigation"
 
 const signin = () => {
     const [role, setRole] = useState<Role>("")
     const [part, setPart] = useState(0)
     const [parent] = useAutoAnimate<any>()
+    const router = useRouter()
 
     const {
         register,
@@ -46,30 +49,19 @@ const signin = () => {
 
     const { mutateAsync, isLoading } = useMutation({
         mutationFn: mutateFunc,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] })
+            router.push("/dashboard")
+        },
     })
 
     const handleSignIn = async (e: SignInInputProps) => {
         const data = { ...e, role }
         try {
             const session = await mutateAsync(data)
-
-            console.log(session)
         } catch (e) {
             console.log(e)
         }
-    }
-
-    const getCurrentUser = async () => {
-        console.log(process.env.NEXT_PUBLIC_SERVER_ENDPOINT)
-
-        const user = await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`,
-            {
-                withCredentials: true,
-            }
-        )
-
-        console.log(user)
     }
 
     return (

@@ -22,3 +22,9 @@ interface UserProps {
     sessionId: string
     id: string
 }
+
+interface ModalProps {
+    isOn: boolean
+    toggleOn: () => void
+    children: ReactNode
+}

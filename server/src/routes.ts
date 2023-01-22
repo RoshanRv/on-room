@@ -5,6 +5,7 @@ import { createUserHandler } from "@controller/users.controller"
 import { createSessionSchema } from "@schema/sessions.schema"
 import {
     createSessionHandler,
+    deleteSessionHandler,
     getCurrentUserHandler,
 } from "@controller/sessions.contoller"
 import requireUser from "@middleware/requireUser"
@@ -23,6 +24,9 @@ const routes = (app: Express) => {
         validateInput(createSessionSchema),
         createSessionHandler
     )
+
+    // logout and delete session
+    app.delete("/api/sessions", deleteSessionHandler)
 
     app.get("/api/me", requireUser, getCurrentUserHandler)
 }

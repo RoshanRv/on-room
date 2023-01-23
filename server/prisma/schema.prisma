@@ -23,6 +23,7 @@ model User{
   email String @unique
   img String @default("https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000")
   sessions Session[]
+  classroom Classroom[]
 }
 
 model Session{
@@ -30,4 +31,14 @@ model Session{
   user User @relation(fields: [userId],references: [id])
   userId String
   valid Boolean @default(true)
+}
+
+model Classroom{
+  id String @id @default(cuid())
+  title String
+  description String @default("No Description Provided")
+  img String @default("https://thumbs.dreamstime.com/b/elementary-school-classroom-27014997.jpg")
+  teacherId String
+  teacher User @relation(fields: [teacherId],references: [id])
+  date DateTime @default(now())
 }

@@ -8,7 +8,9 @@ import {
     deleteSessionHandler,
     getCurrentUserHandler,
 } from "@controller/sessions.contoller"
-import requireUser from "@middleware/requireUser"
+import requireUser, { requireTeacher } from "@middleware/requireUser"
+import { createClassroomSchema } from "@schema/classroom.schema"
+import { createClassroomHandler } from "@controller/classrooms.controller"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
@@ -17,6 +19,9 @@ const routes = (app: Express) => {
 
     //  Create New User
     app.post("/api/users", validateInput(createUserSchema), createUserHandler)
+
+    // get current user using token
+    app.get("/api/me", requireUser, getCurrentUserHandler)
 
     // create new session / login
     app.post(
@@ -28,7 +33,12 @@ const routes = (app: Express) => {
     // logout and delete session
     app.delete("/api/sessions", deleteSessionHandler)
 
-    app.get("/api/me", requireUser, getCurrentUserHandler)
+    // create classroom
+    app.post(
+        "/api/classroom",
+        [requireUser, requireTeacher, validateInput(createClassroomSchema)],
+        createClassroomHandler
+    )
 }
 
 export default routes

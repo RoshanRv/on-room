@@ -7,3 +7,13 @@ const requireUser = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export default requireUser
+
+export const requireTeacher = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { user } = res.locals
+    if (user.role === "student") res.status(403).send("Teachers Only")
+    return next()
+}

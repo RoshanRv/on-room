@@ -10,7 +10,10 @@ import {
 } from "@controller/sessions.contoller"
 import requireUser, { requireTeacher } from "@middleware/requireUser"
 import { createClassroomSchema } from "@schema/classroom.schema"
-import { createClassroomHandler } from "@controller/classrooms.controller"
+import {
+    createClassroomHandler,
+    getClassroomHandler,
+} from "@controller/classrooms.controller"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
@@ -32,6 +35,8 @@ const routes = (app: Express) => {
 
     // logout and delete session
     app.delete("/api/sessions", deleteSessionHandler)
+
+    app.get("/api/classroom", requireUser, getClassroomHandler)
 
     // create classroom
     app.post(

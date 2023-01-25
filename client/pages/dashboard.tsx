@@ -15,23 +15,52 @@ import { IoIosAdd } from "react-icons/io"
 import ClassroomCard from "@components/Dashboard/ClassroomCard"
 import useToggle from "@hooks/useToggle"
 import Modal from "@components/Modal/Modal"
-import { faHourglass1 } from "@fortawesome/free-solid-svg-icons"
+import AddClassroomForm from "@components/Dashboard/AddClassroomForm"
+import { classroomSchemaInput } from "@schema/dashboard.schema"
 
 const dashboard = () => {
     const router = useRouter()
 
+    // const {
+    //     data: user,
+    //     isError,
+    //     isSuccess,
+    // } = useQuery<UserResponse>({
+    //     queryKey: ["users"],
+    //     queryFn: () =>
+    //         axios.get(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`, {
+    //             withCredentials: true,
+    //         }),
+    //     retry: 1,
+    // })
+
+    interface ClassroomProp extends classroomSchemaInput {
+        id: string
+        date: string
+        teacher: TeacherProps
+        teacherId: string
+    }
+    interface ClassroomResponse {
+        data: ClassroomProp[]
+    }
+
     const {
-        data: user,
+        data: classrooms,
         isError,
         isSuccess,
-    } = useQuery<UserResponse>({
-        queryKey: ["users"],
+    } = useQuery<ClassroomResponse>({
+        queryKey: ["classrooms"],
         queryFn: () =>
-            axios.get(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`, {
-                withCredentials: true,
-            }),
+            axios.get(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom`,
+                {
+                    withCredentials: true,
+                }
+            ),
         retry: 1,
     })
+
+    console.log(classrooms)
 
     const { isOn, toggleOn } = useToggle()
 
@@ -58,17 +87,18 @@ const dashboard = () => {
                 </div>
 
                 {/*       Classes       */}
-                <div className="grid grid-cols-2 gap-10 mt-10 md:grid-cols-3 lg:grid-cols-4">
-                    <ClassroomCard
-                        description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa aperiam tempore ullam explicabo consequuntur voluptatem velit tempora quisquam fuga voluptatum."
-                        img="https://cdn.geekboots.com/geek/javascript-meta-1652702081069.jpg"
-                        teacher="Roshan"
-                        title="Javascript"
-                    />
-                </div>
+                {classrooms && (
+                    <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                        {classrooms.data.map((classroom, i) => (
+                            <ClassroomCard key={i} classroomData={classroom} />
+                        ))}
+                    </div>
+                )}
+
+                {/*    Add Classroom Modal      */}
 
                 <Modal isOn={isOn} toggleOn={toggleOn}>
-                    <h1>hii</h1>
+                    <AddClassroomForm />
                 </Modal>
             </main>
         )

@@ -36,7 +36,10 @@ const Header = () => {
                     withCredentials: true,
                 }
             ),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+        onSuccess: () =>
+            queryClient.invalidateQueries({
+                queryKey: ["users", "classrooms"],
+            }),
     })
 
     useEffect(() => {
@@ -84,7 +87,7 @@ const Header = () => {
                         {/* img */}
                         <div
                             onClick={toggleProfile}
-                            className="w-12 h-12 rounded-full cursor-pointer"
+                            className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"
                         >
                             <img
                                 src={user.data.img}

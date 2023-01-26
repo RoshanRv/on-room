@@ -14,6 +14,14 @@ interface SelectRoleProps {
     page: "signin" | "signup"
 }
 
+interface TeacherProps {
+    name: string
+    img: string
+    role: "teacher"
+    email: string
+    id: string
+}
+
 interface UserProps {
     name: string
     img: string

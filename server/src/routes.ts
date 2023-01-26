@@ -34,7 +34,7 @@ const routes = (app: Express) => {
     )
 
     // logout and delete session
-    app.delete("/api/sessions", deleteSessionHandler)
+    app.delete("/api/sessions", requireUser, deleteSessionHandler)
 
     app.get("/api/classroom", requireUser, getClassroomHandler)
 

@@ -1,21 +1,25 @@
 import { FieldValues, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { classroomSchema } from "@schema/dashboard.schema"
+import { classroomSchema, ClassroomSchemaInput } from "@schema/dashboard.schema"
 import React, { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { ClickButton } from "@components/Button/Button"
+import { omit } from "lodash"
 
-const AddClassroomForm = () => {
+const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
     const {
         register,
         formState: { errors },
         handleSubmit,
-    } = useForm({
+        reset,
+    } = useForm<ClassroomSchemaInput>({
         resolver: zodResolver(classroomSchema),
     })
 
-    const mutateFunc = async <T extends unknown>(data: T) => {
+    const queryClient = useQueryClient()
+
+    const mutateFunc = async (data: ClassroomSchemaInput) => {
         return await axios.post(
             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom`,
             data,
@@ -27,10 +31,27 @@ const AddClassroomForm = () => {
 
     const { mutate } = useMutation({
         mutationFn: mutateFunc,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["classrooms"] })
+        },
     })
 
-    const handleAddClassroom = (e: any) => {
-        mutate(e)
+    const handleAddClassroom = (e: ClassroomSchemaInput) => {
+        let updated
+        if (e.img == "" && e.description == "")
+            updated = omit(e, ["img", "description"])
+        else if (e.img == "") updated = omit(e, "img")
+        else if (e.description == "") updated = omit(e, "description")
+        else updated = { ...e }
+
+        mutate(updated as any)
+
+        reset({
+            description: "",
+            img: "",
+            title: "",
+        })
+        toggleOn()
     }
 
     const [imgUrl, setImgUrl] = useState("")
@@ -42,7 +63,7 @@ const AddClassroomForm = () => {
                 New Classroom
             </h1>
             {/* classroom Img */}
-            <div className="w-full h-40 my-8 border rounded-md shadow-md md:h-60 border-dPri shadow-black/20">
+            <div className="w-full h-40 my-6 border rounded-md shadow-md md:h-60 border-dPri shadow-black/20">
                 <img
                     src={imgUrl}
                     alt="classroom_img"
@@ -53,11 +74,11 @@ const AddClassroomForm = () => {
             <div className="flex flex-col mt-4 gap-y-6 ">
                 {/*     Title     */}
                 <div className="flex flex-col-reverse justify-end w-full ">
-                    {/* {errors.title && (
+                    {errors.title && (
                         <p className="p-1 text-base text-red-500 capitalize ">
-                            {errors.title.message}
+                            {errors.title.message as string}
                         </p>
-                    )} */}
+                    )}
                     <input
                         type="text"
                         placeholder="Title"
@@ -70,14 +91,15 @@ const AddClassroomForm = () => {
                 </div>
                 {/*     Description    */}
                 <div className="flex flex-col-reverse justify-end w-full ">
-                    {/* {errors.description && (
-            <p className="p-1 text-base text-red-500 capitalize ">
-                {errors.description.message}
-            </p>
-        )} */}
+                    {errors.description && (
+                        <p className="p-1 overflow-auto text-base text-red-500 capitalize resize-none">
+                            {errors.description.message as string}
+                        </p>
+                    )}
                     <textarea
                         placeholder="Description"
-                        className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
+                        rows={1}
+                        className="w-full p-2 overflow-y-auto text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
                         {...register("description")}
                     />
                     <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
@@ -88,11 +110,11 @@ const AddClassroomForm = () => {
                 {/* Img and */}
                 <div className="flex items-end gap-x-2">
                     <div className="flex flex-col-reverse justify-end w-full">
-                        {/* {errors.img && (
-    <p className="p-1 text-base text-red-500 capitalize ">
-        {errors.img.message}
-    </p>
-)} */}
+                        {errors.img && (
+                            <p className="p-1 text-base text-red-500 capitalize ">
+                                {errors.img.message as string}
+                            </p>
+                        )}
                         <input
                             type="text"
                             placeholder="imageUrl"

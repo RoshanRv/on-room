@@ -16,7 +16,7 @@ import ClassroomCard from "@components/Dashboard/ClassroomCard"
 import useToggle from "@hooks/useToggle"
 import Modal from "@components/Modal/Modal"
 import AddClassroomForm from "@components/Dashboard/AddClassroomForm"
-import { classroomSchemaInput } from "@schema/dashboard.schema"
+import { ClassroomSchemaInput } from "@schema/dashboard.schema"
 
 const dashboard = () => {
     const router = useRouter()
@@ -34,7 +34,7 @@ const dashboard = () => {
     //     retry: 1,
     // })
 
-    interface ClassroomProp extends classroomSchemaInput {
+    interface ClassroomProp extends ClassroomSchemaInput {
         id: string
         date: string
         teacher: TeacherProps
@@ -59,8 +59,6 @@ const dashboard = () => {
             ),
         retry: 1,
     })
-
-    console.log(classrooms)
 
     const { isOn, toggleOn } = useToggle()
 
@@ -98,7 +96,7 @@ const dashboard = () => {
                 {/*    Add Classroom Modal      */}
 
                 <Modal isOn={isOn} toggleOn={toggleOn}>
-                    <AddClassroomForm />
+                    <AddClassroomForm toggleOn={toggleOn} />
                 </Modal>
             </main>
         )

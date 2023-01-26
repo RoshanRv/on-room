@@ -26,8 +26,6 @@ export const getClassroomHandler = async (req: Request, res: Response) => {
         const { user } = res.locals
         const classroom = await getClassroom(user.id as string)
 
-        console.log(classroom)
-
         return res.status(200).send(classroom)
     } catch (e: any) {
         return res.status(400).send(e.message)

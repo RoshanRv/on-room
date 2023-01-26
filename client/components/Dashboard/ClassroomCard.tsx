@@ -1,7 +1,7 @@
-import { classroomSchemaInput } from "@schema/dashboard.schema"
+import { ClassroomSchemaInput } from "@schema/dashboard.schema"
 import React from "react"
 
-interface ClassroomDataProp extends classroomSchemaInput {
+interface ClassroomDataProp extends ClassroomSchemaInput {
     id: string
     date: string
     teacher: TeacherProps

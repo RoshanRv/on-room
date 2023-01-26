@@ -1,20 +1,21 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
+import { omit } from "lodash"
 
 interface ClassroomBody {
     title: string
-    description: string
-    img: string
+    description?: string
+    img?: string
 }
 
-type createClassroom = ClassroomBody & {
+type createClassroomType = ClassroomBody & {
     teacherId: string
 }
 
-export const createClassroom = async (data: createClassroom) => {
+export const createClassroom = async (data: createClassroomType) => {
     try {
         const classroom = await prisma.classroom.create({
-            data,
+            data: data,
         })
 
         return classroom

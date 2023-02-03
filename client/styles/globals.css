@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+    background-color: black;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: gray;
+}
+
 .bg {
     background-image: url("../public/bg.svg");
     background-repeat: no-repeat;

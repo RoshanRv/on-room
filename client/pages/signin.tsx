@@ -67,7 +67,7 @@ const signin = () => {
     return (
         <main
             ref={parent}
-            className="flex flex-col items-center justify-center flex-1 h-full py-2 bg-back md:px-10 md:py-6 bg gap-y-10 lg:gap-y-16"
+            className="flex flex-col items-center justify-center flex-1 h-full py-2 bg-gray-100  dark:bg-back md:px-10 md:py-6 bg gap-y-10 lg:gap-y-16"
         >
             {/*           Part - 0       */}
             {part == 0 && (

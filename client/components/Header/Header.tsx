@@ -6,12 +6,15 @@ import axios from "axios"
 import { queryClient } from "pages/_app"
 import useToggle from "@hooks/useToggle"
 import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md"
+import { useRouter } from "next/navigation"
 
 export interface UserResponse {
     data: UserProps
 }
 
 const Header = () => {
+    const router = useRouter()
+
     const {
         data: user,
         isError,
@@ -29,17 +32,21 @@ const Header = () => {
     const { isOn: isDark, toggleOn: toggleDark } = useToggle()
 
     const { mutate } = useMutation({
-        mutationFn: () =>
-            axios.delete(
+        mutationFn: () => {
+            toggleProfile()
+            return axios.delete(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
                 {
                     withCredentials: true,
                 }
-            ),
-        onSuccess: () =>
+            )
+        },
+        onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["users", "classrooms"],
-            }),
+                queryKey: ["users"],
+            })
+            router.push("/signin")
+        },
     })
 
     useEffect(() => {
@@ -59,73 +66,76 @@ const Header = () => {
                 </Link>
             </div>
             {/*    Sign In And Sign Up  */}
-            {!isSuccess ? (
-                <div className="flex items-center gap-x-8">
-                    <LinkButton
-                        link={"signup"}
-                        size={"small"}
-                        variant={"primary"}
-                    >
-                        {<h1>Sign Up</h1>}
-                    </LinkButton>
-                    <LinkButton
-                        link={"signin"}
-                        size={"small"}
-                        variant={"secondary"}
-                    >
-                        {<h1>Sign In</h1>}
-                    </LinkButton>
-                </div>
-            ) : (
-                // Dashboard
-                <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-12">
-                    <Link href={"/dashboard"}>
-                        <h1>Dashboard</h1>
-                    </Link>
-                    {/* Profile */}
-                    <div className="relative z-50">
-                        {/* img */}
-                        <div
-                            onClick={toggleProfile}
-                            className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"
+            <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-12">
+                {!isSuccess ? (
+                    <>
+                        <LinkButton
+                            link={"signup"}
+                            size={"small"}
+                            variant={"primary"}
                         >
-                            <img
-                                src={user.data.img}
-                                alt="profile_pic"
-                                className="w-full h-full rounded-full"
-                            />
-                        </div>
-                        {/*   Dropdown   */}
-                        <div
-                            className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 ${
-                                showProfile ? "scale-100" : "scale-0"
-                            } gap-y-2 transition-all `}
+                            {<h1>Sign Up</h1>}
+                        </LinkButton>
+                        <LinkButton
+                            link={"signin"}
+                            size={"small"}
+                            variant={"secondary"}
                         >
-                            <Link href={""}>
-                                <h1 className="transition-all hover:text-dPri">
-                                    Profile
-                                </h1>
-                            </Link>
-                            <Link href={""}>
-                                <h1
-                                    onClick={() => mutate()}
-                                    className="transition-all hover:text-dPri"
-                                >
-                                    Logout
-                                </h1>
-                            </Link>
+                            {<h1>Sign In</h1>}
+                        </LinkButton>
+                    </>
+                ) : (
+                    // </div>
+                    // Dashboard
+                    <>
+                        <Link href={"/dashboard"}>
+                            <h1>Dashboard</h1>
+                        </Link>
+                        {/* Profile */}
+                        <div className="relative z-50">
+                            {/* img */}
+                            <div
+                                onClick={toggleProfile}
+                                className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"
+                            >
+                                <img
+                                    src={user.data.img}
+                                    alt="profile_pic"
+                                    className="w-full h-full rounded-full"
+                                />
+                            </div>
+                            {/*   Dropdown   */}
+                            <div
+                                className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 ${
+                                    showProfile ? "scale-100" : "scale-0"
+                                } gap-y-2 transition-all `}
+                            >
+                                <Link href={""}>
+                                    <h1 className="transition-all hover:text-dPri">
+                                        Profile
+                                    </h1>
+                                </Link>
+                                <Link href={""}>
+                                    <h1
+                                        onClick={() => mutate()}
+                                        className="transition-all hover:text-dPri"
+                                    >
+                                        Logout
+                                    </h1>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                    {/*    Light/Dark      */}
-                    <button onClick={toggleDark} className=" text-dPri">
-                        {isDark ? (
-                            <MdOutlineDarkMode className="" />
-                        ) : (
-                            <MdOutlineLightMode />
-                        )}
-                    </button>
-                </div>
-            )}
+                    </>
+                )}
+                {/*    Light/Dark      */}
+                <button onClick={toggleDark} className=" text-dPri">
+                    {isDark ? (
+                        <MdOutlineDarkMode className="" />
+                    ) : (
+                        <MdOutlineLightMode />
+                    )}
+                </button>
+            </div>
         </header>
     )
 }

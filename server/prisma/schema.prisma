@@ -23,7 +23,8 @@ model User{
   email String @unique
   img String @default("https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000")
   sessions Session[]
-  classroom Classroom[]
+  classroom Classroom[] @relation("Classroom")
+  enrolledIn Classroom[] @relation("EnrolledIn")
 }
 
 model Session{
@@ -39,6 +40,7 @@ model Classroom{
   description String @default("No Description Provided")
   img String @default("https://thumbs.dreamstime.com/b/elementary-school-classroom-27014997.jpg")
   teacherId String
-  teacher User @relation(fields: [teacherId],references: [id])
+  teacher User @relation(name: "Classroom",fields: [teacherId],references: [id])
+  student User[] @relation(name:"EnrolledIn")
   date DateTime @default(now())
 }

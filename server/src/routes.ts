@@ -1,7 +1,10 @@
 import { Express, Request, Response } from "express"
 import validateInput from "@middleware/validateInput"
-import { createUserSchema } from "@schema/users.schema"
-import { createUserHandler } from "@controller/users.controller"
+import { createUserSchema, updateUserSchema } from "@schema/users.schema"
+import {
+    createUserHandler,
+    updateUserHandler,
+} from "@controller/users.controller"
 import { createSessionSchema } from "@schema/sessions.schema"
 import {
     createSessionHandler,
@@ -22,6 +25,12 @@ const routes = (app: Express) => {
 
     //  Create New User
     app.post("/api/users", validateInput(createUserSchema), createUserHandler)
+    //  Update User
+    app.put(
+        "/api/users",
+        [requireUser, validateInput(updateUserSchema)],
+        updateUserHandler
+    )
 
     // get current user using token
     app.get("/api/me", requireUser, getCurrentUserHandler)

@@ -24,7 +24,7 @@ export const createClassroom = async (data: createClassroomType) => {
     }
 }
 
-export const getClassroom = async (teacherId: string) => {
+export const getClassroomByTeacherId = async (teacherId: string) => {
     try {
         const classroom = await prisma.classroom.findMany({
             where: {
@@ -36,6 +36,40 @@ export const getClassroom = async (teacherId: string) => {
             },
         })
 
+        return classroom
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}
+
+export const getClassrooms = async () => {
+    try {
+        const classroom = await prisma.classroom.findMany({
+            include: {
+                teacher: true,
+            },
+        })
+
+        return classroom
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}
+
+export const enrollClassroom = async (id: string, student: any) => {
+    try {
+        const classroom = await prisma.classroom.update({
+            where: {
+                id,
+            },
+            data: {
+                student: {
+                    connect: {
+                        id: student.id,
+                    },
+                },
+            },
+        })
         return classroom
     } catch (e: any) {
         throw new Error(e)

@@ -11,4 +11,13 @@ export const createUserSchema = object({
     }),
 })
 
+export const updateUserSchema = object({
+    body: object({
+        name: string().min(1, "Name is Required"),
+        img: string().min(1, "Img is Required").url(),
+    }),
+})
+
 export type createUserSchemaType = TypeOf<typeof createUserSchema>
+
+export type updateUserSchemaType = TypeOf<typeof updateUserSchema>

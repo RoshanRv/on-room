@@ -38,3 +38,21 @@ export const findUserById = async (id: string) => {
         throw new Error(e)
     }
 }
+
+export const updateUserById = async (
+    id: string,
+    data: { name: string; img: string }
+) => {
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id,
+            },
+            data,
+        })
+
+        return user
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}

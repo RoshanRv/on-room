@@ -1,12 +1,6 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
-import {
-    dehydrate,
-    QueryClient,
-    useQuery,
-    QueryObserver,
-    useQueryClient,
-} from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { UserResponse } from "@components/Header/Header"
 import { queryClient } from "./_app"
@@ -17,6 +11,16 @@ import useToggle from "@hooks/useToggle"
 import Modal from "@components/Modal/Modal"
 import AddClassroomForm from "@components/Dashboard/AddClassroomForm"
 import { ClassroomSchemaInput } from "@schema/dashboard.schema"
+
+interface ClassroomProp extends ClassroomSchemaInput {
+    id: string
+    date: string
+    teacher: TeacherProps
+    teacherId: string
+}
+export interface ClassroomResponse {
+    data: ClassroomProp[]
+}
 
 const dashboard = () => {
     const router = useRouter()
@@ -33,16 +37,6 @@ const dashboard = () => {
     //         }),
     //     retry: 1,
     // })
-
-    interface ClassroomProp extends ClassroomSchemaInput {
-        id: string
-        date: string
-        teacher: TeacherProps
-        teacherId: string
-    }
-    interface ClassroomResponse {
-        data: ClassroomProp[]
-    }
 
     const {
         data: classrooms,

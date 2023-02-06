@@ -26,11 +26,11 @@ const SignIn = ({
     handleSubmit,
 }: SignInProps) => {
     return (
-        <div className="relative flex flex-col w-11/12 p-6 px-10 text-center bg-gray-800 rounded-md shadow-md shadow-black md:w-7/12 lg:w-5/12 xl:w-4/12 gap-y-6">
+        <div className="relative flex flex-col w-11/12 p-6 px-10 text-center bg-gray-200 rounded-md shadow-md dark:bg-gray-800 shadow-black md:w-7/12 lg:w-5/12 xl:w-4/12 gap-y-6">
             {/* back btn */}
             <button
                 onClick={handleBack}
-                className="absolute p-2 bg-gray-900 rounded-full top-6 left-4"
+                className="absolute p-2 bg-gray-100 rounded-full dark:bg-gray-900 top-6 left-4"
             >
                 <IoChevronBack className="text-2xl font-bold rounded-full text-dPri" />
             </button>

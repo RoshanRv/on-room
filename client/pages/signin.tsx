@@ -47,7 +47,7 @@ const signin = () => {
         )
     }
 
-    const { mutateAsync, isLoading } = useMutation({
+    const { mutate, isLoading } = useMutation({
         mutationFn: mutateFunc,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["users"] })
@@ -58,7 +58,7 @@ const signin = () => {
     const handleSignIn = async (e: SignInInputProps) => {
         const data = { ...e, role }
         try {
-            const session = await mutateAsync(data)
+            mutate(data)
         } catch (e) {
             console.log(e)
         }

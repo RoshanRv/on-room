@@ -7,6 +7,7 @@ type ClickButtonProp = VariantProps<typeof buttonClass> & {
     onClick: () => void
     children: ReactNode
     isLoading?: boolean
+    className?: string
 }
 
 type LinkButtonProp = VariantProps<typeof buttonClass> & {
@@ -61,12 +62,20 @@ export const ClickButton = ({
     disabled = false,
     onClick,
     children,
+    size,
     isLoading = false,
+    className,
 }: ClickButtonProp) => {
     return (
         <button
             disabled={disabled as boolean}
-            className={buttonClass({ variant, width, disabled })}
+            className={buttonClass({
+                variant,
+                width,
+                disabled,
+                size,
+                className,
+            })}
             onClick={onClick}
         >
             {!isLoading ? (

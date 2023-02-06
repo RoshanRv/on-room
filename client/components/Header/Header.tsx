@@ -50,7 +50,7 @@ const Header = () => {
     })
 
     useEffect(() => {
-        console.log(isDark)
+        // console.log(isDark)
 
         if (isDark) document.documentElement.classList.add("dark")
         else document.documentElement.classList.remove("dark")
@@ -66,7 +66,7 @@ const Header = () => {
                 </Link>
             </div>
             {/*    Sign In And Sign Up  */}
-            <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-12">
+            <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-12 ">
                 {!isSuccess ? (
                     <>
                         <LinkButton
@@ -88,14 +88,22 @@ const Header = () => {
                     // </div>
                     // Dashboard
                     <>
+                        {user.data.role == "student" && (
+                            <Link href={"/browse-classroom"}>
+                                <h1>Find Classroom</h1>
+                            </Link>
+                        )}
                         <Link href={"/dashboard"}>
                             <h1>Dashboard</h1>
                         </Link>
+
                         {/* Profile */}
                         <div className="relative z-50">
                             {/* img */}
                             <div
-                                onClick={toggleProfile}
+                                // onClick={toggleProfile}
+                                onMouseEnter={toggleProfile}
+                                onMouseLeave={toggleProfile}
                                 className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"
                             >
                                 <img
@@ -103,26 +111,24 @@ const Header = () => {
                                     alt="profile_pic"
                                     className="w-full h-full rounded-full"
                                 />
-                            </div>
-                            {/*   Dropdown   */}
-                            <div
-                                className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 ${
-                                    showProfile ? "scale-100" : "scale-0"
-                                } gap-y-2 transition-all `}
-                            >
-                                <Link href={""}>
-                                    <h1 className="transition-all hover:text-dPri">
-                                        Profile
-                                    </h1>
-                                </Link>
-                                <Link href={""}>
+                                {/*   Dropdown   */}
+                                <div
+                                    className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-white dark:bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 rounded-md ${
+                                        showProfile ? "scale-100" : "scale-0"
+                                    } gap-y-2 transition-all`}
+                                >
+                                    <Link href={"/profile"}>
+                                        <h1 className="transition-all hover:text-dPri">
+                                            Profile
+                                        </h1>
+                                    </Link>
                                     <h1
                                         onClick={() => mutate()}
                                         className="transition-all hover:text-dPri"
                                     >
                                         Logout
                                     </h1>
-                                </Link>
+                                </div>
                             </div>
                         </div>
                     </>

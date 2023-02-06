@@ -16,6 +16,7 @@ import { createClassroomSchema } from "@schema/classroom.schema"
 import {
     createClassroomHandler,
     getClassroomHandler,
+    handleEnrollClassroom,
 } from "@controller/classrooms.controller"
 
 const routes = (app: Express) => {
@@ -53,6 +54,8 @@ const routes = (app: Express) => {
         [requireUser, requireTeacher, validateInput(createClassroomSchema)],
         createClassroomHandler
     )
+
+    app.post("/api/classroom/enroll", requireUser, handleEnrollClassroom)
 }
 
 export default routes

@@ -11,12 +11,19 @@ import {
     deleteSessionHandler,
     getCurrentUserHandler,
 } from "@controller/sessions.contoller"
-import requireUser, { requireTeacher } from "@middleware/requireUser"
-import { createClassroomSchema } from "@schema/classroom.schema"
+import requireUser, {
+    requireStudent,
+    requireTeacher,
+} from "@middleware/requireUser"
+import {
+    createClassroomSchema,
+    enrollClassroomSchema,
+} from "@schema/classroom.schema"
 import {
     createClassroomHandler,
+    enrollClassroomHandler,
     getClassroomHandler,
-    handleEnrollClassroom,
+    getMyClassroomHandler,
 } from "@controller/classrooms.controller"
 
 const routes = (app: Express) => {
@@ -46,16 +53,25 @@ const routes = (app: Express) => {
     // logout and delete session
     app.delete("/api/sessions", requireUser, deleteSessionHandler)
 
+    //      fetches all classrooms
     app.get("/api/classroom", requireUser, getClassroomHandler)
+
+    // fetches created classroom by teacher or enrolled classroom by students
+    app.get("/api/myclassroom", requireUser, getMyClassroomHandler)
 
     // create classroom
     app.post(
         "/api/classroom",
-        [requireUser, requireTeacher, validateInput(createClassroomSchema)],
+        [requireTeacher, validateInput(createClassroomSchema)],
         createClassroomHandler
     )
 
-    app.post("/api/classroom/enroll", requireUser, handleEnrollClassroom)
+    //   enroll classroom
+    app.post(
+        "/api/classroom/enroll",
+        [requireStudent, validateInput(enrollClassroomSchema)],
+        enrollClassroomHandler
+    )
 }
 
 export default routes

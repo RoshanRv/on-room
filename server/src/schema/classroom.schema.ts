@@ -8,4 +8,11 @@ export const createClassroomSchema = object({
     }),
 })
 
+export const enrollClassroomSchema = object({
+    body: object({
+        id: string().min(1),
+    }),
+})
+
 export type createClassroomSchemaType = TypeOf<typeof createClassroomSchema>
+export type enrollClassroomSchemaType = TypeOf<typeof enrollClassroomSchema>

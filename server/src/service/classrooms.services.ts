@@ -42,11 +42,18 @@ export const getClassroomByTeacherId = async (teacherId: string) => {
     }
 }
 
-export const getClassrooms = async () => {
+export const getClassrooms = async (id: string) => {
     try {
         const classroom = await prisma.classroom.findMany({
             include: {
                 teacher: true,
+            },
+            where: {
+                student: {
+                    none: {
+                        id,
+                    },
+                },
             },
         })
 
@@ -56,7 +63,7 @@ export const getClassrooms = async () => {
     }
 }
 
-export const enrollClassroom = async (id: string, student: any) => {
+export const enrollClassroom = async (id: string, studentId: string) => {
     try {
         const classroom = await prisma.classroom.update({
             where: {
@@ -65,9 +72,30 @@ export const enrollClassroom = async (id: string, student: any) => {
             data: {
                 student: {
                     connect: {
-                        id: student.id,
+                        id: studentId,
                     },
                 },
+            },
+        })
+        return classroom
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}
+
+export const getEnrolledClassroomByStudentId = async (id: string) => {
+    try {
+        const classroom = await prisma.classroom.findMany({
+            where: {
+                student: {
+                    some: {
+                        id,
+                    },
+                },
+            },
+
+            include: {
+                teacher: true,
             },
         })
         return classroom

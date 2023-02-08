@@ -1,6 +1,6 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, QueryObserver } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { UserResponse } from "@components/Header/Header"
 import { queryClient } from "./_app"
@@ -38,6 +38,26 @@ const dashboard = () => {
     //     retry: 1,
     // })
 
+    useEffect(() => {
+        // Create an observer to watch the query and update its result into state
+        const observer = new QueryObserver(queryClient, {
+            queryKey: ["users"],
+            enabled: false,
+            retry: 1,
+        })
+        const unsubscribe = observer.subscribe((queryResult: any) => {
+            console.log(queryResult.data)
+            setUserRole(queryResult.data.data.role)
+        })
+
+        // Clean up the subscription when the component unmounts
+        return () => {
+            unsubscribe()
+        }
+    }, [queryClient])
+
+    const [userRole, setUserRole] = useState<"" | "teacher" | "student">("")
+
     const {
         data: classrooms,
         isError,
@@ -46,7 +66,7 @@ const dashboard = () => {
         queryKey: ["classrooms"],
         queryFn: () =>
             axios.get(
-                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom`,
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/myclassroom`,
                 {
                     withCredentials: true,
                 }
@@ -66,16 +86,19 @@ const dashboard = () => {
                     <h1 className="text-2xl font-semibold lg:text-4xl text-dPri">
                         Your Classroom
                     </h1>
-                    <ClickButton
-                        size={"small"}
-                        onClick={toggleOn}
-                        variant="primary"
-                    >
-                        <div className="flex items-center gap-x-2">
-                            <IoIosAdd className="text-3xl" />
-                            <h1>Add Classroom</h1>
-                        </div>
-                    </ClickButton>
+                    {/*       Add Class btn is only shown to teacher   */}
+                    {userRole === "teacher" && (
+                        <ClickButton
+                            size={"small"}
+                            onClick={toggleOn}
+                            variant="primary"
+                        >
+                            <div className="flex items-center gap-x-2">
+                                <IoIosAdd className="text-3xl" />
+                                <h1>Add Classroom</h1>
+                            </div>
+                        </ClickButton>
+                    )}
                 </div>
 
                 {/*       Classes       */}

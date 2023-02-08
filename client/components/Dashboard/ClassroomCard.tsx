@@ -64,7 +64,7 @@ const ClassroomCard = ({
                             width
                             onClick={() => {
                                 handleEnroll && handleEnroll(classroomData.id)
-                                toggleOn
+                                toggleOn()
                             }}
                         >
                             <h1>YES!!</h1>

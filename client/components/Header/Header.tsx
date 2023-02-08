@@ -33,7 +33,6 @@ const Header = () => {
 
     const { mutate } = useMutation({
         mutationFn: () => {
-            toggleProfile()
             return axios.delete(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
                 {

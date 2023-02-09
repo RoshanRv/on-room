@@ -6,7 +6,7 @@ import axios from "axios"
 import { queryClient } from "pages/_app"
 import useToggle from "@hooks/useToggle"
 import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 export interface UserResponse {
     data: UserProps
@@ -14,6 +14,11 @@ export interface UserResponse {
 
 const Header = () => {
     const router = useRouter()
+    const pathname = usePathname()
+
+    const [tab, setTab] = useState("")
+
+    useEffect(() => {}, [pathname])
 
     const {
         data: user,
@@ -89,18 +94,33 @@ const Header = () => {
                     <>
                         {user.data.role == "student" && (
                             <Link href={"/browse-classroom"}>
-                                <h1>Find Classroom</h1>
+                                <h1
+                                    className={`relative before:absolute before:contents-[''] ${
+                                        pathname == "/browse-classroom"
+                                            ? "before:w-full"
+                                            : "before:w-0"
+                                    }  before:transition-all origin-center before:h-1 before:bg-dPri before:top-full before:left-0  rounded-md`}
+                                >
+                                    Find Classroom
+                                </h1>
                             </Link>
                         )}
                         <Link href={"/dashboard"}>
-                            <h1>Dashboard</h1>
+                            <h1
+                                className={`relative before:absolute before:contents-[''] ${
+                                    pathname == "/dashboard"
+                                        ? "before:w-full"
+                                        : "before:w-0"
+                                }  before:transition-all origin-center before:h-1 before:bg-dPri before:top-full before:left-0  rounded-md`}
+                            >
+                                Dashboard
+                            </h1>
                         </Link>
 
                         {/* Profile */}
                         <div className="relative z-50">
                             {/* img */}
                             <div
-                                // onClick={toggleProfile}
                                 onMouseEnter={toggleProfile}
                                 onMouseLeave={toggleProfile}
                                 className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"

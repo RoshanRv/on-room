@@ -1,4 +1,5 @@
 type Role = "" | "student" | "teacher"
+type Tabs = "assignments" | "students"
 
 interface CardRoleProps {
     role: Role
@@ -22,6 +23,14 @@ interface TeacherProps {
     id: string
 }
 
+interface StudentProps {
+    name: string
+    img: string
+    role: "student"
+    email: string
+    id: string
+}
+
 interface UserProps {
     name: string
     img: string
@@ -35,4 +44,13 @@ interface ModalProps {
     isOn: boolean
     toggleOn: () => void
     children: ReactNode
+}
+
+interface ClassroomProps {
+    id: string
+    title: string
+    date: string
+    img: string
+    description: string
+    teacherId: string
 }

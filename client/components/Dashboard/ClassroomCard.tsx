@@ -4,11 +4,8 @@ import useToggle from "@hooks/useToggle"
 import { ClassroomSchemaInput } from "@schema/dashboard.schema"
 import React from "react"
 
-interface ClassroomDataProp extends ClassroomSchemaInput {
-    id: string
-    date: string
+interface ClassroomDataProp extends ClassroomProps {
     teacher: TeacherProps
-    teacherId: string
 }
 interface ClassroomCardProp {
     classroomData: ClassroomDataProp

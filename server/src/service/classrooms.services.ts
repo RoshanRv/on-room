@@ -63,6 +63,19 @@ export const getClassrooms = async (id: string) => {
     }
 }
 
+export const getClassroomById = async (id: string) => {
+    try {
+        const classroom = await prisma.classroom.findUnique({
+            where: {
+                id,
+            },
+        })
+        return classroom
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}
+
 export const enrollClassroom = async (id: string, studentId: string) => {
     try {
         const classroom = await prisma.classroom.update({

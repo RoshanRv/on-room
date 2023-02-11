@@ -14,5 +14,12 @@ export const enrollClassroomSchema = object({
     }),
 })
 
+export const getClassroomByIdSchema = object({
+    params: object({
+        id: string().min(1),
+    }),
+})
+
 export type createClassroomSchemaType = TypeOf<typeof createClassroomSchema>
 export type enrollClassroomSchemaType = TypeOf<typeof enrollClassroomSchema>
+export type getClassroomByIdSchemaType = TypeOf<typeof getClassroomByIdSchema>

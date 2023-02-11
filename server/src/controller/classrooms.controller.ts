@@ -1,10 +1,12 @@
 import {
     createClassroomSchemaType,
     enrollClassroomSchemaType,
+    getClassroomByIdSchemaType,
 } from "@schema/classroom.schema"
 import {
     createClassroom,
     enrollClassroom,
+    getClassroomById,
     getClassroomByTeacherId,
     getClassrooms,
     getEnrolledClassroomByStudentId,
@@ -56,6 +58,21 @@ export const getClassroomHandler = async (req: Request, res: Response) => {
     try {
         const { user } = res.locals
         const classroom = await getClassrooms(user.id)
+        return res.status(200).send(classroom)
+    } catch (e: any) {
+        return res.status(400).send(e.message)
+    }
+}
+
+export const getClassroomByIdHandler = async (
+    req: Request<getClassroomByIdSchemaType["params"], {}, {}>,
+    res: Response
+) => {
+    try {
+        const { id } = req.params
+        console.log(id)
+
+        const classroom = await getClassroomById(id)
         return res.status(200).send(classroom)
     } catch (e: any) {
         return res.status(400).send(e.message)

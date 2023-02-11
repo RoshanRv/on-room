@@ -11,15 +11,12 @@ import useToggle from "@hooks/useToggle"
 import Modal from "@components/Modal/Modal"
 import AddClassroomForm from "@components/Dashboard/AddClassroomForm"
 import { ClassroomSchemaInput } from "@schema/dashboard.schema"
+import Link from "next/link"
+import MainTitle from "@components/Title/MainTitle"
+import useUser from "@hooks/useUser"
 
-interface ClassroomProp extends ClassroomSchemaInput {
-    id: string
-    date: string
+interface DashboardClassroomProp extends ClassroomProps {
     teacher: TeacherProps
-    teacherId: string
-}
-export interface ClassroomResponse {
-    data: ClassroomProp[]
 }
 
 const dashboard = () => {
@@ -38,34 +35,16 @@ const dashboard = () => {
     //     retry: 1,
     // })
 
-    useEffect(() => {
-        // Create an observer to watch the query and update its result into state
-        const observer = new QueryObserver(queryClient, {
-            queryKey: ["users"],
-            enabled: false,
-            retry: 1,
-        })
-        const unsubscribe = observer.subscribe((queryResult: any) => {
-            console.log(queryResult.data)
-            setUserRole(queryResult.data.data.role)
-        })
-
-        // Clean up the subscription when the component unmounts
-        return () => {
-            unsubscribe()
-        }
-    }, [queryClient])
-
-    const [userRole, setUserRole] = useState<"" | "teacher" | "student">("")
+    const { userRole } = useUser()
 
     const {
         data: classrooms,
         isError,
         isSuccess,
-    } = useQuery<ClassroomResponse>({
+    } = useQuery({
         queryKey: ["classrooms"],
         queryFn: () =>
-            axios.get(
+            axios.get<DashboardClassroomProp[]>(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/myclassroom`,
                 {
                     withCredentials: true,
@@ -73,7 +52,6 @@ const dashboard = () => {
             ),
         retry: 1,
     })
-
     const { isOn, toggleOn } = useToggle()
 
     if (isError) router.push("/signin")
@@ -82,11 +60,10 @@ const dashboard = () => {
         return (
             <main className="flex flex-col flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
                 {/*         Heading and Add Classroom Btn   */}
-                <div className="flex items-baseline justify-between pb-4 border-b border-dPri">
+                {/* <div className="flex items-baseline justify-between pb-4 border-b border-dPri">
                     <h1 className="text-2xl font-semibold lg:text-4xl text-dPri">
                         Your Classroom
                     </h1>
-                    {/*       Add Class btn is only shown to teacher   */}
                     {userRole === "teacher" && (
                         <ClickButton
                             size={"small"}
@@ -99,13 +76,37 @@ const dashboard = () => {
                             </div>
                         </ClickButton>
                     )}
-                </div>
+                </div> */}
+
+                {/*         Heading and Add Classroom Btn   */}
+
+                <MainTitle title="Your Classroom">
+                    {/*       Add Class btn is only shown to teacher   */}
+
+                    {userRole === "teacher" && (
+                        <ClickButton
+                            size={"small"}
+                            onClick={toggleOn}
+                            variant="primary"
+                        >
+                            <div className="flex items-center gap-x-2">
+                                <IoIosAdd className="text-3xl" />
+                                <h1>Add Classroom</h1>
+                            </div>
+                        </ClickButton>
+                    )}
+                </MainTitle>
 
                 {/*       Classes       */}
                 {classrooms && (
                     <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                         {classrooms.data.map((classroom, i) => (
-                            <ClassroomCard key={i} classroomData={classroom} />
+                            <Link
+                                href={`/classroom/${classroom.id}`}
+                                key={classroom.id}
+                            >
+                                <ClassroomCard classroomData={classroom} />
+                            </Link>
                         ))}
                     </div>
                 )}

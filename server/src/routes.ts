@@ -18,10 +18,12 @@ import requireUser, {
 import {
     createClassroomSchema,
     enrollClassroomSchema,
+    getClassroomByIdSchema,
 } from "@schema/classroom.schema"
 import {
     createClassroomHandler,
     enrollClassroomHandler,
+    getClassroomByIdHandler,
     getClassroomHandler,
     getMyClassroomHandler,
 } from "@controller/classrooms.controller"
@@ -52,6 +54,12 @@ const routes = (app: Express) => {
 
     // logout and delete session
     app.delete("/api/sessions", requireUser, deleteSessionHandler)
+
+    app.get(
+        "/api/classroom/:id",
+        [requireUser, validateInput(getClassroomByIdSchema)],
+        getClassroomByIdHandler
+    )
 
     //      fetches all classrooms
     app.get("/api/classroom", requireUser, getClassroomHandler)

@@ -118,11 +118,11 @@ const Header = () => {
                         </Link>
 
                         {/* Profile */}
-                        <div className="relative z-50">
+                        <div className="relative z-50 group">
                             {/* img */}
                             <div
-                                onMouseEnter={toggleProfile}
-                                onMouseLeave={toggleProfile}
+                                // onMouseEnter={toggleProfile}
+                                // onMouseLeave={toggleProfile}
                                 className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"
                             >
                                 <img
@@ -132,9 +132,7 @@ const Header = () => {
                                 />
                                 {/*   Dropdown   */}
                                 <div
-                                    className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-white dark:bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 rounded-md ${
-                                        showProfile ? "scale-100" : "scale-0"
-                                    } gap-y-2 transition-all`}
+                                    className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-white dark:bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 rounded-md gap-y-2 transition-all group-hover:scale-100 scale-0 `}
                                 >
                                     <Link href={"/profile"}>
                                         <h1 className="transition-all hover:text-dPri">

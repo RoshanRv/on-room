@@ -68,8 +68,8 @@ model Submission{
 model Assignment{
   id String @id @default(cuid())
   name String
-  description String
-  dueDate DateTime
+  description String? @default("No Description")
+  dueDate String
   attachments Attachment[]
   submissions Submission[]
   classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)

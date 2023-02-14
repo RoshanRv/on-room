@@ -17,16 +17,34 @@ import requireUser, {
 } from "@middleware/requireUser"
 import {
     createClassroomSchema,
+    deleteClassroomSchema,
     enrollClassroomSchema,
     getClassroomByIdSchema,
+    updateClassroomByIdSchema,
 } from "@schema/classroom.schema"
 import {
     createClassroomHandler,
+    deleteClassroomHandler,
     enrollClassroomHandler,
     getClassroomByIdHandler,
     getClassroomHandler,
     getMyClassroomHandler,
+    updateClassroomByIdHandler,
 } from "@controller/classrooms.controller"
+import {
+    createAssignmentSchema,
+    deleteAssignmentSchema,
+    getAssignmentByIdSchema,
+    getAssignmentsByClassroomIdSchema,
+    updateAssignmentSchema,
+} from "@schema/assignments.schema"
+import {
+    createAssignmentHandler,
+    deleteAssignmentHandler,
+    getAssignmentByIdHandler,
+    getAssignmentsByClassroomIdHandler,
+    updateAssignmentHandler,
+} from "@controller/assignments.controller"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
@@ -61,6 +79,12 @@ const routes = (app: Express) => {
         getClassroomByIdHandler
     )
 
+    app.put(
+        "/api/classroom/:id",
+        [requireTeacher, validateInput(updateClassroomByIdSchema)],
+        updateClassroomByIdHandler
+    )
+
     //      fetches all classrooms
     app.get("/api/classroom", requireUser, getClassroomHandler)
 
@@ -74,11 +98,49 @@ const routes = (app: Express) => {
         createClassroomHandler
     )
 
+    app.delete(
+        "/api/classroom/:id",
+        [requireTeacher, validateInput(deleteClassroomSchema)],
+        deleteClassroomHandler
+    )
+
     //   enroll classroom
     app.post(
         "/api/classroom/enroll",
         [requireStudent, validateInput(enrollClassroomSchema)],
         enrollClassroomHandler
+    )
+
+    //     assignmentss
+    app.post(
+        "/api/assignment",
+        [requireTeacher, validateInput(createAssignmentSchema)],
+        createAssignmentHandler
+    )
+
+    // fetches assignments based on classroom id
+    app.get(
+        "/api/assignment/classroom/:classroomId",
+        [requireUser, validateInput(getAssignmentsByClassroomIdSchema)],
+        getAssignmentsByClassroomIdHandler
+    )
+
+    // fetches single assignment using id
+    app.get(
+        "/api/assignment/:id",
+        [requireUser, validateInput(getAssignmentByIdSchema)],
+        getAssignmentByIdHandler
+    )
+
+    app.put(
+        "/api/assignment/:id",
+        [requireTeacher, validateInput(updateAssignmentSchema)],
+        updateAssignmentHandler
+    )
+    app.delete(
+        "/api/assignment/:id",
+        [requireTeacher, validateInput(deleteAssignmentSchema)],
+        deleteAssignmentHandler
     )
 }
 

@@ -11,6 +11,7 @@ module.exports = {
             colors: {
                 dPri: "#eab308",
                 back: "#111827",
+                danger: "#b91c1c",
             },
             fontFamily: {
                 disp: ["Raleway", " sans-serif"],

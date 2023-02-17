@@ -33,7 +33,6 @@ const Header = () => {
         retry: 1,
     })
 
-    const { isOn: showProfile, toggleOn: toggleProfile } = useToggle()
     const { isOn: isDark, toggleOn: toggleDark } = useToggle()
 
     const { mutate } = useMutation({
@@ -120,11 +119,7 @@ const Header = () => {
                         {/* Profile */}
                         <div className="relative z-50 group">
                             {/* img */}
-                            <div
-                                // onMouseEnter={toggleProfile}
-                                // onMouseLeave={toggleProfile}
-                                className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri"
-                            >
+                            <div className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri">
                                 <img
                                     src={user.data.img}
                                     alt="profile_pic"

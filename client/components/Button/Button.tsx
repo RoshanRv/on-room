@@ -23,9 +23,9 @@ const buttonClass = cva(
     {
         variants: {
             variant: {
-                primary: ["bg-dPri  "],
+                primary: ["bg-dPri border-2 border-black  "],
                 secondary: ["border-2 border-dPri bg-black"],
-                danger: ["bg-red-600"],
+                danger: ["bg-danger border-2 border-dPri "],
             },
 
             width: {

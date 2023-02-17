@@ -18,6 +18,14 @@ export const updateUserSchema = object({
     }),
 })
 
-export type createUserSchemaType = TypeOf<typeof createUserSchema>
+export const findStudentsByClassroomSchema = object({
+    params: object({
+        classroomId: string().min(1, "ClassroomId is required"),
+    }),
+})
 
+export type createUserSchemaType = TypeOf<typeof createUserSchema>
 export type updateUserSchemaType = TypeOf<typeof updateUserSchema>
+export type findStudentsByClassroomType = TypeOf<
+    typeof findStudentsByClassroomSchema
+>

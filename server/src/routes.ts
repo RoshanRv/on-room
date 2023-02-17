@@ -1,8 +1,13 @@
 import { Express, Request, Response } from "express"
 import validateInput from "@middleware/validateInput"
-import { createUserSchema, updateUserSchema } from "@schema/users.schema"
+import {
+    createUserSchema,
+    findStudentsByClassroomSchema,
+    updateUserSchema,
+} from "@schema/users.schema"
 import {
     createUserHandler,
+    findStudentsByClassroomHandler,
     updateUserHandler,
 } from "@controller/users.controller"
 import { createSessionSchema } from "@schema/sessions.schema"
@@ -96,6 +101,12 @@ const routes = (app: Express) => {
         "/api/classroom",
         [requireTeacher, validateInput(createClassroomSchema)],
         createClassroomHandler
+    )
+
+    app.get(
+        "/api/classroom/enrolled/:classroomId",
+        [requireUser, validateInput(findStudentsByClassroomSchema)],
+        findStudentsByClassroomHandler
     )
 
     app.delete(

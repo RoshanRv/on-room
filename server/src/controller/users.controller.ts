@@ -1,10 +1,12 @@
 import { Request, Response } from "express"
 import {
     createUserSchemaType,
+    findStudentsByClassroomType,
     updateUserSchemaType,
 } from "@schema/users.schema"
 import {
     createUser,
+    findStudentsByClassroom,
     findUserByEmail,
     updateUserById,
 } from "@service/users.services"
@@ -46,6 +48,20 @@ export const updateUserHandler = async (
 
         const updatedUser = await updateUserById(user.id as string, body)
         return res.status(201).send(updatedUser)
+    } catch (e: any) {
+        console.log(e)
+        return res.status(400).send(e.message)
+    }
+}
+
+export const findStudentsByClassroomHandler = async (
+    req: Request<findStudentsByClassroomType["params"]>,
+    res: Response
+) => {
+    try {
+        const { classroomId } = req.params
+        const students = await findStudentsByClassroom(classroomId)
+        return res.status(200).send(students)
     } catch (e: any) {
         console.log(e)
         return res.status(400).send(e.message)

@@ -56,3 +56,19 @@ export const updateUserById = async (
         throw new Error(e)
     }
 }
+
+export const findStudentsByClassroom = async (id: string) => {
+    try {
+        const students = await prisma.user.findMany({
+            where: {
+                enrolledIn: {
+                    some: { id },
+                },
+            },
+        })
+
+        return students
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}

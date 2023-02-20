@@ -25,6 +25,7 @@ import {
     deleteClassroomSchema,
     enrollClassroomSchema,
     getClassroomByIdSchema,
+    unEnrollClassroomSchema,
     updateClassroomByIdSchema,
 } from "@schema/classroom.schema"
 import {
@@ -34,6 +35,7 @@ import {
     getClassroomByIdHandler,
     getClassroomHandler,
     getMyClassroomHandler,
+    unEnrollClassroomHandler,
     updateClassroomByIdHandler,
 } from "@controller/classrooms.controller"
 import {
@@ -120,6 +122,13 @@ const routes = (app: Express) => {
         "/api/classroom/enroll",
         [requireStudent, validateInput(enrollClassroomSchema)],
         enrollClassroomHandler
+    )
+
+    //   unenroll classroom
+    app.post(
+        "/api/classroom/unenroll",
+        [requireStudent, validateInput(unEnrollClassroomSchema)],
+        unEnrollClassroomHandler
     )
 
     //     assignmentss

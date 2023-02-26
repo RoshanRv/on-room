@@ -1,5 +1,4 @@
 import { ClickButton } from "@components/Button/Button"
-import RemoveModal from "@components/Classroom/Delete/RemoveModal"
 import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 import ConfirmationModal from "@components/Modal/ConfirmationModel"
 import FileUploadModel from "@components/Modal/FileUploadModel"

@@ -1,4 +1,5 @@
 import ClassroomCard from "@components/Dashboard/ClassroomCard"
+import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 import Modal from "@components/Modal/Modal"
 import MainTitle from "@components/Title/MainTitle"
 import useToggle from "@hooks/useToggle"
@@ -48,9 +49,12 @@ const browseClassroom = () => {
             <MainTitle title="Find Classrooms" />
 
             {/*       Classes       */}
-            {classrooms && (
+            <EmptyWrapper
+                data={classrooms?.data}
+                noDataText="No New Classrooms"
+            >
                 <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                    {classrooms.data.map((classroom, i) => (
+                    {classrooms?.data.map((classroom, i) => (
                         <ClassroomCard
                             key={i}
                             classroomData={classroom}
@@ -59,7 +63,7 @@ const browseClassroom = () => {
                         />
                     ))}
                 </div>
-            )}
+            </EmptyWrapper>
         </main>
     )
 }

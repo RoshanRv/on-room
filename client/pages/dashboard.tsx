@@ -14,6 +14,7 @@ import { ClassroomSchemaInput } from "@schema/dashboard.schema"
 import Link from "next/link"
 import MainTitle from "@components/Title/MainTitle"
 import useUser from "@hooks/useUser"
+import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 
 interface DashboardClassroomProp extends ClassroomProps {
     teacher: TeacherProps
@@ -60,25 +61,6 @@ const dashboard = () => {
         return (
             <main className="flex flex-col flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
                 {/*         Heading and Add Classroom Btn   */}
-                {/* <div className="flex items-baseline justify-between pb-4 border-b border-dPri">
-                    <h1 className="text-2xl font-semibold lg:text-4xl text-dPri">
-                        Your Classroom
-                    </h1>
-                    {userRole === "teacher" && (
-                        <ClickButton
-                            size={"small"}
-                            onClick={toggleOn}
-                            variant="primary"
-                        >
-                            <div className="flex items-center gap-x-2">
-                                <IoIosAdd className="text-3xl" />
-                                <h1>Add Classroom</h1>
-                            </div>
-                        </ClickButton>
-                    )}
-                </div> */}
-
-                {/*         Heading and Add Classroom Btn   */}
 
                 <MainTitle title="Your Classroom">
                     {/*       Add Class btn is only shown to teacher   */}
@@ -98,7 +80,10 @@ const dashboard = () => {
                 </MainTitle>
 
                 {/*       Classes       */}
-                {classrooms && (
+                <EmptyWrapper
+                    data={classrooms.data}
+                    noDataText="You Have Not Enrolled Any Courses"
+                >
                     <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                         {classrooms.data.map((classroom, i) => (
                             <Link
@@ -109,7 +94,7 @@ const dashboard = () => {
                             </Link>
                         ))}
                     </div>
-                )}
+                </EmptyWrapper>
 
                 {/*    Add Classroom Modal      */}
 

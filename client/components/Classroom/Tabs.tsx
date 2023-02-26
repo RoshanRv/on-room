@@ -33,7 +33,9 @@ const Tabs = ({ tab, setTab }: Props) => {
                     onClick={() => setTab(tabDetail.name as Tabs)}
                     className={`capitalize transition-all cursor-pointer ${
                         tab === tabDetail.name && "text-dPri/70"
-                    } flex items-center gap-x-4 hover:bg-gray-200 dark:hover:bg-gray-800 p-1 md:p-3 rounded-md`}
+                    } flex items-center gap-x-4 hover:bg-gray-200 dark:hover:bg-gray-800 p-1 md:p-3 rounded-md  relative
+                    
+                    `}
                 >
                     {tabDetail.icon}
                     <h1>{tabDetail.name}</h1>

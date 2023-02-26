@@ -26,6 +26,7 @@ model User{
   classroom Classroom[] @relation("Classroom")
   enrolledIn Classroom[] @relation("EnrolledIn")
   submissions Submission[]
+  announcements Announcement[]
 }
 
 model Session{
@@ -45,6 +46,7 @@ model Classroom{
   student User[] @relation(name:"EnrolledIn")
   date DateTime @default(now())
   assignments Assignment[]
+  announcements Announcement[]
 }
 
 model Attachment{
@@ -75,4 +77,14 @@ model Assignment{
   submissions Submission[]
   classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
   classroomId String
+}
+
+model Announcement{
+  id String @id @default(cuid())
+  title String
+  description String
+  date DateTime @default(now())
+  classroom Classroom @relation(fields: [classroomId],references: [id],onDelete: Cascade)
+  classroomId String
+  viewedUsers User[] 
 }

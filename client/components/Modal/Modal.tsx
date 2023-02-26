@@ -14,7 +14,7 @@ const Modal = ({ isOn, toggleOn, children }: ModalProps) => {
                 {/*      Modal Div    */}
                 <section
                     onClick={(e) => e.stopPropagation()}
-                    className={`dark:bg-back bg-gray-100 rounded-lg p-4 md:p-6 shadow-lg shadow-black/80 relative transition-all duration-1000 border-4 border-dPri text-gray-300 w-11/12 sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-5/12 text-center ${
+                    className={`dark:bg-back bg-gray-100 rounded-lg p-4 md:p-6 shadow-lg shadow-black/80 relative transition-all duration-1000 border-4 border-dPri text-gray-300 w-11/12 sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-5/12 ${
                         isOn ? "scale-100" : "scale-0"
                     } `}
                 >

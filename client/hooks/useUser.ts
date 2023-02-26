@@ -10,10 +10,13 @@ const useUser = () => {
         // Create an observer to watch the query and update its result into state
         const observer = new QueryObserver(queryClient, {
             queryKey: ["users"],
-            enabled: false,
+            // enabled: false,
             retry: 1,
         })
+
         const unsubscribe = observer.subscribe((queryResult: any) => {
+            // console.log(queryResult.data.data.role)
+
             setUser(queryResult.data.data)
             setUserRole(queryResult.data.data.role)
         })

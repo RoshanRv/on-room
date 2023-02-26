@@ -1,4 +1,5 @@
 import { ClickButton } from "@components/Button/Button"
+import ConfirmationModal from "@components/Modal/ConfirmationModel"
 import Modal from "@components/Modal/Modal"
 import useToggle from "@hooks/useToggle"
 import { ClassroomSchemaInput } from "@schema/dashboard.schema"
@@ -49,35 +50,16 @@ const ClassroomCard = ({
             {/*    Enroll Confirmation    */}
 
             <Modal isOn={isOn} toggleOn={toggleOn}>
-                <>
-                    <h1 className="text-2xl mb-10 font-semibold text-dPri">
-                        Are You Sure? You Want To Enroll In{" "}
-                        {classroomData.title} Course?
-                    </h1>
-                    <div className="flex items-center gap-x-4 justify-around">
-                        {/*   Yes btn   */}
-                        <ClickButton
-                            size={"small"}
-                            width
-                            onClick={() => {
-                                handleEnroll && handleEnroll(classroomData.id)
-                                toggleOn()
-                            }}
-                        >
-                            <h1>YES!!</h1>
-                        </ClickButton>
-                        {/*   No btn   */}
-
-                        <ClickButton
-                            size={"small"}
-                            variant={"secondary"}
-                            width
-                            onClick={toggleOn}
-                        >
-                            <h1>NO</h1>
-                        </ClickButton>
-                    </div>
-                </>
+                <ConfirmationModal
+                    name={classroomData.title}
+                    type={"course"}
+                    toggleConfirmationModal={toggleOn}
+                    action="enroll"
+                    handleAction={() => {
+                        toggleOn()
+                        handleEnroll && handleEnroll(classroomData.id)
+                    }}
+                />
             </Modal>
         </div>
     )

@@ -12,6 +12,7 @@ module.exports = {
                 dPri: "#eab308",
                 back: "#111827",
                 danger: "#b91c1c",
+                success: "#047857",
             },
             fontFamily: {
                 disp: ["Raleway", " sans-serif"],

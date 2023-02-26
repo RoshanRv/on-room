@@ -1,5 +1,5 @@
 type Role = "" | "student" | "teacher"
-type Tabs = "assignments" | "students"
+type Tabs = "assignments" | "students" | "announcements"
 
 interface CardRoleProps {
     role: Role
@@ -15,22 +15,6 @@ interface SelectRoleProps {
     page: "signin" | "signup"
 }
 
-interface TeacherProps {
-    name: string
-    img: string
-    role: "teacher"
-    email: string
-    id: string
-}
-
-interface StudentProps {
-    name: string
-    img: string
-    role: "student"
-    email: string
-    id: string
-}
-
 interface UserProps {
     name: string
     img: string
@@ -38,6 +22,13 @@ interface UserProps {
     email: string
     sessionId: string
     id: string
+}
+
+interface TeacherProps extends Omit<UserProps, "sessionId"> {
+    role: "teacher"
+}
+interface StudentProps extends Omit<UserProps, "sessionId"> {
+    role: "student"
 }
 
 interface ModalProps {
@@ -53,4 +44,26 @@ interface ClassroomProps {
     img: string
     description: string
     teacherId: string
+}
+
+interface AssignmentProps {
+    id: string
+    name: string
+    description: string
+    dueDate: string
+    classroomId: string
+}
+
+interface FileProps {
+    name: string
+    size: number
+    type: string
+}
+
+interface Announcement {
+    id: string
+    title: string
+    description: string
+    date: string
+    viewedUsers: StudentProps[]
 }

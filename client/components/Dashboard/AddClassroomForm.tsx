@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { ClickButton } from "@components/Button/Button"
 import { omit } from "lodash"
+import omitEmptyValues from "@utils/omitEmptyValues"
 
 const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
     const {
@@ -19,7 +20,7 @@ const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
 
     const queryClient = useQueryClient()
 
-    const mutateFunc = async (data: ClassroomSchemaInput) => {
+    const mutateFunc = async (data: Partial<ClassroomSchemaInput>) => {
         return await axios.post(
             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom`,
             data,
@@ -37,14 +38,7 @@ const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
     })
 
     const handleAddClassroom = (e: ClassroomSchemaInput) => {
-        let updated
-        if (e.img == "" && e.description == "")
-            updated = omit(e, ["img", "description"])
-        else if (e.img == "") updated = omit(e, "img")
-        else if (e.description == "") updated = omit(e, "description")
-        else updated = { ...e }
-
-        mutate(updated as any)
+        mutate(omitEmptyValues(e))
 
         reset({
             description: "",

@@ -69,7 +69,7 @@ const Header = () => {
                 </Link>
             </div>
             {/*    Sign In And Sign Up  */}
-            <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-12 ">
+            <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-10 ">
                 {!isSuccess ? (
                     <>
                         <LinkButton
@@ -98,7 +98,7 @@ const Header = () => {
                                         pathname == "/browse-classroom"
                                             ? "before:w-full"
                                             : "before:w-0"
-                                    }  before:transition-all origin-center before:h-1 before:bg-dPri before:top-full before:left-0  rounded-md`}
+                                    }  before:transition-all origin-center before:h-1 before:bg-dPri before:top-full before:left-0  rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 p-2`}
                                 >
                                     Find Classroom
                                 </h1>
@@ -110,7 +110,7 @@ const Header = () => {
                                     pathname == "/dashboard"
                                         ? "before:w-full"
                                         : "before:w-0"
-                                }  before:transition-all origin-center before:h-1 before:bg-dPri before:top-full before:left-0  rounded-md`}
+                                }  before:transition-all origin-center before:h-1 before:bg-dPri before:top-full before:left-0 hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-md`}
                             >
                                 Dashboard
                             </h1>
@@ -146,7 +146,10 @@ const Header = () => {
                     </>
                 )}
                 {/*    Light/Dark      */}
-                <button onClick={toggleDark} className=" text-dPri">
+                <button
+                    onClick={toggleDark}
+                    className=" text-dPri hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-lg "
+                >
                     {isDark ? (
                         <MdOutlineDarkMode className="" />
                     ) : (

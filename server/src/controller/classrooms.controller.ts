@@ -1,15 +1,21 @@
 import {
     createClassroomSchemaType,
+    deleteClassroomSchemaType,
     enrollClassroomSchemaType,
     getClassroomByIdSchemaType,
+    unEnrollClassroomSchemaType,
+    updateClassroomByIdSchemaType,
 } from "@schema/classroom.schema"
 import {
     createClassroom,
+    deleteClassroom,
     enrollClassroom,
     getClassroomById,
     getClassroomByTeacherId,
     getClassrooms,
     getEnrolledClassroomByStudentId,
+    unEnrollClassroom,
+    updateClassroomById,
 } from "@service/classrooms.services"
 import { Request, Response } from "express"
 import { omit } from "lodash"
@@ -70,9 +76,27 @@ export const getClassroomByIdHandler = async (
 ) => {
     try {
         const { id } = req.params
-        console.log(id)
 
         const classroom = await getClassroomById(id)
+        return res.status(200).send(classroom)
+    } catch (e: any) {
+        return res.status(400).send(e.message)
+    }
+}
+
+export const updateClassroomByIdHandler = async (
+    req: Request<
+        updateClassroomByIdSchemaType["params"],
+        {},
+        updateClassroomByIdSchemaType["body"]
+    >,
+    res: Response
+) => {
+    try {
+        const { id } = req.params
+        const { body } = req
+
+        const classroom = await updateClassroomById(id, body)
         return res.status(200).send(classroom)
     } catch (e: any) {
         return res.status(400).send(e.message)
@@ -90,6 +114,37 @@ export const enrollClassroomHandler = async (
 
         const classroom = await enrollClassroom(id, user.id)
         return res.status(201).send(classroom)
+    } catch (e: any) {
+        return res.status(400).send(e.message)
+    }
+}
+
+// unenrolls student in a existing classroom
+export const unEnrollClassroomHandler = async (
+    req: Request<{}, {}, unEnrollClassroomSchemaType["body"]>,
+    res: Response
+) => {
+    try {
+        const { user } = res.locals
+        const { id } = req.body
+
+        const classroom = await unEnrollClassroom(id, user.id)
+        return res.status(201).send(classroom)
+    } catch (e: any) {
+        return res.status(400).send(e.message)
+    }
+}
+
+// delete classroom
+export const deleteClassroomHandler = async (
+    req: Request<deleteClassroomSchemaType["params"]>,
+    res: Response
+) => {
+    try {
+        const { id } = req.params
+
+        const classroom = await deleteClassroom(id)
+        return res.status(204).send(classroom)
     } catch (e: any) {
         return res.status(400).send(e.message)
     }

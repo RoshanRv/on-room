@@ -52,6 +52,21 @@ import {
     getAssignmentsByClassroomIdHandler,
     updateAssignmentHandler,
 } from "@controller/assignments.controller"
+import {
+    connectAnnouncementSchema,
+    createAnnouncementSchema,
+    getAnnouncementsSchema,
+} from "@schema/announcements.schema"
+import {
+    connectAnnouncementHandler,
+    createAnnouncementHandler,
+    deleteAnnouncementHandler,
+    getAnnouncementsHandler,
+} from "@controller/announcements.controller"
+
+interface hehe {
+    dasd: string
+}
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
@@ -161,6 +176,32 @@ const routes = (app: Express) => {
         "/api/assignment/:id",
         [requireTeacher, validateInput(deleteAssignmentSchema)],
         deleteAssignmentHandler
+    )
+
+    //     Announcements
+
+    app.post(
+        "/api/announcement",
+        [requireTeacher, validateInput(createAnnouncementSchema)],
+        createAnnouncementHandler
+    )
+
+    app.get(
+        "/api/announcement/:id",
+        [requireUser, validateInput(getAnnouncementsSchema)],
+        getAnnouncementsHandler
+    )
+
+    app.put(
+        "/api/announcement",
+        [requireUser, validateInput(connectAnnouncementSchema)],
+        connectAnnouncementHandler
+    )
+
+    app.delete(
+        "/api/announcement/:id",
+        [requireUser, validateInput(deleteAssignmentSchema)],
+        deleteAnnouncementHandler
     )
 }
 

@@ -6,7 +6,7 @@ interface Props {
     handleAction: () => void
     toggleConfirmationModal: () => void
     action: "delete" | "unenroll" | "enroll"
-    type: "assignment" | "course"
+    type: "assignment" | "course" | "announcement"
 }
 
 const ConfirmationModal = ({

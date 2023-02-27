@@ -7,31 +7,70 @@ import { queryClient } from "pages/_app"
 import useToggle from "@hooks/useToggle"
 import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md"
 import { usePathname, useRouter } from "next/navigation"
+import checkAnnouncementView from "@utils/checkAnnouncementView"
+import Notification from "./Notification"
 
-export interface UserResponse {
-    data: UserProps
+export interface Announcements {
+    id: string
+    title: string
+    classroomId: string
+    viewedUsers: {
+        id: string
+    }[]
 }
 
 const Header = () => {
     const router = useRouter()
     const pathname = usePathname()
 
-    const [tab, setTab] = useState("")
-
-    useEffect(() => {}, [pathname])
+    const [unviewedAnnouncements, setUnviewedAnnouncements] = useState<
+        Announcements[]
+    >([])
 
     const {
         data: user,
         isError,
         isSuccess,
-    } = useQuery<UserResponse>({
+    } = useQuery({
         queryKey: ["users"],
         queryFn: () =>
-            axios.get(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`, {
-                withCredentials: true,
-            }),
+            axios.get<UserProps>(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`,
+                {
+                    withCredentials: true,
+                }
+            ),
         retry: 1,
     })
+
+    const { data: announcements } = useQuery({
+        queryKey: ["announcements"],
+        queryFn: () =>
+            axios.get<Announcements[]>(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom/announcements`,
+                {
+                    withCredentials: true,
+                }
+            ),
+        retry: 1,
+    })
+
+    //      Filters the unviewed announcement
+    useEffect(() => {
+        if (announcements && user?.data.role === "student") {
+            setUnviewedAnnouncements(
+                announcements.data.filter(
+                    (announcement) =>
+                        !checkAnnouncementView(
+                            user.data.id,
+                            announcement.viewedUsers
+                        )
+                )
+            )
+        }
+
+        if (user?.data.role === "teacher") setUnviewedAnnouncements([])
+    }, [announcements, user])
 
     const { isOn: isDark, toggleOn: toggleDark } = useToggle()
 
@@ -115,6 +154,11 @@ const Header = () => {
                                 Dashboard
                             </h1>
                         </Link>
+
+                        {/*    Notification  */}
+                        <Notification
+                            unviewedAnnouncements={unviewedAnnouncements}
+                        />
 
                         {/* Profile */}
                         <div className="relative z-50 group">

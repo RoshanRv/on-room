@@ -1,4 +1,5 @@
 import { Express, Request, Response } from "express"
+import fileUpload from "express-fileupload"
 import validateInput from "@middleware/validateInput"
 import {
     createUserSchema,
@@ -61,17 +62,22 @@ import {
     connectAnnouncementHandler,
     createAnnouncementHandler,
     deleteAnnouncementHandler,
+    getAnnouncementsFromEnrolledClassroomHandler,
     getAnnouncementsHandler,
 } from "@controller/announcements.controller"
 
-interface hehe {
-    dasd: string
-}
+import path from "path"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
         res.sendStatus(200)
     })
+
+    app.get(
+        "/api/classroom/announcements",
+        requireUser,
+        getAnnouncementsFromEnrolledClassroomHandler
+    )
 
     //  Create New User
     app.post("/api/users", validateInput(createUserSchema), createUserHandler)
@@ -202,6 +208,31 @@ const routes = (app: Express) => {
         "/api/announcement/:id",
         [requireUser, validateInput(deleteAssignmentSchema)],
         deleteAnnouncementHandler
+    )
+
+    app.get("/api/uploads", (req: Request, res: Response) => {
+        res.download(path.join(__dirname, "../uploads/id.jpeg"), (err) => {
+            if (err) console.log(err)
+        })
+    })
+
+    app.post(
+        "/api/uploads",
+
+        (req: Request, res: Response) => {
+            const files = req.files
+
+            if (files) {
+                Object.keys(files).forEach((key) => {
+                    const filePath = path.join(__dirname, `../uploads/${key}`)
+
+                    // @ts-ignore
+                    files[key].mv(filePath, (errr: any) => console.log(errr))
+                })
+            }
+
+            return res.sendStatus(200)
+        }
     )
 }
 

@@ -54,12 +54,16 @@ model Attachment{
   filename String
   assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
   assignmentId String
+  type String
+  size Int
 
 }
 
 model Submission{
   id String @id @default(cuid())
   filename String
+  type String
+  size Int
   assignment Assignment @relation(fields: [assignmentId], references: [id],onDelete: Cascade)
   assignmentId String
   studentId String 

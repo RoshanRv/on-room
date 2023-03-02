@@ -1,5 +1,5 @@
 import { Express, Request, Response } from "express"
-import fileUpload from "express-fileupload"
+import fileUpload, { FileArray } from "express-fileupload"
 import validateInput from "@middleware/validateInput"
 import {
     createUserSchema,
@@ -67,6 +67,16 @@ import {
 } from "@controller/announcements.controller"
 
 import path from "path"
+import {
+    createAttachmentSchema,
+    getAttachmentAssignmentIdSchema,
+} from "@schema/attachments.schema"
+import {
+    createAttachmentsHandler,
+    downloadAttachmentHandler,
+    getAttachmentAssignmentIdHandler,
+} from "@controller/attachments.controller"
+import { createAttachments } from "@service/attachments.services"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {
@@ -210,29 +220,37 @@ const routes = (app: Express) => {
         deleteAnnouncementHandler
     )
 
-    app.get("/api/uploads", (req: Request, res: Response) => {
-        res.download(path.join(__dirname, "../uploads/id.jpeg"), (err) => {
-            if (err) console.log(err)
-        })
-    })
+    //          Create New Attachments
+    // app.post(
+    //     "/api/attachment",
+    //     [requireTeacher, validateInput(createAttachmentSchema)],
+    //     createAttachmentsHandler
+    // )
+
+    // app.get("/api/uploads", (req: Request, res: Response) => {
+    //     res.sendFile(path.join(__dirname, "../uploads/Novicers-doc.pdf"))
+
+    //     // res.download(path.join(__dirname, "../uploads/id.jpeg"), (err) => {
+    //     //     if (err) console.log(err)
+    //     // })
+    // })
+
+    app.get(
+        "/api/attachment/:attachmentId/download",
+        requireUser,
+        downloadAttachmentHandler
+    )
 
     app.post(
-        "/api/uploads",
+        "/api/attachment/:assignmentId",
+        [requireTeacher, validateInput(createAttachmentSchema)],
+        createAttachmentsHandler
+    )
 
-        (req: Request, res: Response) => {
-            const files = req.files
-
-            if (files) {
-                Object.keys(files).forEach((key) => {
-                    const filePath = path.join(__dirname, `../uploads/${key}`)
-
-                    // @ts-ignore
-                    files[key].mv(filePath, (errr: any) => console.log(errr))
-                })
-            }
-
-            return res.sendStatus(200)
-        }
+    app.get(
+        "/api/attachment/:assignmentId",
+        [requireUser, validateInput(getAttachmentAssignmentIdSchema)],
+        getAttachmentAssignmentIdHandler
     )
 }
 

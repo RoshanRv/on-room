@@ -1,7 +1,10 @@
 import { ClickButton } from "@components/Button/Button"
 import Table from "@components/Table/Table"
 import MainTitle from "@components/Title/MainTitle"
+import { useMutation } from "@tanstack/react-query"
 import validateFile from "@utils/validateFile"
+import axios from "axios"
+import { useSearchParams } from "next/navigation"
 import React, { ChangeEvent, DragEvent, useState } from "react"
 import { AiOutlineFileAdd } from "react-icons/ai"
 import { FiTrash2 } from "react-icons/fi"
@@ -9,6 +12,23 @@ import { FiTrash2 } from "react-icons/fi"
 const FileUploadModel = () => {
     const [isDragActive, setDragActive] = useState(false)
     const [attachments, setAttachments] = useState<FileProps[]>([])
+    const [fileData, setFileData] = useState<File[]>()
+
+    const assignmentId = useSearchParams().get("assignmentId")
+
+    // const { mutate } = useMutation({
+    //     mutationFn: () =>
+    //         axios.post(
+    //             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/attachment`,
+    //             attachments.map((attachment) => ({
+    //                 ...attachment,
+    //                 assignmentId,
+    //             })),
+    //             {
+    //                 withCredentials: true,
+    //             }
+    //         ),
+    // })
 
     const handleDrag = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault()
@@ -25,13 +45,19 @@ const FileUploadModel = () => {
         e.stopPropagation()
         setDragActive(false)
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            const files = Array.from(e.dataTransfer.files)
+            // Eliminates Invalid Typed & Duplicate Files
+
+            const files = validateFile(
+                Array.from(e.dataTransfer.files),
+                attachments
+            )
             files.forEach((file) => {
                 setAttachments((e) => [
                     ...e,
-                    { name: file.name, size: file.size, type: file.type },
+                    { filename: file.name, size: file.size, type: file.type },
                 ])
             })
+            setFileData(files)
         }
     }
 
@@ -39,20 +65,46 @@ const FileUploadModel = () => {
         e.preventDefault()
         e.stopPropagation()
         if (e.target.files && e.target.files[0]) {
+            // Eliminates Invalid Typed & Duplicate Files
             const files = validateFile(Array.from(e.target.files), attachments)
-            // console.log(validateFile(files))
 
             files.forEach((file) => {
                 setAttachments((e) => [
                     ...e,
-                    { name: file.name, size: file.size, type: file.type },
+                    {
+                        filename: file.name,
+                        size: file.size,
+                        type: file.name.split(".")[1],
+                    },
                 ])
             })
+            setFileData(files)
         }
     }
 
     const handleRemoveFile = (filename: string) => {
-        setAttachments((e) => e.filter((file) => file.name != filename))
+        setAttachments((e) => e.filter((file) => file.filename != filename))
+    }
+
+    const handleUpload = () => {
+        const formData = new FormData()
+        fileData?.forEach((file) => formData.append(file.name, file))
+        try {
+            if (fileData && fileData?.length > 0) {
+                axios.post(
+                    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/attachment/${assignmentId}`,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        withCredentials: true,
+                    }
+                )
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
@@ -78,11 +130,13 @@ const FileUploadModel = () => {
                         <Table
                             headers={["name", "size", "type", "action"]}
                             rows={attachments.map((file) => [
-                                file.name,
+                                file.filename,
                                 `${Math.round(file.size / 1000)} KB`,
                                 file.type,
                                 <button
-                                    onClick={() => handleRemoveFile(file.name)}
+                                    onClick={() =>
+                                        handleRemoveFile(file.filename)
+                                    }
                                 >
                                     <FiTrash2 className="text-lg" />
                                 </button>,
@@ -103,12 +157,16 @@ const FileUploadModel = () => {
                 </div>
             </div>
             <ClickButton
-                onClick={() => null}
+                onClick={handleUpload}
                 size={"small"}
                 variant={"secondary"}
             >
                 <h1>Upload Files</h1>
             </ClickButton>
+
+            {/* <a href="http://localhost:3002/api/uploads/" target={"_blank"}>
+                sfdad
+            </a> */}
         </section>
     )
 }

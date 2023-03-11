@@ -6,28 +6,33 @@ interface ToastProp {
 }
 
 interface UseToastProps {
-    toast: ToastProp | null
+    toast: ToastProp
     setToast: (toast: ToastProp) => void
+    showToast: boolean
 }
 
 const useToast = create<UseToastProps>()((set) => ({
-    toast: null,
+    toast: {
+        msg: "",
+        variant: "success",
+    },
+    showToast: false,
     setToast: ({ msg, variant }) =>
         set((state) => {
             let toastTimeout: any
-            if (state.toast) {
+            if (state.showToast) {
                 clearTimeout(toastTimeout)
                 toastTimeout = setTimeout(() => {
-                    set({ toast: null })
+                    set({ showToast: false })
                     return clearTimeout(toastTimeout)
                 }, 2000)
-                return { toast: { msg, variant } }
+                return { toast: { msg, variant }, showToast: true }
             } else {
                 toastTimeout = setTimeout(() => {
-                    set({ toast: null })
+                    set({ showToast: false })
                     return clearTimeout(toastTimeout)
                 }, 2000)
-                return { toast: { msg, variant } }
+                return { toast: { msg, variant }, showToast: true }
             }
         }),
 }))

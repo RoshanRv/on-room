@@ -22,8 +22,8 @@ const toastClass = cva(
             },
 
             showToast: {
-                true: ["scale-100"],
-                false: ["scale-0"],
+                true: ["scale-100", "delay-[10ms]"],
+                false: ["scale-0", "delay-[10ms]"],
             },
         },
 
@@ -32,11 +32,6 @@ const toastClass = cva(
         },
     }
 )
-
-interface ToastProp {
-    msg: string
-    variant: "error" | "success"
-}
 
 const Toast = () => {
     const {

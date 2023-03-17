@@ -3,10 +3,10 @@ import React from "react"
 import { HiOutlineDocumentDownload } from "react-icons/hi"
 import { FiEye } from "react-icons/fi"
 import useActions from "@store/useActions"
-import { shallow } from "zustand/shallow"
+import { BiTrash } from "react-icons/bi"
 
 interface Prop {
-    attachments: Attachment[] | undefined
+    submissions: SubmissionProps[] | undefined
     handleDownload: (
         id: string,
         name: string,
@@ -21,16 +21,16 @@ interface Prop {
 }
 
 const AssignmentTable = ({
-    attachments,
+    submissions,
     handleDownload,
     handleView,
     handleDelete,
 }: Prop) => {
-    const isOwner = useActions((state) => state.isOwner)
+    const isEnrolled = useActions((state) => state.isEnrolled)
 
     return (
         <section>
-            {attachments && (
+            {submissions && (
                 <Table
                     headers={[
                         "Name",
@@ -38,36 +38,48 @@ const AssignmentTable = ({
                         "Type",
                         "Download",
                         "View",
-                        isOwner ? "Delete" : "",
+                        isEnrolled ? "Delete" : "",
                     ]}
-                    rows={attachments.map((attachment) => [
+                    rows={submissions.map((attachment) => [
                         attachment.filename,
                         `${Math.round(attachment.size / 1000)} KB`,
                         attachment.type,
-
+                        //          download btn
                         <button
                             onClick={() =>
                                 handleDownload(
                                     `${attachment.id}.${attachment.type}`,
                                     attachment.filename,
-                                    "attachment"
+                                    "submission"
                                 )
                             }
                             className="text-3xl  w-max mx-auto"
                         >
                             <HiOutlineDocumentDownload />
                         </button>,
-
+                        //  view btn
                         <button
                             onClick={() =>
-                                handleDelete(
+                                handleView(
                                     `${attachment.id}.${attachment.type}`,
-                                    "attachment"
+                                    attachment.filename,
+                                    "submission"
                                 )
                             }
                             className="text-3xl  w-max mx-auto"
                         >
                             <FiEye />
+                        </button>,
+                        <button
+                            onClick={() =>
+                                handleDelete(
+                                    `${attachment.id}.${attachment.type}`,
+                                    "submission"
+                                )
+                            }
+                            className="text-3xl  w-max mx-auto"
+                        >
+                            <BiTrash />
                         </button>,
                     ])}
                 />

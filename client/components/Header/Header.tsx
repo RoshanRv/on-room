@@ -9,6 +9,9 @@ import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md"
 import { usePathname, useRouter } from "next/navigation"
 import checkAnnouncementView from "@utils/checkAnnouncementView"
 import Notification from "./Notification"
+import { BiMenu } from "react-icons/bi"
+import { AiOutlineClose } from "react-icons/ai"
+import Profile from "./Profile"
 
 export interface Announcements {
     id: string
@@ -73,27 +76,9 @@ const Header = () => {
     }, [announcements, user])
 
     const { isOn: isDark, toggleOn: toggleDark } = useToggle()
-
-    const { mutate } = useMutation({
-        mutationFn: () => {
-            return axios.delete(
-                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/sessions`,
-                {
-                    withCredentials: true,
-                }
-            )
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["users"],
-            })
-            router.push("/signin")
-        },
-    })
+    const { isOn: isNav, toggleOn: toggleNav } = useToggle()
 
     useEffect(() => {
-        // console.log(isDark)
-
         if (isDark) document.documentElement.classList.add("dark")
         else document.documentElement.classList.remove("dark")
     }, [isDark])
@@ -101,14 +86,26 @@ const Header = () => {
     return (
         <header className="top-0 left-0 z-50 flex items-center justify-between w-full px-3 py-2 bg-white shadow-md md:px-8 lg:px-16 dark:bg-back md:py-4 shadow-black/30 ">
             <div>
+                {/*   Logo   */}
                 <Link href={"/"}>
-                    <h1 className="text-4xl font-bold text-gray-700 dark:text-white dark:text-shadow-sm ">
+                    <h1 className="lg:text-4xl text-2xl md:text-3xl font-bold text-gray-700 dark:text-white dark:text-shadow-sm ">
                         On-Room
                     </h1>
                 </Link>
             </div>
-            {/*    Sign In And Sign Up  */}
-            <div className="flex items-center justify-center text-xl font-semibold text-dPri gap-x-10 ">
+            {/*    Sign In And Sign Up - Lap  */}
+            <div
+                className={`${
+                    isNav ? "left-0" : "left-full"
+                } flex flex-col lg:flex-row gap-y-4 items-start  lg:items-center lg:justify-center text-xl font-semibold text-dPri gap-x-10 fixed lg:static dark:bg-back bg-gray-100 lg:bg-transparent  w-full lg:w-auto h-screen lg:h-auto top-0 left-0 p-16 lg:p-0 transition-all `}
+            >
+                {/* Close Btn  - Mobile */}
+                <button
+                    onClick={toggleNav}
+                    className="text-dPri font-semibold text-2xl absolute top-5 right-5 lg:hidden"
+                >
+                    <AiOutlineClose />
+                </button>
                 {!isSuccess ? (
                     <>
                         <LinkButton
@@ -127,10 +124,9 @@ const Header = () => {
                         </LinkButton>
                     </>
                 ) : (
-                    // </div>
-                    // Dashboard
                     <>
-                        {user.data.role == "student" && (
+                        {user.data.role === "student" && (
+                            // browse classroom - student only
                             <Link href={"/browse-classroom"}>
                                 <h1
                                     className={`relative before:absolute before:contents-[''] ${
@@ -143,6 +139,7 @@ const Header = () => {
                                 </h1>
                             </Link>
                         )}
+                        {/*    dashboard - teacher & student  */}
                         <Link href={"/dashboard"}>
                             <h1
                                 className={`relative before:absolute before:contents-[''] ${
@@ -156,36 +153,15 @@ const Header = () => {
                         </Link>
 
                         {/*    Notification  */}
-                        <Notification
-                            unviewedAnnouncements={unviewedAnnouncements}
-                        />
+                        <div className="hidden lg:block">
+                            <Notification
+                                unviewedAnnouncements={unviewedAnnouncements}
+                            />
+                        </div>
 
                         {/* Profile */}
-                        <div className="relative z-50 group">
-                            {/* img */}
-                            <div className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri">
-                                <img
-                                    src={user.data.img}
-                                    alt="profile_pic"
-                                    className="w-full h-full rounded-full"
-                                />
-                                {/*   Dropdown   */}
-                                <div
-                                    className={` shadow-md shadow-black/50 absolute flex left-0 flex-col p-3 px-6 translate-y-5 bg-white dark:bg-gray-900 -translate-x-[25%] -z-10 top-full origin-top text-gray-400 rounded-md gap-y-2 transition-all group-hover:scale-100 scale-0 `}
-                                >
-                                    <Link href={"/profile"}>
-                                        <h1 className="transition-all hover:text-dPri">
-                                            Profile
-                                        </h1>
-                                    </Link>
-                                    <h1
-                                        onClick={() => mutate()}
-                                        className="transition-all hover:text-dPri"
-                                    >
-                                        Logout
-                                    </h1>
-                                </div>
-                            </div>
+                        <div className="hidden lg:block">
+                            <Profile user={user.data} />
                         </div>
                     </>
                 )}
@@ -199,6 +175,23 @@ const Header = () => {
                     ) : (
                         <MdOutlineLightMode />
                     )}
+                </button>
+            </div>
+            {/*     End - Nav - LAb     */}
+
+            {/*     Mobile Nav   */}
+            <div className="flex gap-x-4 lg:hidden text-2xl text-dPri -z-10">
+                {user && (
+                    <>
+                        {" "}
+                        <Profile user={user.data} />{" "}
+                        <Notification
+                            unviewedAnnouncements={unviewedAnnouncements}
+                        />
+                    </>
+                )}
+                <button onClick={toggleNav} className=" ">
+                    <BiMenu />
                 </button>
             </div>
         </header>

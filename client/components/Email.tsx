@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Html } from "@react-email/html"
 import { Button } from "@react-email/button"
-import { Tailwind } from "@react-email/tailwind"
 import { Heading } from "@react-email/heading"
 import { Container } from "@react-email/container"
 import { Body } from "@react-email/body"
@@ -10,19 +9,20 @@ import { Preview } from "@react-email/preview"
 import { Text } from "@react-email/text"
 
 interface Props {
-    name?: string
-    teacher?: string
+    name: string
+    user: string | undefined
+    classroom: string | undefined
 }
 
-export function Email({ name = "Roshan", teacher = "Mr.X" }: Props) {
+export function Email({ name, user, classroom }: Props) {
     return (
         <Html>
-            <Preview>Invitation For HTML Classroom - OnRoom</Preview>
+            <Preview>{`Invitation For ${classroom} Classroom - OnRoom`}</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Heading as="h1">OnRoom</Heading>
                     <Hr style={hr}></Hr>
-                    <Heading as="h3">{`Hii ${name}, You Are Invited To HTML Classroom By ${teacher}`}</Heading>
+                    <Heading as="h3">{`Hii ${name}, You Are Invited To ${classroom} Classroom By ${user}`}</Heading>
                     <Text>Click The Button Below To Join The Classroom</Text>
                     <Button href="https://www.google.com" style={btn}>
                         Join Classroom

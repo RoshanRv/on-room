@@ -6,10 +6,13 @@ import * as dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import config from "config"
 import deserializeUser from "@middleware/deserializeUser"
+import fileUpload from "express-fileupload"
+import { Server } from "socket.io"
 dotenv.config()
 
 const app = express()
 app.use(cookieParser())
+app.use(fileUpload())
 
 app.use(
     cors({

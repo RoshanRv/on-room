@@ -1,5 +1,5 @@
 type Role = "" | "student" | "teacher"
-type Tabs = "assignments" | "students" | "announcements"
+type Tabs = "assignments" | "students" | "announcements" | "submissions"
 
 interface CardRoleProps {
     role: Role
@@ -44,6 +44,9 @@ interface ClassroomProps {
     img: string
     description: string
     teacherId: string
+    assignments: AssignmentProps[]
+    announcements: Announcement[]
+    student: StudentProps[]
 }
 
 interface AssignmentProps {
@@ -52,10 +55,16 @@ interface AssignmentProps {
     description: string
     dueDate: string
     classroomId: string
+    classroom: {
+        student: ClassroomProps["student"]
+        teacherId: string
+    }
+    attachments: Attachment[]
+    submissions: SubmissionProps[]
 }
 
 interface FileProps {
-    name: string
+    filename: string
     size: number
     type: string
 }
@@ -66,4 +75,34 @@ interface Announcement {
     description: string
     date: string
     viewedUsers: StudentProps[]
+}
+
+interface Attachment {
+    filename: string
+    size: number
+    type: string
+    id: string
+    assignmentId: string
+}
+
+interface SubmissionProps {
+    filename: string
+    size: number
+    type: string
+    id: string
+    assignmentId: string
+    studentId: string
+    grade: null | number
+}
+
+interface SubmissionStudentsProps {
+    filename: string
+    size: number
+    type: string
+    id: string
+    assignmentId: string
+    assignment: AssignmentProps
+    studentId: string
+    student: StudentProps
+    grade: null | number
 }

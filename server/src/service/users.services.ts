@@ -72,3 +72,21 @@ export const findStudentsByClassroom = async (id: string) => {
         throw new Error(e)
     }
 }
+
+export const getAllStudentsExceptEnrolled = async (classroomId: string) => {
+    try {
+        const students = await prisma.user.findMany({
+            where: {
+                role: "student",
+                NOT: {
+                    enrolledIn: {
+                        some: { id: classroomId },
+                    },
+                },
+            },
+        })
+        return students
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}

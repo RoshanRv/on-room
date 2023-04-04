@@ -25,6 +25,7 @@ export const requireStudent = (
     next: NextFunction
 ) => {
     const { user } = res.locals
+
     if (user.role === "teacher") return res.status(403).send("Students Only")
     return next()
 }

@@ -8,6 +8,7 @@ import {
     createUser,
     findStudentsByClassroom,
     findUserByEmail,
+    getAllStudentsExceptEnrolled,
     updateUserById,
 } from "@service/users.services"
 import { hashSync } from "bcryptjs"
@@ -61,6 +62,20 @@ export const findStudentsByClassroomHandler = async (
     try {
         const { classroomId } = req.params
         const students = await findStudentsByClassroom(classroomId)
+        return res.status(200).send(students)
+    } catch (e: any) {
+        console.log(e)
+        return res.status(400).send(e.message)
+    }
+}
+
+export const getAllStudentsExceptEnrolledHander = async (
+    req: Request<findStudentsByClassroomType["params"]>,
+    res: Response
+) => {
+    try {
+        const { classroomId } = req.params
+        const students = await getAllStudentsExceptEnrolled(classroomId)
         return res.status(200).send(students)
     } catch (e: any) {
         console.log(e)

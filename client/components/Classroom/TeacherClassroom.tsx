@@ -8,6 +8,11 @@ import Table from "@components/Table/Table"
 
 import autoAnimate from "@formkit/auto-animate"
 import Announcement from "./Announcement/Announcement"
+import useActions from "@store/useActions"
+import { shallow } from "zustand/shallow"
+import SubmissionTable from "./SubmissionTable"
+import Chatroom from "./Chatroom/Chatroom"
+import { Socket } from "socket.io-client"
 
 interface Props {
     tab: Tabs
@@ -16,6 +21,8 @@ interface Props {
     toggleAssignmentModal: () => void
     toggleAnnouncementModal: () => void
     classroomId: string | null
+    toggleInviteModal: () => void
+    socket: Socket
 }
 
 const TeacherClassroom = ({
@@ -25,8 +32,16 @@ const TeacherClassroom = ({
     toggleAssignmentModal,
     toggleAnnouncementModal,
     classroomId,
+    toggleInviteModal,
+    socket,
 }: Props) => {
     const parent = useRef(null)
+    const { isOwner } = useActions(
+        ({ isOwner }) => ({
+            isOwner,
+        }),
+        shallow
+    )
 
     useEffect(() => {
         parent.current && autoAnimate(parent.current)
@@ -37,19 +52,26 @@ const TeacherClassroom = ({
         case "assignments":
             title = "Your Assignments"
             break
+        case "submissions":
+            title = "Submitted Assignments"
+            break
         case "students":
             title = "Enrolled Students"
             break
         case "announcements":
             title = "Announcements"
             break
+        case "chats":
+            title = "Chatroom"
+            break
     }
 
     return (
-        <section ref={parent}>
+        <section className="flex flex-col h-full" ref={parent}>
             {/*    heading  */}
             <MainTitle title={`${title}`}>
-                {tab === "assignments" && (
+                {/*    Add Assignment - Teacher  */}
+                {tab === "assignments" && isOwner && (
                     <ClickButton
                         size={"small"}
                         onClick={toggleAssignmentModal}
@@ -61,8 +83,22 @@ const TeacherClassroom = ({
                         </div>
                     </ClickButton>
                 )}
+                {/*    Invite Student  - Teacher  */}
+                {tab === "students" && isOwner && (
+                    <ClickButton
+                        size={"small"}
+                        onClick={toggleInviteModal}
+                        variant="secondary"
+                    >
+                        <div className="flex items-center gap-x-2">
+                            <IoIosAdd className="text-3xl" />
+                            <h1>Invite Students</h1>
+                        </div>
+                    </ClickButton>
+                )}
 
-                {tab === "announcements" && (
+                {/*    Add Announcement - Teacher  */}
+                {tab === "announcements" && isOwner && (
                     <ClickButton
                         size={"small"}
                         onClick={toggleAnnouncementModal}
@@ -75,7 +111,7 @@ const TeacherClassroom = ({
                     </ClickButton>
                 )}
             </MainTitle>
-            {/* <div className="" ref={parent}> */}{" "}
+
             {/*      Assignment Table    */}
             {assignments && tab === "assignments" && (
                 <EmptyWrapper
@@ -103,7 +139,7 @@ const TeacherClassroom = ({
                                             variant={"secondary"}
                                             size={"small"}
                                         >
-                                            <h1>Edit</h1>
+                                            <h1>View</h1>
                                         </LinkButton>
                                     </span>,
                                 ] as ReactNode[]
@@ -111,6 +147,12 @@ const TeacherClassroom = ({
                     />
                 </EmptyWrapper>
             )}
+
+            {/*    Submissions  */}
+            {tab === "submissions" && (
+                <SubmissionTable assignments={assignments} />
+            )}
+
             {/*     Enrolled Students Table    */}
             {students && tab === "students" && (
                 <EmptyWrapper
@@ -118,22 +160,15 @@ const TeacherClassroom = ({
                     noDataText={"No Students Enrolled"}
                 >
                     <Table
-                        headers={[
-                            "No",
-                            "Name",
-                            // "Description",
-                            // "Due Date",
-                            "Action",
-                        ]}
+                        headers={["No", "Name", "Action"]}
                         rows={students.map(
                             (student, i) =>
                                 [
                                     i + 1,
                                     student.name,
-                                    // student.,
                                     <span>
                                         <LinkButton
-                                            link={``}
+                                            link={`/`}
                                             variant={"secondary"}
                                             size={"small"}
                                         >
@@ -145,10 +180,15 @@ const TeacherClassroom = ({
                     />
                 </EmptyWrapper>
             )}
+
+            {/*    Announcements  */}
+
             {tab === "announcements" && (
                 <Announcement classroomId={classroomId} />
             )}
-            {/* </div> */}
+
+            {/* Chat */}
+            {tab === "chats" && <Chatroom socket={socket} />}
         </section>
     )
 }

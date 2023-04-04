@@ -3,7 +3,9 @@ import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 import Modal from "@components/Modal/Modal"
 import MainTitle from "@components/Title/MainTitle"
 import useToggle from "@hooks/useToggle"
+import useToast from "@store/useToast"
 import { useMutation, useQuery } from "@tanstack/react-query"
+import setErrorMsg from "@utils/setErrorMsg"
 import axios from "axios"
 import React from "react"
 
@@ -28,6 +30,8 @@ const browseClassroom = () => {
         retry: 1,
     })
 
+    const toast = useToast((state) => state.setToast)
+
     const { mutate } = useMutation({
         mutationFn: (id: string) =>
             axios.post(
@@ -37,6 +41,19 @@ const browseClassroom = () => {
                     withCredentials: true,
                 }
             ),
+
+        onSuccess: () =>
+            toast({
+                msg: "Enrolled Successfully",
+                variant: "success",
+            }),
+
+        onError: (err: any) => {
+            toast({
+                msg: setErrorMsg(err.response),
+                variant: "error",
+            })
+        },
     })
 
     const handleEnroll = (id: string) => {

@@ -2,7 +2,6 @@ import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useQuery, QueryObserver } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { UserResponse } from "@components/Header/Header"
 import { queryClient } from "./_app"
 import { ClickButton } from "@components/Button/Button"
 import { IoIosAdd } from "react-icons/io"
@@ -15,6 +14,10 @@ import Link from "next/link"
 import MainTitle from "@components/Title/MainTitle"
 import useUser from "@hooks/useUser"
 import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
+import { render } from "@react-email/render"
+import { Email } from "@components/Email"
+import useToast from "@store/useToast"
+import { shallow } from "zustand/shallow"
 
 interface DashboardClassroomProp extends ClassroomProps {
     teacher: TeacherProps
@@ -55,13 +58,19 @@ const dashboard = () => {
     })
     const { isOn, toggleOn } = useToggle()
 
+    const { setToast, toast } = useToast(
+        (state) => ({ toast: state.toast, setToast: state.setToast }),
+        shallow
+    )
+
+    console.log(toast)
+
     if (isError) router.push("/signin")
 
     if (isSuccess)
         return (
             <main className="flex flex-col flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
                 {/*         Heading and Add Classroom Btn   */}
-
                 <MainTitle title="Your Classroom">
                     {/*       Add Class btn is only shown to teacher   */}
 
@@ -78,7 +87,6 @@ const dashboard = () => {
                         </ClickButton>
                     )}
                 </MainTitle>
-
                 {/*       Classes       */}
                 <EmptyWrapper
                     data={classrooms.data}
@@ -95,9 +103,25 @@ const dashboard = () => {
                         ))}
                     </div>
                 </EmptyWrapper>
-
+                Email Testing
+                <button
+                    onClick={() =>
+                        setToast({ msg: "Noooooo!!", variant: "error" })
+                    }
+                    // onClick={async () => {
+                    //     const html = render(<Email />)
+                    //     return axios
+                    //         .post(
+                    //             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/email`,
+                    //             { html },
+                    //             { withCredentials: true }
+                    //         )
+                    //         .catch((err) => console.log(err))
+                    // }}
+                >
+                    Toast
+                </button>
                 {/*    Add Classroom Modal      */}
-
                 <Modal isOn={isOn} toggleOn={toggleOn}>
                     <AddClassroomForm toggleOn={toggleOn} />
                 </Modal>

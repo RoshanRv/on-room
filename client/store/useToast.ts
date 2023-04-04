@@ -5,6 +5,8 @@ interface ToastProp {
     variant: "error" | "success"
 }
 
+const TOAST_DURATION = 5000
+
 interface UseToastProps {
     toast: ToastProp
     setToast: (toast: ToastProp) => void
@@ -25,13 +27,13 @@ const useToast = create<UseToastProps>()((set) => ({
                 toastTimeout = setTimeout(() => {
                     set({ showToast: false })
                     return clearTimeout(toastTimeout)
-                }, 2000)
+                }, TOAST_DURATION)
                 return { toast: { msg, variant }, showToast: true }
             } else {
                 toastTimeout = setTimeout(() => {
                     set({ showToast: false })
                     return clearTimeout(toastTimeout)
-                }, 2000)
+                }, TOAST_DURATION)
                 return { toast: { msg, variant }, showToast: true }
             }
         }),

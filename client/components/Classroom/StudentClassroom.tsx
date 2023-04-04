@@ -1,16 +1,23 @@
-import { LinkButton } from "@components/Button/Button"
+import { ClickButton, LinkButton } from "@components/Button/Button"
 import MainTitle from "@components/Title/MainTitle"
 import React, { ReactNode } from "react"
 import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 import Table from "@components/Table/Table"
 import Announcement from "./Announcement/Announcement"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import useUser from "@hooks/useUser"
+import { IoIosAdd } from "react-icons/io"
+import Chatroom from "./Chatroom/Chatroom"
+import { Socket } from "socket.io-client"
 
 interface Props {
     tab: Tabs
     assignments: AssignmentProps[] | undefined
     students: StudentProps[] | undefined
-
     classroomId: string | null
+    toggleInviteModal: () => void
+    socket: Socket
 }
 
 const StudentClassroom = ({
@@ -18,6 +25,8 @@ const StudentClassroom = ({
     assignments,
     classroomId,
     students,
+    toggleInviteModal,
+    socket,
 }: Props) => {
     let title
     switch (tab) {
@@ -30,12 +39,60 @@ const StudentClassroom = ({
         case "announcements":
             title = "Announcements"
             break
+        case "chats":
+            title = "Chatroom"
+            break
+    }
+
+    const { data: submissions } = useQuery({
+        queryFn: () =>
+            axios.get<SubmissionStudentsProps[]>(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/submission/classroom/${classroomId}`,
+                { withCredentials: true }
+            ),
+        queryKey: ["submission", classroomId],
+    })
+
+    const { user } = useUser()
+
+    const findGrade = (assignmentId: string) => {
+        let grade: string | number = "N/A"
+
+        if (submissions && user) {
+            for (let submission of submissions.data) {
+                if (
+                    submission.assignmentId === assignmentId &&
+                    submission.studentId === user.id
+                ) {
+                    grade = submission.grade ? submission.grade : "N/A"
+                    break
+                } else {
+                    grade = "N/A"
+                }
+            }
+        }
+
+        return grade
     }
 
     return (
         <>
             {/*    heading  */}
-            <MainTitle title={`${title}`}></MainTitle>
+            <MainTitle title={`${title}`}>
+                {/*    Invite Student  - Student  */}
+                {tab === "students" && (
+                    <ClickButton
+                        size={"small"}
+                        onClick={toggleInviteModal}
+                        variant="secondary"
+                    >
+                        <div className="flex items-center gap-x-2">
+                            <IoIosAdd className="text-3xl" />
+                            <h1>Invite Students</h1>
+                        </div>
+                    </ClickButton>
+                )}
+            </MainTitle>
             {/*      Assignment Table    */}
             {assignments && tab === "assignments" && (
                 <EmptyWrapper
@@ -49,7 +106,7 @@ const StudentClassroom = ({
                                 [
                                     i + 1,
                                     assignment.name,
-                                    "N/A",
+                                    findGrade(assignment.id),
                                     assignment.dueDate,
                                     <span>
                                         <LinkButton
@@ -101,9 +158,13 @@ const StudentClassroom = ({
                 </EmptyWrapper>
             )}
 
+            {/*    Announcements  */}
             {tab === "announcements" && (
                 <Announcement classroomId={classroomId} />
             )}
+
+            {/* Chat */}
+            {tab === "chats" && <Chatroom socket={socket} />}
         </>
     )
 }

@@ -53,6 +53,13 @@ const buttonClass = cva(
                 disabled: true,
                 className: ["bg-dPri/50  text-gray-400"],
             },
+            {
+                variant: "secondary",
+                disabled: true,
+                className: [
+                    "bg-gray-900  text-gray-300/80 border-dPri/70 hover:scale-100 active:scale-100 ",
+                ],
+            },
         ],
     }
 )

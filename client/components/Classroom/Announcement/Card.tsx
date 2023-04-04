@@ -2,9 +2,10 @@ import ConfirmationModal from "@components/Modal/ConfirmationModel"
 import Modal from "@components/Modal/Modal"
 import useToggle from "@hooks/useToggle"
 import useUser from "@hooks/useUser"
+import useActions from "@store/useActions"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import checkAnnouncementView from "@utils/checkAnnouncementView"
-import formatDate from "@utils/formatDate"
+import { formatDate } from "@utils/formatDate"
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
@@ -18,18 +19,22 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
     const [isViewed, setIsViewed] = useState(false)
     const { isOn, toggleOn } = useToggle()
     const queryClient = useQueryClient()
+    const { isEnrolled, isOwner } = useActions(({ isEnrolled, isOwner }) => ({
+        isEnrolled,
+        isOwner,
+    }))
 
     useEffect(() => {
-        if (user && userRole === "student") {
+        if (user && isEnrolled) {
             const isViewed = checkAnnouncementView(
-                user?.id,
+                user.id,
                 announcement.viewedUsers
             )
             setIsViewed(isViewed)
         } else {
             setIsViewed(true)
         }
-    }, [user, announcement])
+    }, [user, announcement, isEnrolled])
 
     const mutateFunc = async () =>
         axios.put(
@@ -56,7 +61,7 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
                 }
             ),
         onSuccess: () => {
-            queryClient.invalidateQueries(["announcement"])
+            queryClient.invalidateQueries(["announcement", "announcements"])
         },
     })
 
@@ -72,7 +77,7 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
     return (
         <>
             <div
-                onClick={userRole === "student" ? handleUpdateView : () => null}
+                onClick={isEnrolled ? handleUpdateView : () => null}
                 className={`p-4 border-2 border-dPri rounded-md relative flex flex-col gap-y-2 transition-all ${
                     !isViewed && userRole === "student"
                         ? "bg-dPri/80 before:absolute before:content-[''] before:-top-2 before:-right-2 cursor-pointer before:h-4 before:w-4 before:rounded-full before:bg-danger   "
@@ -80,7 +85,7 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
                 }  `}
             >
                 {/*    Delete  */}
-                {userRole === "teacher" && (
+                {isOwner && (
                     <button
                         onClick={toggleOn}
                         className="absolute top-3 right-2 dark:text-gray-200 text-gray-800 hover:text-danger dark:hover:text-danger transition-all"
@@ -112,7 +117,6 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
                             : "text-gray-800"
                     } `}
                 >
-                    {/* {moment(announcement.date.split("T")[0]).format()} */}
                     {"- " + formatDate(announcement.date)}
                 </p>
             </div>

@@ -13,9 +13,12 @@ import {
 } from "@schema/signup.schema"
 import SignUp1 from "@components/SignUp/SignUp1"
 import SignUp2 from "@components/SignUp/SignUp2"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 
 import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import useToast from "@store/useToast"
+import setErrorMsg from "@utils/setErrorMsg"
 
 const DEFAULT_IMG =
     "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000"
@@ -25,6 +28,7 @@ const signUp = () => {
     const [part, setPart] = useState(0)
     const [imgUrl, setImgUrl] = useState(DEFAULT_IMG)
     const [parent] = useAutoAnimate<any>()
+    const router = useRouter()
 
     const mutateFunc = async (data: Data) => {
         const filteredData = omit(data, ["confirmPassword"])
@@ -35,7 +39,24 @@ const signUp = () => {
         )
     }
 
-    const { mutateAsync, isLoading } = useMutation({ mutationFn: mutateFunc })
+    const { setToast } = useToast(({ setToast }) => ({ setToast }))
+
+    const { mutateAsync, isLoading } = useMutation({
+        mutationFn: mutateFunc,
+        onSuccess: () => {
+            setToast({
+                msg: "User Created Successfully",
+                variant: "success",
+            })
+            router.push("/signin")
+        },
+        onError(e: AxiosError) {
+            setToast({
+                msg: setErrorMsg(e.response!),
+                variant: "error",
+            })
+        },
+    })
 
     const {
         register,

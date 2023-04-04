@@ -4,10 +4,10 @@ interface myObj {
 
 const isPresent = <T extends Array<myObj>>(
     array: T | undefined,
-    val: string | undefined
+    studId: string | undefined
 ): boolean => {
     if (array) {
-        return array.some((arr) => arr.id === val)
+        return array.some((arr) => arr.id === studId)
     }
     return false
 }

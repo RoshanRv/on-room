@@ -10,7 +10,7 @@ interface Props {
 
 const Notification = ({ unviewedAnnouncements }: Props) => {
     return (
-        <div className="group relative">
+        <div className="group relative ">
             <button
                 className={`relative text-dPri hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-lg text-2xl ${
                     unviewedAnnouncements.length > 0

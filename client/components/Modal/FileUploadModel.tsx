@@ -1,7 +1,7 @@
 import { ClickButton } from "@components/Button/Button"
 import Table from "@components/Table/Table"
 import MainTitle from "@components/Title/MainTitle"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import validateFile from "@utils/validateFile"
 import axios from "axios"
 import { useSearchParams } from "next/navigation"
@@ -9,26 +9,18 @@ import React, { ChangeEvent, DragEvent, useState } from "react"
 import { AiOutlineFileAdd } from "react-icons/ai"
 import { FiTrash2 } from "react-icons/fi"
 
-const FileUploadModel = () => {
+interface Props {
+    toggleModal: () => void
+    type: "attachment" | "submission"
+}
+
+const FileUploadModel = ({ toggleModal, type }: Props) => {
     const [isDragActive, setDragActive] = useState(false)
     const [attachments, setAttachments] = useState<FileProps[]>([])
     const [fileData, setFileData] = useState<File[]>()
 
     const assignmentId = useSearchParams().get("assignmentId")
-
-    // const { mutate } = useMutation({
-    //     mutationFn: () =>
-    //         axios.post(
-    //             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/attachment`,
-    //             attachments.map((attachment) => ({
-    //                 ...attachment,
-    //                 assignmentId,
-    //             })),
-    //             {
-    //                 withCredentials: true,
-    //             }
-    //         ),
-    // })
+    const queryClient = useQueryClient()
 
     const handleDrag = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault()
@@ -64,8 +56,10 @@ const FileUploadModel = () => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         e.stopPropagation()
+
         if (e.target.files && e.target.files[0]) {
             // Eliminates Invalid Typed & Duplicate Files
+
             const files = validateFile(Array.from(e.target.files), attachments)
 
             files.forEach((file) => {
@@ -84,6 +78,7 @@ const FileUploadModel = () => {
 
     const handleRemoveFile = (filename: string) => {
         setAttachments((e) => e.filter((file) => file.filename != filename))
+        setFileData((e) => e?.filter((file) => file.name != filename))
     }
 
     const handleUpload = () => {
@@ -91,17 +86,24 @@ const FileUploadModel = () => {
         fileData?.forEach((file) => formData.append(file.name, file))
         try {
             if (fileData && fileData?.length > 0) {
-                axios.post(
-                    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/attachment/${assignmentId}`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                        withCredentials: true,
-                    }
-                )
+                axios
+                    .post(
+                        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/${type}/assignment/${assignmentId}`,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                            withCredentials: true,
+                        }
+                    )
+                    .then((resp) =>
+                        queryClient.invalidateQueries(["assignment"])
+                    )
             }
+            setAttachments([])
+            setFileData([])
+            toggleModal()
         } catch (e) {
             console.log(e)
         }
@@ -163,10 +165,6 @@ const FileUploadModel = () => {
             >
                 <h1>Upload Files</h1>
             </ClickButton>
-
-            {/* <a href="http://localhost:3002/api/uploads/" target={"_blank"}>
-                sfdad
-            </a> */}
         </section>
     )
 }

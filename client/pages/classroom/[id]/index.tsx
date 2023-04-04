@@ -8,22 +8,25 @@ import useUser from "@hooks/useUser"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useRouter, useSearchParams } from "next/navigation"
-import React, { ReactNode, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { HiOutlinePencilAlt } from "react-icons/hi"
 import { FiTrash2 } from "react-icons/fi"
 import AddAssignmentForm from "@components/Classroom/AddAssignmentForm"
-import Table from "@components/Table/Table"
-import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 import TeacherClassroom from "@components/Classroom/TeacherClassroom"
 import StudentClassroom from "@components/Classroom/StudentClassroom"
 import ConfirmationModal from "@components/Modal/ConfirmationModel"
 import AddAnnouncementForm from "@components/Classroom/AddAnnouncementForm"
+import isPresent from "@utils/isPresent"
+import useActions from "@store/useActions"
+import InviteStudents from "@components/Classroom/InviteStudents"
+import { connect } from "socket.io-client"
+
+const socket = connect(process.env.NEXT_PUBLIC_SERVER_ENDPOINT)
 
 const Classroom = () => {
     const router = useRouter()
-    const searchParams = useSearchParams()
-    const id = searchParams.get("id")
-    const { userRole } = useUser()
+    const id = useSearchParams().get("id")
+    const { userRole, user } = useUser()
     const { data: classroom } = useQuery({
         queryKey: ["classroom", id],
         queryFn: () =>
@@ -31,24 +34,24 @@ const Classroom = () => {
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom/${id}`,
                 { withCredentials: true }
             ),
-    })
-    const { data: assignments } = useQuery({
-        queryKey: ["assignment"],
-        queryFn: () =>
-            axios.get<AssignmentProps[]>(
-                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/assignment/classroom/${id}`,
-                { withCredentials: true }
-            ),
+        enabled: !!id,
     })
 
-    const { data: students } = useQuery({
-        queryKey: ["students"],
-        queryFn: () =>
-            axios.get<StudentProps[]>(
-                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom/enrolled/${id}`,
-                { withCredentials: true }
-            ),
-    })
+    useEffect(() => {
+        if (user && classroom) {
+            setIsEnrolled(user.role, isPresent(classroom.data.student, user.id))
+            setIsOwner(user.role, classroom.data.teacherId, user.id)
+        }
+    }, [classroom, user])
+
+    const {
+        isEnrolled,
+        isNotEnrolled,
+        isNotOwner,
+        isOwner,
+        setIsEnrolled,
+        setIsOwner,
+    } = useActions()
 
     const { isOn: isEditModal, toggleOn: toggleEditModal } = useToggle()
     const { isOn: isDeleteModal, toggleOn: toggleDeleteModal } = useToggle()
@@ -57,6 +60,7 @@ const Classroom = () => {
         useToggle()
     const { isOn: isAnnouncementModal, toggleOn: toggleAnnouncementModal } =
         useToggle()
+    const { isOn: isInviteModal, toggleOn: toggleInviteModal } = useToggle()
 
     const [tab, setTab] = useState<Tabs>("assignments")
 
@@ -85,14 +89,15 @@ const Classroom = () => {
 
     const handelUnEnroll = () => {
         unEnrollClassroom()
-        toggleDeleteModal()
+        toggleUnEnrollModal()
     }
 
     return (
         <main className="flex flex-col gap-y-4 flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
-            {/*      Title and Unenroll/Edit btn    */}
-            <MainTitle title={`${classroom?.data.title} Classroom`}>
-                {userRole === "student" ? (
+            {/*      Title    */}
+            <MainTitle backBtn title={`${classroom?.data.title} Classroom`}>
+                {/*    Enroll/Unenroll Btn - Students  */}
+                {isEnrolled ? (
                     <ClickButton
                         size={"small"}
                         variant={"danger"}
@@ -101,6 +106,18 @@ const Classroom = () => {
                         <h1>UnEnroll</h1>
                     </ClickButton>
                 ) : (
+                    isNotEnrolled && (
+                        <ClickButton
+                            size={"small"}
+                            variant={"primary"}
+                            onClick={() => null}
+                        >
+                            <h1>Enroll</h1>
+                        </ClickButton>
+                    )
+                )}
+                {/*   Add/Delete/Edit Btn - Teachers   */}
+                {isOwner && (
                     <div className="flex gap-x-4 items-center">
                         <ClickButton
                             size={"small"}
@@ -131,28 +148,34 @@ const Classroom = () => {
                 {classroom?.data.description}
             </p>
 
-            <section className="flex mt-10 p-2 gap-x-10">
+            <section className="flex mt-10 p-2 gap-x-10 h-full  flex-1  ">
                 {/*      Tabs    */}
                 <Tabs tab={tab} setTab={setTab} />
 
                 {/*     Assignments/Students Table     */}
-                <section className="w-full">
+                <section className="w-full  flex flex-col ">
                     {userRole == "teacher" ? (
                         <TeacherClassroom
-                            assignments={assignments?.data}
-                            students={students?.data}
+                            assignments={classroom?.data.assignments}
+                            students={classroom?.data.student}
                             tab={tab}
                             classroomId={id}
                             toggleAssignmentModal={toggleAssignmentModal}
                             toggleAnnouncementModal={toggleAnnouncementModal}
+                            toggleInviteModal={toggleInviteModal}
+                            socket={socket}
                         />
                     ) : (
-                        <StudentClassroom
-                            students={students?.data}
-                            classroomId={id}
-                            assignments={assignments?.data}
-                            tab={tab}
-                        />
+                        userRole === "student" && (
+                            <StudentClassroom
+                                students={classroom?.data.student}
+                                classroomId={id}
+                                assignments={classroom?.data.assignments}
+                                tab={tab}
+                                toggleInviteModal={toggleInviteModal}
+                                socket={socket}
+                            />
+                        )
                     )}
                 </section>
             </section>
@@ -203,6 +226,15 @@ const Classroom = () => {
                     toggleConfirmationModal={toggleUnEnrollModal}
                     action={"unenroll"}
                     type={"course"}
+                />
+            </Modal>
+
+            {/*     Invite Students Modal  */}
+            <Modal isOn={isInviteModal} toggleOn={toggleInviteModal}>
+                <InviteStudents
+                    toggleOn={toggleInviteModal}
+                    classroomId={classroom?.data.id!}
+                    classroomName={classroom?.data.title}
                 />
             </Modal>
         </main>

@@ -1,6 +1,6 @@
 const checkAnnouncementView = (
     studentId: string | undefined,
-    viewedUsers: StudentProps[]
+    viewedUsers: StudentProps[] | { id: string }[]
 ) => {
     return viewedUsers.find((users) => users.id === studentId) ? true : false
 }

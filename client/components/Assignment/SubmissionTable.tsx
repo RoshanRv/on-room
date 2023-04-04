@@ -70,17 +70,19 @@ const AssignmentTable = ({
                         >
                             <FiEye />
                         </button>,
-                        <button
-                            onClick={() =>
-                                handleDelete(
-                                    `${attachment.id}.${attachment.type}`,
-                                    "submission"
-                                )
-                            }
-                            className="text-3xl  w-max mx-auto"
-                        >
-                            <BiTrash />
-                        </button>,
+                        isEnrolled && (
+                            <button
+                                onClick={() =>
+                                    handleDelete(
+                                        `${attachment.id}.${attachment.type}`,
+                                        "submission"
+                                    )
+                                }
+                                className="text-3xl  w-max mx-auto"
+                            >
+                                <BiTrash />
+                            </button>
+                        ),
                     ])}
                 />
             )}

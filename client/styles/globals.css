@@ -4,6 +4,7 @@
 
 ::-webkit-scrollbar {
     background-color: black;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -22,4 +23,12 @@
 
 .text-shadow-lg {
     text-shadow: 4px 4px 0px rgba(0, 0, 0, 1);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }

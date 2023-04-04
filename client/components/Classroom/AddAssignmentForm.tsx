@@ -117,7 +117,7 @@ const AddAssignmentForm = ({
                             {...register("dueDate")}
                         />
                         <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                            Image Url
+                            Due Date
                         </h1>
                     </div>
                 </div>

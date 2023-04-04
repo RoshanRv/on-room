@@ -5,11 +5,13 @@ import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SignInInputProps, signInSchema } from "@schema/signin.schema"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { queryClient } from "./_app"
 import { useRouter } from "next/navigation"
+import useToast from "@store/useToast"
+import setErrorMsg from "@utils/setErrorMsg"
 
 const signin = () => {
     const [role, setRole] = useState<Role>("")
@@ -47,11 +49,23 @@ const signin = () => {
         )
     }
 
+    const { setToast } = useToast(({ setToast }) => ({ setToast }))
+
     const { mutate, isLoading } = useMutation({
         mutationFn: mutateFunc,
         onSuccess: () => {
+            setToast({
+                msg: "Successfully Logged In",
+                variant: "success",
+            })
             queryClient.invalidateQueries({ queryKey: ["users"] })
             router.push("/dashboard")
+        },
+        onError: (e: AxiosError) => {
+            setToast({
+                msg: setErrorMsg(e.response!),
+                variant: "error",
+            })
         },
     })
 

@@ -55,6 +55,7 @@ const Header = () => {
                     withCredentials: true,
                 }
             ),
+        enabled: !!user?.data.id,
         retry: 1,
     })
 

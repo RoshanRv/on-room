@@ -7,16 +7,24 @@ interface ResponseType {
 const setErrorMsg = (response: ResponseType) => {
     switch (response.status) {
         case 400:
-            return "Something Is Wrong, Try Again Later"
+            return typeof response.data === "string"
+                ? response.data
+                : "Please, Try Again Later"
         case 403:
             return "You're Not Authorized"
         case 404:
             return "Data Not Found"
         case 409:
-            return "Invalid Input"
+            return Array.isArray(response.data)
+                ? response.data[0].message
+                : typeof response.data === "object"
+                ? response.data[0].message
+                : "Invalid Input"
 
         default:
-            return "Error Occured"
+            return typeof response.data === "string"
+                ? response.data
+                : "Error Occured"
     }
 }
 

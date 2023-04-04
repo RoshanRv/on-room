@@ -92,3 +92,11 @@ model Announcement{
   classroomId String
   viewedUsers User[] 
 }
+
+model Chat{
+  id String @id @default(cuid())
+  user String
+  msg String
+  time String
+  roomId String 
+}

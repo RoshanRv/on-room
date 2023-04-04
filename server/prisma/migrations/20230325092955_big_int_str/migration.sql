@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Chat` MODIFY `time` VARCHAR(191) NOT NULL;

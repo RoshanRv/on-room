@@ -1,4 +1,3 @@
-import { UserResponse } from "@components/Header/Header"
 import UpdateCard from "@components/Profile/UpdateCard"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -10,12 +9,15 @@ export interface UserDetailsType {
 }
 
 const profile = () => {
-    const { data: user } = useQuery<UserResponse>({
+    const { data: user } = useQuery({
         queryKey: ["users"],
         queryFn: () =>
-            axios.get(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`, {
-                withCredentials: true,
-            }),
+            axios.get<UserProps>(
+                `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`,
+                {
+                    withCredentials: true,
+                }
+            ),
         retry: 1,
         refetchOnWindowFocus: false,
         onSuccess(data) {

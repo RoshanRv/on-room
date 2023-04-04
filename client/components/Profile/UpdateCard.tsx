@@ -1,12 +1,13 @@
 import { ClickButton } from "@components/Button/Button"
-import { UserResponse } from "@components/Header/Header"
+import useToast from "@store/useToast"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
+import setErrorMsg from "@utils/setErrorMsg"
+import axios, { AxiosError } from "axios"
 import { UserDetailsType } from "pages/profile"
 import React, { useState } from "react"
 
 interface UpdateCardProps {
-    user: UserResponse["data"]
+    user: UserProps
     userDetails: UserDetailsType
     setUserDetails: React.Dispatch<React.SetStateAction<UserDetailsType>>
 }
@@ -43,6 +44,8 @@ const UpdateCard = ({ user, userDetails, setUserDetails }: UpdateCardProps) => {
         mutate(userDetails)
     }
 
+    const setToast = useToast((state) => state.setToast)
+
     const { mutate } = useMutation({
         mutationFn: (data: { name: string; img: string }) =>
             axios.put(
@@ -50,6 +53,20 @@ const UpdateCard = ({ user, userDetails, setUserDetails }: UpdateCardProps) => {
                 data,
                 { withCredentials: true }
             ),
+
+        onSuccess: () => {
+            setToast({
+                msg: "Profile Updated",
+                variant: "success",
+            })
+        },
+
+        onError: (e: AxiosError) => {
+            setToast({
+                msg: setErrorMsg(e.response!),
+                variant: "error",
+            })
+        },
     })
 
     return (

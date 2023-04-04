@@ -9,6 +9,7 @@ import {
     createAnnouncement,
     deleteAnnouncement,
     getAnnouncements,
+    getAnnouncementsFromEnrolledClassroom,
 } from "@service/announcements.services"
 import { Request, Response } from "express"
 
@@ -63,6 +64,20 @@ export const deleteAnnouncementHandler = async (
         const { id } = req.params
         const announcement = await deleteAnnouncement(id)
         return res.status(200).send(announcement)
+    } catch (e: any) {
+        return res.status(400).send(e.message)
+    }
+}
+
+export const getAnnouncementsFromEnrolledClassroomHandler = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const { id } = res.locals.user
+
+        const classrooms = await getAnnouncementsFromEnrolledClassroom(id)
+        return res.status(200).send(classrooms)
     } catch (e: any) {
         return res.status(400).send(e.message)
     }

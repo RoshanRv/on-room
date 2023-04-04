@@ -64,3 +64,34 @@ export const connectAnnouncement = async (id: string, studentId: string) => {
         throw new Error(e)
     }
 }
+
+export const getAnnouncementsFromEnrolledClassroom = async (id: string) => {
+    try {
+        const announcements = await prisma.announcement.findMany({
+            where: {
+                classroom: {
+                    student: {
+                        some: {
+                            id,
+                        },
+                    },
+                },
+            },
+
+            select: {
+                title: true,
+                classroomId: true,
+                id: true,
+                viewedUsers: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        })
+
+        return announcements
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}

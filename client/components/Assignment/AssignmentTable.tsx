@@ -4,6 +4,7 @@ import { HiOutlineDocumentDownload } from "react-icons/hi"
 import { FiEye } from "react-icons/fi"
 import useActions from "@store/useActions"
 import { shallow } from "zustand/shallow"
+import { BiTrash } from "react-icons/bi"
 
 interface Prop {
     attachments: Attachment[] | undefined
@@ -60,8 +61,9 @@ const AssignmentTable = ({
 
                         <button
                             onClick={() =>
-                                handleDelete(
+                                handleView(
                                     `${attachment.id}.${attachment.type}`,
+                                    attachment.filename,
                                     "attachment"
                                 )
                             }
@@ -69,6 +71,19 @@ const AssignmentTable = ({
                         >
                             <FiEye />
                         </button>,
+                        isOwner && (
+                            <button
+                                onClick={() =>
+                                    handleDelete(
+                                        `${attachment.id}.${attachment.type}`,
+                                        "attachment"
+                                    )
+                                }
+                                className="text-3xl  w-max mx-auto"
+                            >
+                                <BiTrash />
+                            </button>
+                        ),
                     ])}
                 />
             )}

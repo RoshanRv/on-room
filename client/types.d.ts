@@ -1,5 +1,10 @@
 type Role = "" | "student" | "teacher"
-type Tabs = "assignments" | "students" | "announcements" | "submissions"
+type Tabs =
+    | "assignments"
+    | "students"
+    | "announcements"
+    | "submissions"
+    | "chats"
 
 interface CardRoleProps {
     role: Role

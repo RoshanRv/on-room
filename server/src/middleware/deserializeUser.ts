@@ -29,7 +29,7 @@ const deserializeUser = async (
 
         const { decoded } = verifyToken(newAccessToken, "access")
 
-        res.cookie("accessToken", accessTokenOptions)
+        res.cookie("accessToken", newAccessToken, accessTokenOptions)
 
         res.locals.user = decoded
 

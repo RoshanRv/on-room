@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { updateClassroomByIdSchemaType } from "@schema/classroom.schema"
+import { Response } from "express"
 const prisma = new PrismaClient()
 import { omit } from "lodash"
 
@@ -69,6 +70,11 @@ export const getClassroomById = async (id: string) => {
         const classroom = await prisma.classroom.findUnique({
             where: {
                 id,
+            },
+            include: {
+                announcements: true,
+                assignments: true,
+                student: true,
             },
         })
         return classroom

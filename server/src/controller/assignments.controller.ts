@@ -48,7 +48,8 @@ export const getAssignmentByIdHandler = async (
 ) => {
     try {
         const { id } = req.params
-        const assignment = await getAssignmentById(id)
+        const { id: studentId } = res.locals.user
+        const assignment = await getAssignmentById(id, studentId)
         return res.status(200).send(assignment)
     } catch (e: any) {
         return res.status(400).send(e.message)
@@ -85,5 +86,3 @@ export const deleteAssignmentHandler = async (
         return res.status(400).send(e.message)
     }
 }
-
-// export const

@@ -31,11 +31,25 @@ export const getAssignmentsByClassroomId = async (classroomId: string) => {
     }
 }
 
-export const getAssignmentById = async (id: string) => {
+export const getAssignmentById = async (id: string, studentId: string) => {
     try {
         const assignment = await prisma.assignment.findUnique({
             where: {
                 id,
+            },
+            include: {
+                attachments: true,
+                classroom: {
+                    select: {
+                        student: true,
+                        teacherId: true,
+                    },
+                },
+                submissions: {
+                    where: {
+                        studentId,
+                    },
+                },
             },
         })
         return assignment

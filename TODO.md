@@ -40,7 +40,3 @@ Students will be able to:
 [ ] check out https://www.ponicode.com/
 [ ] investigate https://github.com/streamich/react-use
 [ ] https://flowbite.com/docs/components/buttons/
-[ ] build component library for
-[ ] modal
-[ ] tabs
-[ ]

@@ -1,6 +1,6 @@
 import { ClickButton, LinkButton } from "@components/Button/Button"
 import MainTitle from "@components/Title/MainTitle"
-import { IoIosAdd } from "react-icons/io"
+import { IoMdAdd } from "react-icons/io"
 
 import React, { ReactNode, useEffect, useRef } from "react"
 import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
@@ -13,6 +13,8 @@ import { shallow } from "zustand/shallow"
 import SubmissionTable from "./SubmissionTable"
 import Chatroom from "./Chatroom/Chatroom"
 import { Socket } from "socket.io-client"
+import { FiEye } from "react-icons/fi"
+import Link from "next/link"
 
 interface Props {
     tab: Tabs
@@ -69,30 +71,30 @@ const TeacherClassroom = ({
     return (
         <section className="flex flex-col h-full" ref={parent}>
             {/*    heading  */}
-            <MainTitle title={`${title}`}>
+            <MainTitle sub title={`${title}`}>
                 {/*    Add Assignment - Teacher  */}
                 {tab === "assignments" && isOwner && (
                     <ClickButton
-                        size={"small"}
+                        size={"logo"}
                         onClick={toggleAssignmentModal}
                         variant="secondary"
                     >
                         <div className="flex items-center gap-x-2">
-                            <IoIosAdd className="text-3xl" />
-                            <h1>Add Assignment</h1>
+                            <IoMdAdd className="text-3xl" />
+                            <h1 className="hidden md:block">Add Assignment</h1>
                         </div>
                     </ClickButton>
                 )}
                 {/*    Invite Student  - Teacher  */}
                 {tab === "students" && isOwner && (
                     <ClickButton
-                        size={"small"}
+                        size={"logo"}
                         onClick={toggleInviteModal}
                         variant="secondary"
                     >
                         <div className="flex items-center gap-x-2">
-                            <IoIosAdd className="text-3xl" />
-                            <h1>Invite Students</h1>
+                            <IoMdAdd className="text-3xl" />
+                            <h1 className="hidden md:block">Invite Students</h1>
                         </div>
                     </ClickButton>
                 )}
@@ -100,13 +102,15 @@ const TeacherClassroom = ({
                 {/*    Add Announcement - Teacher  */}
                 {tab === "announcements" && isOwner && (
                     <ClickButton
-                        size={"small"}
+                        size={"logo"}
                         onClick={toggleAnnouncementModal}
                         variant="secondary"
                     >
                         <div className="flex items-center gap-x-2">
-                            <IoIosAdd className="text-3xl" />
-                            <h1>Add Announcement</h1>
+                            <IoMdAdd className="text-3xl" />
+                            <h1 className="hidden md:block">
+                                Add Announcement
+                            </h1>
                         </div>
                     </ClickButton>
                 )}
@@ -133,15 +137,13 @@ const TeacherClassroom = ({
                                     assignment.name,
                                     // assignment.description,
                                     assignment.dueDate,
-                                    <span>
-                                        <LinkButton
-                                            link={`classroom/${classroomId}/assignment/${assignment.id}`}
-                                            variant={"secondary"}
-                                            size={"small"}
-                                        >
-                                            <h1>View</h1>
-                                        </LinkButton>
-                                    </span>,
+                                    <Link
+                                        href={`/classroom/${classroomId}/assignment/${assignment.id}`}
+                                    >
+                                        <button className="text-2xl">
+                                            <FiEye />
+                                        </button>
+                                    </Link>,
                                 ] as ReactNode[]
                         )}
                     />
@@ -166,15 +168,12 @@ const TeacherClassroom = ({
                                 [
                                     i + 1,
                                     student.name,
-                                    <span>
-                                        <LinkButton
-                                            link={`/`}
-                                            variant={"secondary"}
-                                            size={"small"}
-                                        >
-                                            <h1>View</h1>
-                                        </LinkButton>
-                                    </span>,
+
+                                    <Link href={`/`}>
+                                        <button className="text-2xl">
+                                            <FiEye />
+                                        </button>
+                                    </Link>,
                                 ] as ReactNode[]
                         )}
                     />

@@ -7,9 +7,11 @@ import Announcement from "./Announcement/Announcement"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import useUser from "@hooks/useUser"
-import { IoIosAdd } from "react-icons/io"
+import { IoMdAdd } from "react-icons/io"
 import Chatroom from "./Chatroom/Chatroom"
 import { Socket } from "socket.io-client"
+import Link from "next/link"
+import { FiEye } from "react-icons/fi"
 
 interface Props {
     tab: Tabs
@@ -78,17 +80,17 @@ const StudentClassroom = ({
     return (
         <>
             {/*    heading  */}
-            <MainTitle title={`${title}`}>
+            <MainTitle sub title={`${title}`}>
                 {/*    Invite Student  - Student  */}
                 {tab === "students" && (
                     <ClickButton
-                        size={"small"}
+                        size={"logo"}
                         onClick={toggleInviteModal}
                         variant="secondary"
                     >
                         <div className="flex items-center gap-x-2">
-                            <IoIosAdd className="text-3xl" />
-                            <h1>Invite Students</h1>
+                            <IoMdAdd className="text-3xl" />
+                            <h1 className="hidden lg:block">Invite Students</h1>
                         </div>
                     </ClickButton>
                 )}
@@ -108,15 +110,13 @@ const StudentClassroom = ({
                                     assignment.name,
                                     findGrade(assignment.id),
                                     assignment.dueDate,
-                                    <span>
-                                        <LinkButton
-                                            link={`classroom/${classroomId}/assignment/${assignment.id}`}
-                                            variant={"secondary"}
-                                            size={"small"}
-                                        >
-                                            <h1>View</h1>
-                                        </LinkButton>
-                                    </span>,
+                                    <Link
+                                        href={`/classroom/${classroomId}/assignment/${assignment.id}`}
+                                    >
+                                        <button className="text-2xl">
+                                            <FiEye />
+                                        </button>
+                                    </Link>,
                                 ] as ReactNode[]
                         )}
                     />
@@ -143,15 +143,11 @@ const StudentClassroom = ({
                                     i + 1,
                                     student.name,
                                     // student.,
-                                    <span>
-                                        <LinkButton
-                                            link={``}
-                                            variant={"secondary"}
-                                            size={"small"}
-                                        >
-                                            <h1>View</h1>
-                                        </LinkButton>
-                                    </span>,
+                                    <Link href={`/`}>
+                                        <button className="text-2xl">
+                                            <FiEye />
+                                        </button>
+                                    </Link>,
                                 ] as ReactNode[]
                         )}
                     />

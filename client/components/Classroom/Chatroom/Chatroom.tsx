@@ -113,7 +113,7 @@ const Chatroom: FC<Prop> = ({ socket }) => {
     }
 
     return (
-        <section className="border-2 border-dPri rounded-lg  bg-white dark:bg-black p-6 mt-8 shadow-md gap-y-4  flex-1 flex flex-col text-gray-800 dark:text-gray-300 ">
+        <section className="border-2 border-dPri rounded-lg  bg-white dark:bg-black p-3 lg:p-6 mt-8 shadow-md gap-y-4  flex-1 flex flex-col text-gray-800 dark:text-gray-300 ">
             {/*     Messages  */}
             <div
                 ref={msgBoxRef}

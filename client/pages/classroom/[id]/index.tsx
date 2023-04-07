@@ -103,7 +103,7 @@ const Classroom = () => {
                         variant={"danger"}
                         onClick={toggleUnEnrollModal}
                     >
-                        <h1>UnEnroll</h1>
+                        <h1 className="">UnEnroll</h1>
                     </ClickButton>
                 ) : (
                     isNotEnrolled && (
@@ -112,7 +112,7 @@ const Classroom = () => {
                             variant={"primary"}
                             onClick={() => null}
                         >
-                            <h1>Enroll</h1>
+                            <h1 className="">Enroll</h1>
                         </ClickButton>
                     )
                 )}
@@ -120,23 +120,23 @@ const Classroom = () => {
                 {isOwner && (
                     <div className="flex gap-x-4 items-center">
                         <ClickButton
-                            size={"small"}
+                            size={"logo"}
                             variant={"secondary"}
                             onClick={toggleEditModal}
                         >
                             <div className="flex items-center gap-x-2">
                                 <HiOutlinePencilAlt className="text-2xl" />
-                                <h1>Edit</h1>
+                                <h1 className="hidden md:block">Edit</h1>
                             </div>
                         </ClickButton>
                         <ClickButton
-                            size={"small"}
+                            size={"logo"}
                             variant={"danger"}
                             onClick={toggleDeleteModal}
                         >
                             <div className="flex items-center gap-x-2">
                                 <FiTrash2 className="text-2xl" />
-                                <h1>Delete</h1>
+                                <h1 className="hidden md:block">Delete</h1>
                             </div>
                         </ClickButton>
                     </div>
@@ -148,7 +148,7 @@ const Classroom = () => {
                 {classroom?.data.description}
             </p>
 
-            <section className="flex mt-10 p-2 gap-x-10 h-full  flex-1  ">
+            <section className="flex mt-10 p-2 gap-x-4 md:gap-x-10 h-full  flex-1  ">
                 {/*      Tabs    */}
                 <Tabs tab={tab} setTab={setTab} />
 

@@ -118,13 +118,13 @@ const SubmissionTable = ({
         <EmptyWrapper data={submissions?.data} noDataText={"No Submissions"}>
             {/*   Filter   */}
             <div className="p-4">
-                <h1 className="text-2xl font-semibold p-2 text-dPri ">
+                <h1 className="text-xl lg:text-2xl font-semibold p-2 text-dPri ">
                     Filter
                 </h1>
                 <select
                     onChange={(e) => setFilterVal(e.target.value)}
                     value={filterVal}
-                    className="p-2 bg-transparent border-b-2 border-dPri/80 outline-0 text-gray-800 dark:text-gray-300 w-full  text-lg "
+                    className="p-2 bg-transparent border-b-2 border-dPri/80 outline-0 text-gray-800 dark:text-gray-300 w-full text-sm md:text-lg "
                 >
                     <option value={""}>Choose Assignment Name</option>
                     {assignmentList.map((assignment) => (
@@ -151,7 +151,7 @@ const SubmissionTable = ({
                                 submission.assignment.name,
                                 // Editable Grade
                                 isEditable && isEditable === submission.id ? (
-                                    <div className="flex items-center gap-x-2">
+                                    <div className="flex items-center gap-x-2 justify-end lg:justify-center ">
                                         <input
                                             onChange={(e) =>
                                                 setSubmissionGrade(
@@ -177,7 +177,7 @@ const SubmissionTable = ({
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-x-2">
+                                    <div className="flex items-center gap-x-2  justify-end lg:justify-center">
                                         <h1>
                                             {submission.grade
                                                 ? submission.grade

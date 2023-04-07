@@ -22,7 +22,7 @@ const ClassroomCard = ({
     const { isOn, toggleOn } = useToggle()
 
     return (
-        <div className="flex flex-col p-2 transition-all bg-gray-200 border-2 rounded-md shadow-lg cursor-pointer dark:bg-gray-800 dark:shadow-xl md:p-4 gap-y-6 md:border-4 shadow-gray-400 dark:shadow-black border-dPri/70 ">
+        <div className="flex flex-col p-4 transition-all bg-gray-200 border-2 rounded-md shadow-lg cursor-pointer dark:bg-gray-800 dark:shadow-xl md:p-4 gap-y-6 md:border-4 shadow-gray-400 dark:shadow-black border-dPri/70 ">
             <div className="overflow-hidden rounded-md ">
                 <img
                     src={classroomData.img}

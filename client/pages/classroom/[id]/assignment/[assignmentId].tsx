@@ -13,7 +13,7 @@ import { useSearchParams } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
 import { HiOutlinePencilAlt } from "react-icons/hi"
-import { IoIosAdd } from "react-icons/io"
+import { TiDocumentAdd } from "react-icons/ti"
 import { saveAs } from "file-saver"
 import SubmissionTable from "@components/Assignment/SubmissionTable"
 import useActions from "@store/useActions"
@@ -198,13 +198,13 @@ const Assignment = () => {
                 {assignment?.data.submissions &&
                 assignment?.data.submissions.length > 0 &&
                 user?.role === "student" ? (
-                    <p className="text-success p-2 rounded-md bg-green-200 border-2 border-success ">{`Assignment Submitted`}</p>
+                    <p className="text-success p-2 rounded-md bg-green-200 border-2 border-success text-xs md:text-base">{`Assignment Submitted`}</p>
                 ) : user?.role === "teacher" ? (
-                    <p className="text-danger p-2 rounded-md bg-red-200 border-2 border-danger ">{`Due Date: ${formatDate(
+                    <p className="text-danger p-2 rounded-md bg-red-200 border-2 border-danger text-xs md:text-base">{`Due Date: ${formatDate(
                         assignment?.data.dueDate
                     )}`}</p>
                 ) : (
-                    <p className="text-danger p-2 rounded-md bg-red-200 border-2 border-danger ">{`Due Date: ${formatDate(
+                    <p className="text-danger p-2 rounded-md bg-red-200 border-2 border-danger  text-xs md:text-base">{`Due Date: ${formatDate(
                         assignment?.data.dueDate
                     )}, ${
                         isPastDueDate(assignment?.data.dueDate) ? "" : ""
@@ -215,14 +215,16 @@ const Assignment = () => {
                 assignment?.data.submissions &&
                 assignment?.data.submissions.length === 0 ? (
                     <ClickButton
-                        size={"small"}
+                        size={"logo"}
                         variant={"secondary"}
                         onClick={toggleFileSubmissionModal}
                         disabled={isPastDueDate(assignment?.data.dueDate)}
                     >
                         <div className="flex items-center gap-x-2">
-                            <IoIosAdd className="text-3xl" />
-                            <h1>Submit Assignment</h1>
+                            <TiDocumentAdd className="text-3xl" />
+                            <h1 className="hidden lg:block">
+                                Submit Assignment
+                            </h1>
                         </div>
                     </ClickButton>
                 ) : (
@@ -230,33 +232,35 @@ const Assignment = () => {
                     isOwner && (
                         <div className="flex gap-x-4 items-center">
                             <ClickButton
-                                size={"small"}
+                                size={"logo"}
                                 variant={"primary"}
                                 onClick={toggleFileAttachmentModal}
                             >
-                                <div className="flex items-center gap-x-2">
-                                    <IoIosAdd className="text-3xl" />
-                                    <h1>Add Assignment</h1>
+                                <div className="flex items-center gap-x-2    ">
+                                    <TiDocumentAdd className="text-3xl" />
+                                    <h1 className="hidden lg:block">
+                                        Add Assignment
+                                    </h1>
                                 </div>
                             </ClickButton>
                             <ClickButton
-                                size={"small"}
+                                size={"logo"}
                                 variant={"secondary"}
                                 onClick={toggleEditModal}
                             >
                                 <div className="flex items-center gap-x-2">
                                     <HiOutlinePencilAlt className="text-2xl" />
-                                    <h1>Edit</h1>
+                                    <h1 className="hidden lg:block">Edit</h1>
                                 </div>
                             </ClickButton>
                             <ClickButton
-                                size={"small"}
+                                size={"logo"}
                                 variant={"danger"}
                                 onClick={toggleDeleteModal}
                             >
                                 <div className="flex items-center gap-x-2">
                                     <FiTrash2 className="text-2xl" />
-                                    <h1>Delete</h1>
+                                    <h1 className="hidden lg:block">Delete</h1>
                                 </div>
                             </ClickButton>
                         </div>

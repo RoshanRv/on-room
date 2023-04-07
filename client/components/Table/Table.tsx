@@ -27,7 +27,7 @@ const Table = ({ headers, rows }: Props) => {
                     })}
                 </tr>
             </thead>
-            <tbody className="bg-white divide-y  dark:bg-transparent divide-dPri/50">
+            <tbody className="bg-transparent md:bg-white divide-y  dark:bg-transparent divide-dPri/50">
                 {rows.map((row, rowIndex) => {
                     return (
                         <tr
@@ -38,7 +38,8 @@ const Table = ({ headers, rows }: Props) => {
                                 if (col) {
                                     return (
                                         <td
-                                            className="py-4 px-6 text-sm font-medium text-gray-800 dark:text-gray-300 text-clip break-all"
+                                            aria-label={headers[colIndex]}
+                                            className="py-4 px-3 md:px-4 lg:px-6 text-sm font-medium text-gray-800 dark:text-gray-300 text-clip break-all  "
                                             key={colIndex}
                                         >
                                             {col}

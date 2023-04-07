@@ -60,7 +60,7 @@ const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
             <div className="w-full h-40 my-6 border rounded-md shadow-md md:h-60 border-dPri shadow-black/20">
                 <img
                     src={imgUrl}
-                    alt="classroom_img"
+                    alt=" Enter Valid Img URL"
                     className="w-full h-full rounded-md"
                 />
             </div>

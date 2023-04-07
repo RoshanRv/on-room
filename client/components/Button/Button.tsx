@@ -18,12 +18,12 @@ type LinkButtonProp = VariantProps<typeof buttonClass> & {
 
 const buttonClass = cva(
     [
-        " rounded-md outline-0 text-white font-semibold shadow-lg shadow-black/50 hover:scale-105 active:scale-95 transition-all",
+        " rounded-md outline-0 text-white font-semibold shadow-lg shadow-black/50  transition-all",
     ],
     {
         variants: {
             variant: {
-                primary: ["bg-dPri border-2 border-black  "],
+                primary: ["bg-dPri border-2 border-black/70  "],
                 secondary: ["border-2 border-dPri bg-black"],
                 danger: ["bg-danger border-2 border-dPri "],
             },
@@ -38,6 +38,7 @@ const buttonClass = cva(
             size: {
                 small: ["px-8 md:py-2 py-1 text-lg md:text-xl"],
                 large: ["px-10 md:py-3 py-2 text-xl md:text-2xl"],
+                logo: ["p-1 md:px-8 md:py-2 md:text-xl "],
             },
         },
 
@@ -56,9 +57,12 @@ const buttonClass = cva(
             {
                 variant: "secondary",
                 disabled: true,
-                className: [
-                    "bg-gray-900  text-gray-300/80 border-dPri/70 hover:scale-100 active:scale-100 ",
-                ],
+                className: ["bg-gray-700  text-gray-300/60 border-dPri/70  "],
+            },
+            {
+                variant: ["secondary", "primary", "danger"],
+                disabled: false,
+                className: ["hover:scale-105 active:scale-95"],
             },
         ],
     }

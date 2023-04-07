@@ -6,13 +6,14 @@ interface Props {
     title: string | undefined
     children?: ReactNode
     backBtn?: boolean
+    sub?: boolean
 }
 
-const MainTitle = ({ title, children, backBtn }: Props) => {
+const MainTitle = ({ title, children, backBtn, sub }: Props) => {
     const router = useRouter()
     return (
-        <div className="flex items-baseline justify-between pb-4 border-b border-dPri">
-            <div className="flex md:gap-x-6">
+        <div className="flex items-baseline justify-between pb-4 border-b border-dPri flex-wrap gap-y-2 ">
+            <div className="flex md:gap-x-6 items-center gap-x-2 ">
                 {/* back btn */}
                 {backBtn && (
                     <button
@@ -23,7 +24,11 @@ const MainTitle = ({ title, children, backBtn }: Props) => {
                     </button>
                 )}
                 {/*   Title   */}
-                <h1 className="text-2xl font-semibold lg:text-4xl text-dPri">
+                <h1
+                    className={` ${
+                        sub ? "text-xl lg:text-3xl" : "text-2xl lg:text-4xl"
+                    }  font-semibold  text-dPri`}
+                >
                     {title}
                 </h1>
             </div>

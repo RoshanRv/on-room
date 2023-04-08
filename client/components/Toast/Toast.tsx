@@ -17,8 +17,8 @@ const toastClass = cva(
     {
         variants: {
             variant: {
-                success: ["bg-green-700/90 "],
-                error: ["bg-red-700/90 "],
+                success: ["bg-green-700 "],
+                error: ["bg-red-700 "],
             },
 
             showToast: {

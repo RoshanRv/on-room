@@ -1,11 +1,10 @@
-import { FieldValues, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { classroomSchema, ClassroomSchemaInput } from "@schema/dashboard.schema"
 import React, { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { ClickButton } from "@components/Button/Button"
-import { omit } from "lodash"
 import omitEmptyValues from "@utils/omitEmptyValues"
 
 const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {

@@ -1,23 +1,23 @@
 import axios from "axios"
-import React, { useEffect, useState } from "react"
-import { useQuery, QueryObserver } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { queryClient } from "./_app"
 import { ClickButton } from "@components/Button/Button"
 import { IoMdAdd } from "react-icons/io"
 import ClassroomCard from "@components/Dashboard/ClassroomCard"
 import useToggle from "@hooks/useToggle"
 import Modal from "@components/Modal/Modal"
-import AddClassroomForm from "@components/Dashboard/AddClassroomForm"
-import { ClassroomSchemaInput } from "@schema/dashboard.schema"
 import Link from "next/link"
 import MainTitle from "@components/Title/MainTitle"
 import useUser from "@hooks/useUser"
 import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
-import { render } from "@react-email/render"
-import { Email } from "@components/Email"
-import useToast from "@store/useToast"
-import { shallow } from "zustand/shallow"
+import dynamic from "next/dynamic"
+
+const AddClassroomForm = dynamic(
+    () => import("@components/Dashboard/AddClassroomForm"),
+    {
+        loading: () => <p>Loading....</p>,
+    }
+)
 
 interface DashboardClassroomProp extends ClassroomProps {
     teacher: TeacherProps

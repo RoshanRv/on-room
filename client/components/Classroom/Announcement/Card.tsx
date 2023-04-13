@@ -1,5 +1,5 @@
-import ConfirmationModal from "@components/Modal/ConfirmationModel"
 import Modal from "@components/Modal/Modal"
+import Spinner from "@components/Spinner"
 import useToggle from "@hooks/useToggle"
 import useUser from "@hooks/useUser"
 import useActions from "@store/useActions"
@@ -7,9 +7,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import checkAnnouncementView from "@utils/checkAnnouncementView"
 import { formatDate } from "@utils/formatDate"
 import axios from "axios"
+import dynamic from "next/dynamic"
 import React, { useEffect, useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
 
+const ConfirmationModal = dynamic(
+    () => import("@components/Modal/ConfirmationModel"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
 interface AnnoucementCardProp {
     announcement: Announcement
 }
@@ -121,15 +129,17 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
                 </p>
             </div>
             {/*       Modal   */}
-            <Modal isOn={isOn} toggleOn={toggleOn}>
-                <ConfirmationModal
-                    toggleConfirmationModal={toggleOn}
-                    action={"delete"}
-                    name={announcement.title}
-                    type={"announcement"}
-                    handleAction={() => handleDeleteAnnouncement()}
-                />
-            </Modal>
+            {isOn && (
+                <Modal isOn={isOn} toggleOn={toggleOn}>
+                    <ConfirmationModal
+                        toggleConfirmationModal={toggleOn}
+                        action={"delete"}
+                        name={announcement.title}
+                        type={"announcement"}
+                        handleAction={() => handleDeleteAnnouncement()}
+                    />
+                </Modal>
+            )}
         </>
     )
 }

@@ -2,7 +2,6 @@ import React, { ReactNode } from "react"
 import { isEmpty } from "lodash"
 import Image from "next/image"
 import WRAPPER from "@public/wrapper_img.png"
-import TEACHER_IMG from "@public/teacher_role.jpeg"
 
 interface Props {
     data: any

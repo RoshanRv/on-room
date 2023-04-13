@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { AiOutlineClose } from "react-icons/ai"
 
 const Modal = ({ isOn, toggleOn, children }: ModalProps) => {

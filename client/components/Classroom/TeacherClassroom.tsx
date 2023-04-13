@@ -1,20 +1,27 @@
 import { ClickButton, LinkButton } from "@components/Button/Button"
 import MainTitle from "@components/Title/MainTitle"
 import { IoMdAdd } from "react-icons/io"
-
-import React, { ReactNode, useEffect, useRef } from "react"
-import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
-import Table from "@components/Table/Table"
-
+import React, { useEffect, useRef } from "react"
 import autoAnimate from "@formkit/auto-animate"
-import Announcement from "./Announcement/Announcement"
 import useActions from "@store/useActions"
 import { shallow } from "zustand/shallow"
-import SubmissionTable from "./SubmissionTable"
-import Chatroom from "./Chatroom/Chatroom"
-import { Socket } from "socket.io-client"
-import { FiEye } from "react-icons/fi"
-import Link from "next/link"
+import dynamic from "next/dynamic"
+
+const Announcement = dynamic(
+    () => import("@components/Classroom/Announcement/Announcement")
+)
+const EnrolledTable = dynamic(
+    () => import("@components/Classroom/Teacher/EnrolledTable")
+)
+const SubmissionTable = dynamic(
+    () => import("@components/Classroom/Teacher/SubmissionTable")
+)
+const AssignmentTable = dynamic(
+    () => import("@components/Classroom/Teacher/AssignmentTable")
+)
+const Chatroom = dynamic(
+    () => import("@components/Classroom/Chatroom/Chatroom")
+)
 
 interface Props {
     tab: Tabs
@@ -24,7 +31,6 @@ interface Props {
     toggleAnnouncementModal: () => void
     classroomId: string | null
     toggleInviteModal: () => void
-    socket: Socket
 }
 
 const TeacherClassroom = ({
@@ -35,7 +41,6 @@ const TeacherClassroom = ({
     toggleAnnouncementModal,
     classroomId,
     toggleInviteModal,
-    socket,
 }: Props) => {
     const parent = useRef(null)
     const { isOwner } = useActions(
@@ -115,39 +120,14 @@ const TeacherClassroom = ({
                     </ClickButton>
                 )}
             </MainTitle>
+            {/* --- End Title   ------- */}
 
             {/*      Assignment Table    */}
             {assignments && tab === "assignments" && (
-                <EmptyWrapper
-                    data={assignments}
-                    noDataText={"No Assignments Found In This Classroom"}
-                >
-                    <Table
-                        headers={[
-                            "No",
-                            "Name",
-                            // "Description",
-                            "Due Date",
-                            "Action",
-                        ]}
-                        rows={assignments.map(
-                            (assignment, i) =>
-                                [
-                                    i + 1,
-                                    assignment.name,
-                                    // assignment.description,
-                                    assignment.dueDate,
-                                    <Link
-                                        href={`/classroom/${classroomId}/assignment/${assignment.id}`}
-                                    >
-                                        <button className="text-2xl">
-                                            <FiEye />
-                                        </button>
-                                    </Link>,
-                                ] as ReactNode[]
-                        )}
-                    />
-                </EmptyWrapper>
+                <AssignmentTable
+                    assignments={assignments}
+                    classroomId={classroomId}
+                />
             )}
 
             {/*    Submissions  */}
@@ -157,27 +137,7 @@ const TeacherClassroom = ({
 
             {/*     Enrolled Students Table    */}
             {students && tab === "students" && (
-                <EmptyWrapper
-                    data={students}
-                    noDataText={"No Students Enrolled"}
-                >
-                    <Table
-                        headers={["No", "Name", "Action"]}
-                        rows={students.map(
-                            (student, i) =>
-                                [
-                                    i + 1,
-                                    student.name,
-
-                                    <Link href={`/`}>
-                                        <button className="text-2xl">
-                                            <FiEye />
-                                        </button>
-                                    </Link>,
-                                ] as ReactNode[]
-                        )}
-                    />
-                </EmptyWrapper>
+                <EnrolledTable students={students} />
             )}
 
             {/*    Announcements  */}
@@ -187,7 +147,7 @@ const TeacherClassroom = ({
             )}
 
             {/* Chat */}
-            {tab === "chats" && <Chatroom socket={socket} />}
+            {tab === "chats" && <Chatroom />}
         </section>
     )
 }

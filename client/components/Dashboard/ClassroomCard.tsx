@@ -2,8 +2,7 @@ import { ClickButton } from "@components/Button/Button"
 import ConfirmationModal from "@components/Modal/ConfirmationModel"
 import Modal from "@components/Modal/Modal"
 import useToggle from "@hooks/useToggle"
-import { ClassroomSchemaInput } from "@schema/dashboard.schema"
-import React from "react"
+import Image from "next/image"
 
 interface ClassroomDataProp extends ClassroomProps {
     teacher: TeacherProps
@@ -23,11 +22,12 @@ const ClassroomCard = ({
 
     return (
         <div className="flex flex-col p-4 transition-all bg-gray-200 border-2 rounded-md shadow-lg cursor-pointer dark:bg-gray-800 dark:shadow-xl md:p-4 gap-y-6 md:border-4 shadow-gray-400 dark:shadow-black border-dPri/70 ">
-            <div className="overflow-hidden rounded-md ">
-                <img
+            <div className="overflow-hidden rounded-md w-full md:w-full h-44 md:h-52 relative ">
+                <Image
                     src={classroomData.img}
                     alt={"classroom_img"}
-                    className="transition-all rounded-md hover:scale-110"
+                    className="transition-all rounded-md hover:scale-110 w-full h-full"
+                    fill={true}
                 />
             </div>
             <div className="pt-2 text-gray-700 border-t dark:text-gray-300 border-dPri">

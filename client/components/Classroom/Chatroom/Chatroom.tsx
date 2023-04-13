@@ -2,11 +2,9 @@ import useUser from "@hooks/useUser"
 import { useSearchParams } from "next/navigation"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { IoSend } from "react-icons/io5"
-import { Socket } from "socket.io-client"
+import { connect } from "socket.io-client"
 
-interface Prop {
-    socket: Socket
-}
+interface Prop {}
 
 interface ReceivedMsgProps {
     msg: string
@@ -14,7 +12,9 @@ interface ReceivedMsgProps {
     time: string
 }
 
-const Chatroom: FC<Prop> = ({ socket }) => {
+const socket = connect(process.env.NEXT_PUBLIC_SERVER_ENDPOINT)
+
+const Chatroom: FC<Prop> = ({}) => {
     const { user } = useUser()
     const classroomId = useSearchParams().get("id")
     const [receivedMsg, setReceivedMsg] = useState<ReceivedMsgProps[]>([])
@@ -76,6 +76,7 @@ const Chatroom: FC<Prop> = ({ socket }) => {
             inputRef.current.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") {
                     const msg = inputRef.current?.value
+                    console.log(msg)
 
                     handleSendMsg(msg)
                 }
@@ -91,7 +92,7 @@ const Chatroom: FC<Prop> = ({ socket }) => {
                 }
             })
         }
-    }, [inputRef])
+    }, [inputRef, user])
 
     const handleSendMsg = (msg: string | undefined) => {
         if (msg != "" && user) {

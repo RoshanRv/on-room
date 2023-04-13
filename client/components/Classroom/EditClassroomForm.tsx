@@ -1,40 +1,26 @@
 import { ClickButton } from "@components/Button/Button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { classroomSchema, ClassroomSchemaInput } from "@schema/dashboard.schema"
-import {
-    QueryObserver,
-    useMutation,
-    useQueryClient,
-} from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import omitEmptyValues from "@utils/omitEmptyValues"
 import axios from "axios"
 import { useSearchParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import Image from "next/image"
+import Form from "@components/Form/Form"
 
-const EditClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
+const EditClassroomForm = ({
+    toggleOn,
+    classroom,
+}: {
+    toggleOn: () => void
+    classroom: ClassroomProps | undefined
+}) => {
     const queryClient = useQueryClient()
     const searchParams = useSearchParams()
     const id = searchParams.get("id")
-    const [classroom, setClassroom] = useState<ClassroomProps>()
     const [imgUrl, setImgUrl] = useState<string | undefined>()
-
-    useEffect(() => {
-        // Create an observer to watch the query and update its result into state
-        const observer = new QueryObserver(queryClient, {
-            queryKey: ["classroom", id],
-            enabled: false,
-            retry: 1,
-        })
-        const unsubscribe = observer.subscribe((queryResult: any) => {
-            setClassroom(queryResult?.data?.data)
-        })
-
-        // Clean up the subscription when the component unmounts
-        return () => {
-            unsubscribe()
-        }
-    }, [queryClient])
 
     const { mutate } = useMutation({
         mutationFn: (data: Partial<ClassroomSchemaInput>) =>
@@ -57,6 +43,11 @@ const EditClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
         handleSubmit,
     } = useForm<ClassroomSchemaInput>({
         resolver: zodResolver(classroomSchema),
+        defaultValues: {
+            title: classroom?.title,
+            description: classroom?.description,
+            img: classroom?.img,
+        },
     })
 
     useEffect(() => {
@@ -79,11 +70,12 @@ const EditClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
                 Edit Classroom
             </h1>
             {/* classroom Img */}
-            <div className="w-full h-40 my-6 border rounded-md shadow-md md:h-60 border-dPri shadow-black/20">
-                <img
-                    src={imgUrl}
+            <div className="w-full h-40 relative my-6 border rounded-md shadow-md md:h-60 border-dPri shadow-black/20">
+                <Image
+                    src={imgUrl || ""}
                     alt="classroom_img"
                     className="w-full h-full rounded-md"
+                    fill
                 />
             </div>
             {/* Form */}
@@ -122,6 +114,13 @@ const EditClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
                         Description
                     </h1>
                 </div>
+
+                <Form
+                    errors={errors}
+                    inputs={["title", "description"]}
+                    register={register}
+                    schemaType={ClassroomSchemaInput}
+                />
 
                 {/* Img and */}
                 <div className="flex items-end gap-x-2">

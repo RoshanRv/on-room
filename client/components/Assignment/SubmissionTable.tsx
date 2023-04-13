@@ -4,6 +4,7 @@ import { HiOutlineDocumentDownload } from "react-icons/hi"
 import { FiEye } from "react-icons/fi"
 import useActions from "@store/useActions"
 import { BiTrash } from "react-icons/bi"
+import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 
 interface Prop {
     submissions: SubmissionProps[] | undefined
@@ -29,7 +30,10 @@ const AssignmentTable = ({
     const isEnrolled = useActions((state) => state.isEnrolled)
 
     return (
-        <section>
+        <EmptyWrapper
+            data={submissions}
+            noDataText="You Have Not Submmited This Assignment"
+        >
             {submissions && (
                 <Table
                     headers={[
@@ -86,7 +90,7 @@ const AssignmentTable = ({
                     ])}
                 />
             )}
-        </section>
+        </EmptyWrapper>
     )
 }
 

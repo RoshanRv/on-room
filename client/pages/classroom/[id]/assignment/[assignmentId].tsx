@@ -1,8 +1,4 @@
-import AssignmentTable from "@components/Assignment/AssignmentTable"
 import { ClickButton } from "@components/Button/Button"
-import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
-import ConfirmationModal from "@components/Modal/ConfirmationModel"
-import FileUploadModel from "@components/Modal/FileUploadModel"
 import Modal from "@components/Modal/Modal"
 import MainTitle from "@components/Title/MainTitle"
 import useToggle from "@hooks/useToggle"
@@ -10,19 +6,58 @@ import useUser from "@hooks/useUser"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios, { AxiosResponse } from "axios"
 import { useSearchParams } from "next/navigation"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
 import { HiOutlinePencilAlt } from "react-icons/hi"
 import { TiDocumentAdd } from "react-icons/ti"
 import { saveAs } from "file-saver"
-import SubmissionTable from "@components/Assignment/SubmissionTable"
 import useActions from "@store/useActions"
 import { shallow } from "zustand/shallow"
 import isPresent from "@utils/isPresent"
 import useToast from "@store/useToast"
-import { formatDate, isPastDueDate } from "@utils/formatDate"
-import EditAssignmentForm from "@components/Assignment/EditAssignmentForm"
+import { isPastDueDate } from "@utils/formatDate"
 import { useRouter } from "next/router"
+import dynamic from "next/dynamic"
+import Spinner from "@components/Spinner"
+import DueDate from "@components/Assignment/DueDate"
+
+const FileUploadModel = dynamic(
+    () => import("@components/Modal/FileUploadModel"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+
+const ConfirmationModal = dynamic(
+    () => import("@components/Modal/ConfirmationModel"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+
+const EditAssignmentForm = dynamic(
+    () => import("@components/Assignment/EditAssignmentForm"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const AssignmentTable = dynamic(
+    () => import("@components/Assignment/AssignmentTable"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const SubmissionTable = dynamic(
+    () => import("@components/Assignment/SubmissionTable"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
 
 const Assignment = () => {
     const { user } = useUser()
@@ -195,21 +230,7 @@ const Assignment = () => {
             {/*      Title    */}
             <MainTitle backBtn title={`${assignment?.data.name} Assignment`}>
                 {/*   Due Date   */}
-                {assignment?.data.submissions &&
-                assignment?.data.submissions.length > 0 &&
-                user?.role === "student" ? (
-                    <p className="text-success p-2 rounded-md bg-green-200 border-2 border-success text-xs md:text-base">{`Assignment Submitted`}</p>
-                ) : user?.role === "teacher" ? (
-                    <p className="text-danger p-2 rounded-md bg-red-200 border-2 border-danger text-xs md:text-base">{`Due Date: ${formatDate(
-                        assignment?.data.dueDate
-                    )}`}</p>
-                ) : (
-                    <p className="text-danger p-2 rounded-md bg-red-200 border-2 border-danger  text-xs md:text-base">{`Due Date: ${formatDate(
-                        assignment?.data.dueDate
-                    )}, ${
-                        isPastDueDate(assignment?.data.dueDate) ? "" : ""
-                    } `}</p>
-                )}
+                <DueDate assignment={assignment?.data} user={user} />
                 {/*    Submit Assignment Btn - Student  */}
                 {isEnrolled &&
                 assignment?.data.submissions &&
@@ -276,17 +297,13 @@ const Assignment = () => {
                 Assignment Files
             </h1>
             {/*      Attachments  - All   */}
-            <EmptyWrapper
-                data={assignment?.data.attachments}
-                noDataText="No Assignemnts To Show"
-            >
-                <AssignmentTable
-                    attachments={assignment?.data.attachments}
-                    handleDownload={handleDownloadAttachment}
-                    handleView={handleViewAttachment}
-                    handleDelete={handleDeleteAttachment}
-                />
-            </EmptyWrapper>
+
+            <AssignmentTable
+                attachments={assignment?.data.attachments}
+                handleDownload={handleDownloadAttachment}
+                handleView={handleViewAttachment}
+                handleDelete={handleDeleteAttachment}
+            />
 
             {/*      Submissions  - Students  */}
             {isEnrolled && (
@@ -294,57 +311,61 @@ const Assignment = () => {
                     <h1 className="text-2xl text-dPri md:text-3xl font-semibold ">
                         Your Submission
                     </h1>
-                    <EmptyWrapper
-                        data={assignment?.data.submissions}
-                        noDataText="You Have Not Submmited This Assignment"
-                    >
-                        <SubmissionTable
-                            submissions={assignment?.data.submissions}
-                            handleDownload={handleDownloadAttachment}
-                            handleView={handleViewAttachment}
-                            handleDelete={handleDeleteAttachment}
-                        />
-                    </EmptyWrapper>
+
+                    <SubmissionTable
+                        submissions={assignment?.data.submissions}
+                        handleDownload={handleDownloadAttachment}
+                        handleView={handleViewAttachment}
+                        handleDelete={handleDeleteAttachment}
+                    />
                 </>
             )}
 
             {/*   Attachment File Upload Model   */}
-            <Modal
-                isOn={isFileAttachmentModal}
-                toggleOn={toggleFileAttachmentModal}
-            >
-                <FileUploadModel
-                    toggleModal={toggleFileAttachmentModal}
-                    type={"attachment"}
-                />
-            </Modal>
+            {isFileAttachmentModal && (
+                <Modal
+                    isOn={isFileAttachmentModal}
+                    toggleOn={toggleFileAttachmentModal}
+                >
+                    <FileUploadModel
+                        toggleModal={toggleFileAttachmentModal}
+                        type={"attachment"}
+                    />
+                </Modal>
+            )}
             {/*   Attachment File Upload Model   */}
-            <Modal
-                isOn={isFileSubmissionModal}
-                toggleOn={toggleFileSubmissionModal}
-            >
-                <FileUploadModel
-                    toggleModal={toggleFileSubmissionModal}
-                    type={"submission"}
-                />
-            </Modal>
+            {isFileSubmissionModal && (
+                <Modal
+                    isOn={isFileSubmissionModal}
+                    toggleOn={toggleFileSubmissionModal}
+                >
+                    <FileUploadModel
+                        toggleModal={toggleFileSubmissionModal}
+                        type={"submission"}
+                    />
+                </Modal>
+            )}
 
             {/*      Edit Classroom Modal    */}
-            <Modal isOn={isEditModal} toggleOn={toggleEditModal}>
-                <EditAssignmentForm toggleOn={toggleEditModal} />
-            </Modal>
+            {isEditModal && (
+                <Modal isOn={isEditModal} toggleOn={toggleEditModal}>
+                    <EditAssignmentForm toggleOn={toggleEditModal} />
+                </Modal>
+            )}
             {/* < /> */}
 
             {/*   Delete Confirmation Modal  */}
-            <Modal isOn={isDeleteModal} toggleOn={toggleDeleteModal}>
-                <ConfirmationModal
-                    action="delete"
-                    name={assignment?.data.name}
-                    type={"assignment"}
-                    toggleConfirmationModal={toggleDeleteModal}
-                    handleAction={handleDeleteAssignment}
-                />
-            </Modal>
+            {isDeleteModal && (
+                <Modal isOn={isDeleteModal} toggleOn={toggleDeleteModal}>
+                    <ConfirmationModal
+                        action="delete"
+                        name={assignment?.data.name}
+                        type={"assignment"}
+                        toggleConfirmationModal={toggleDeleteModal}
+                        handleAction={handleDeleteAssignment}
+                    />
+                </Modal>
+            )}
         </main>
     )
 }

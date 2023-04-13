@@ -5,6 +5,7 @@ import { FiEye } from "react-icons/fi"
 import useActions from "@store/useActions"
 import { shallow } from "zustand/shallow"
 import { BiTrash } from "react-icons/bi"
+import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 
 interface Prop {
     attachments: Attachment[] | undefined
@@ -30,7 +31,7 @@ const AssignmentTable = ({
     const isOwner = useActions((state) => state.isOwner)
 
     return (
-        <section>
+        <EmptyWrapper data={attachments} noDataText="No Assignemnts To Show">
             {attachments && (
                 <Table
                     headers={[
@@ -87,7 +88,7 @@ const AssignmentTable = ({
                     ])}
                 />
             )}
-        </section>
+        </EmptyWrapper>
     )
 }
 

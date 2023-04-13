@@ -1,5 +1,6 @@
+import dynamic from "next/dynamic"
+
 import { ClickButton } from "@components/Button/Button"
-import EditClassroomForm from "@components/Classroom/EditClassroomForm"
 import Tabs from "@components/Classroom/Tabs"
 import Modal from "@components/Modal/Modal"
 import MainTitle from "@components/Title/MainTitle"
@@ -11,17 +12,60 @@ import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import { HiOutlinePencilAlt } from "react-icons/hi"
 import { FiTrash2 } from "react-icons/fi"
-import AddAssignmentForm from "@components/Classroom/AddAssignmentForm"
-import TeacherClassroom from "@components/Classroom/TeacherClassroom"
-import StudentClassroom from "@components/Classroom/StudentClassroom"
-import ConfirmationModal from "@components/Modal/ConfirmationModel"
-import AddAnnouncementForm from "@components/Classroom/AddAnnouncementForm"
 import isPresent from "@utils/isPresent"
 import useActions from "@store/useActions"
-import InviteStudents from "@components/Classroom/InviteStudents"
-import { connect } from "socket.io-client"
+import Spinner from "@components/Spinner"
+// import EditClassroomForm from "@components/Classroom/EditClassroomForm"
 
-const socket = connect(process.env.NEXT_PUBLIC_SERVER_ENDPOINT)
+const TeacherClassroom = dynamic(
+    () => import("@components/Classroom/TeacherClassroom"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const StudentClassroom = dynamic(
+    () => import("@components/Classroom/StudentClassroom"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const InviteStudents = dynamic(
+    () => import("@components/Classroom/InviteStudents"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const AddAnnouncementForm = dynamic(
+    () => import("@components/Classroom/AddAnnouncementForm"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const ConfirmationModal = dynamic(
+    () => import("@components/Modal/ConfirmationModel"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const AddAssignmentForm = dynamic(
+    () => import("@components/Classroom/AddAssignmentForm"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
+const EditClassroomForm = dynamic(
+    () => import("@components/Classroom/EditClassroomForm"),
+    {
+        loading: () => <Spinner />,
+        ssr: false,
+    }
+)
 
 const Classroom = () => {
     const router = useRouter()
@@ -163,7 +207,6 @@ const Classroom = () => {
                             toggleAssignmentModal={toggleAssignmentModal}
                             toggleAnnouncementModal={toggleAnnouncementModal}
                             toggleInviteModal={toggleInviteModal}
-                            socket={socket}
                         />
                     ) : (
                         userRole === "student" && (
@@ -173,7 +216,6 @@ const Classroom = () => {
                                 assignments={classroom?.data.assignments}
                                 tab={tab}
                                 toggleInviteModal={toggleInviteModal}
-                                socket={socket}
                             />
                         )
                     )}
@@ -181,62 +223,80 @@ const Classroom = () => {
             </section>
 
             {/*      Edit Classroom Modal    */}
-            <Modal isOn={isEditModal} toggleOn={toggleEditModal}>
-                <EditClassroomForm toggleOn={toggleEditModal} />
-            </Modal>
+            {isEditModal && (
+                <Modal isOn={isEditModal} toggleOn={toggleEditModal}>
+                    <EditClassroomForm
+                        classroom={classroom?.data}
+                        toggleOn={toggleEditModal}
+                    />
+                </Modal>
+            )}
             {/* < /> */}
 
             {/*      Add Assignment Modal    */}
-            <Modal isOn={isAssignmentModal} toggleOn={toggleAssignmentModal}>
-                <AddAssignmentForm
+            {isAssignmentModal && (
+                <Modal
+                    isOn={isAssignmentModal}
                     toggleOn={toggleAssignmentModal}
-                    classroomId={classroom?.data.id!}
-                />
-            </Modal>
+                >
+                    <AddAssignmentForm
+                        toggleOn={toggleAssignmentModal}
+                        classroomId={classroom?.data.id!}
+                    />
+                </Modal>
+            )}
             {/* < /> */}
 
             {/*      Add Announcement Modal    */}
-            <Modal
-                isOn={isAnnouncementModal}
-                toggleOn={toggleAnnouncementModal}
-            >
-                <AddAnnouncementForm
+            {isAnnouncementModal && (
+                <Modal
+                    isOn={isAnnouncementModal}
                     toggleOn={toggleAnnouncementModal}
-                    classroomId={classroom?.data.id!}
-                />
-            </Modal>
+                >
+                    <AddAnnouncementForm
+                        toggleOn={toggleAnnouncementModal}
+                        classroomId={classroom?.data.id!}
+                    />
+                </Modal>
+            )}
             {/* < /> */}
 
             {/*   Delete Confirmation Modal  */}
-            <Modal isOn={isDeleteModal} toggleOn={toggleDeleteModal}>
-                <ConfirmationModal
-                    name={classroom?.data.title}
-                    handleAction={handleDeleteClassroom}
-                    toggleConfirmationModal={toggleDeleteModal}
-                    action={"delete"}
-                    type={"course"}
-                />
-            </Modal>
+            {isDeleteModal && (
+                <Modal isOn={isDeleteModal} toggleOn={toggleDeleteModal}>
+                    <ConfirmationModal
+                        name={classroom?.data.title}
+                        handleAction={handleDeleteClassroom}
+                        toggleConfirmationModal={toggleDeleteModal}
+                        action={"delete"}
+                        type={"course"}
+                    />
+                </Modal>
+            )}
 
             {/*   Unenroll Confirmation Modal  */}
-            <Modal isOn={isUnEnrollModal} toggleOn={toggleUnEnrollModal}>
-                <ConfirmationModal
-                    name={classroom?.data.title}
-                    handleAction={handelUnEnroll}
-                    toggleConfirmationModal={toggleUnEnrollModal}
-                    action={"unenroll"}
-                    type={"course"}
-                />
-            </Modal>
+            {isUnEnrollModal && (
+                <Modal isOn={isUnEnrollModal} toggleOn={toggleUnEnrollModal}>
+                    <ConfirmationModal
+                        name={classroom?.data.title}
+                        handleAction={handelUnEnroll}
+                        toggleConfirmationModal={toggleUnEnrollModal}
+                        action={"unenroll"}
+                        type={"course"}
+                    />
+                </Modal>
+            )}
 
             {/*     Invite Students Modal  */}
-            <Modal isOn={isInviteModal} toggleOn={toggleInviteModal}>
-                <InviteStudents
-                    toggleOn={toggleInviteModal}
-                    classroomId={classroom?.data.id!}
-                    classroomName={classroom?.data.title}
-                />
-            </Modal>
+            {isInviteModal && (
+                <Modal isOn={isInviteModal} toggleOn={toggleInviteModal}>
+                    <InviteStudents
+                        toggleOn={toggleInviteModal}
+                        classroomId={classroom?.data.id!}
+                        classroomName={classroom?.data.title}
+                    />
+                </Modal>
+            )}
         </main>
     )
 }

@@ -4,7 +4,6 @@ import MainTitle from "@components/Title/MainTitle"
 import useToggle from "@hooks/useToggle"
 import useUser from "@hooks/useUser"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios, { AxiosResponse } from "axios"
 import { useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
@@ -20,6 +19,7 @@ import { useRouter } from "next/router"
 import dynamic from "next/dynamic"
 import Spinner from "@components/Spinner"
 import DueDate from "@components/Assignment/DueDate"
+import Head from "next/head"
 
 const FileUploadModel = dynamic(
     () => import("@components/Modal/FileUploadModel"),
@@ -59,7 +59,7 @@ const SubmissionTable = dynamic(
     }
 )
 
-const Assignment = () => {
+const Assignment = async () => {
     const { user } = useUser()
     const { isOn: isEditModal, toggleOn: toggleEditModal } = useToggle()
     const { isOn: isDeleteModal, toggleOn: toggleDeleteModal } = useToggle()
@@ -77,6 +77,8 @@ const Assignment = () => {
     const [action, setAction] = useState<"download" | "preview" | "">("")
     const [mode, setMode] = useState<"submission" | "attachment" | "">("")
     const router = useRouter()
+
+    const axios = (await import("axios")).default
 
     //  Fetches Assignment Details
     const { data: assignment } = useQuery({
@@ -174,8 +176,10 @@ const Assignment = () => {
         setAttachmentFilename(filename)
         setAction("download")
         setMode(fileMode)
-        const attachmentBlob: AxiosResponse<any, any> | undefined =
-            queryClient.getQueryData(["attachment", attachmentId])
+        const attachmentBlob: any = queryClient.getQueryData([
+            "attachment",
+            attachmentId,
+        ])
 
         if (!isStale && attachmentBlob) {
             saveAs(URL.createObjectURL(attachmentBlob.data), filename)
@@ -192,8 +196,10 @@ const Assignment = () => {
         setAttachmentFilename(filename)
         setAction("preview")
         setMode(fileMode)
-        const attachmentBlob: AxiosResponse<any, any> | undefined =
-            queryClient.getQueryData(["attachment", attachmentId])
+        const attachmentBlob: any = queryClient.getQueryData([
+            "attachment",
+            attachmentId,
+        ])
 
         if (!isStale && attachmentBlob) {
             window.open(URL.createObjectURL(attachmentBlob.data))
@@ -226,147 +232,197 @@ const Assignment = () => {
     }
 
     return (
-        <main className="flex flex-col gap-y-4 flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
-            {/*      Title    */}
-            <MainTitle backBtn title={`${assignment?.data.name} Assignment`}>
-                {/*   Due Date   */}
-                <DueDate assignment={assignment?.data} user={user} />
-                {/*    Submit Assignment Btn - Student  */}
-                {isEnrolled &&
-                assignment?.data.submissions &&
-                assignment?.data.submissions.length === 0 ? (
-                    <ClickButton
-                        size={"logo"}
-                        variant={"secondary"}
-                        onClick={toggleFileSubmissionModal}
-                        disabled={isPastDueDate(assignment?.data.dueDate)}
-                    >
-                        <div className="flex items-center gap-x-2">
-                            <TiDocumentAdd className="text-3xl" />
-                            <h1 className="hidden lg:block">
-                                Submit Assignment
-                            </h1>
-                        </div>
-                    </ClickButton>
-                ) : (
-                    // Add/Edit/Delete Attachments  Btns- Teachers
-                    isOwner && (
-                        <div className="flex gap-x-4 items-center">
-                            <ClickButton
-                                size={"logo"}
-                                variant={"primary"}
-                                onClick={toggleFileAttachmentModal}
-                            >
-                                <div className="flex items-center gap-x-2    ">
-                                    <TiDocumentAdd className="text-3xl" />
-                                    <h1 className="hidden lg:block">
-                                        Add Assignment
-                                    </h1>
-                                </div>
-                            </ClickButton>
-                            <ClickButton
-                                size={"logo"}
-                                variant={"secondary"}
-                                onClick={toggleEditModal}
-                            >
-                                <div className="flex items-center gap-x-2">
-                                    <HiOutlinePencilAlt className="text-2xl" />
-                                    <h1 className="hidden lg:block">Edit</h1>
-                                </div>
-                            </ClickButton>
-                            <ClickButton
-                                size={"logo"}
-                                variant={"danger"}
-                                onClick={toggleDeleteModal}
-                            >
-                                <div className="flex items-center gap-x-2">
-                                    <FiTrash2 className="text-2xl" />
-                                    <h1 className="hidden lg:block">Delete</h1>
-                                </div>
-                            </ClickButton>
-                        </div>
-                    )
+        <>
+            <Head>
+                {/* <!-- HTML Meta Tags --> */}
+                <title>OnRoom | Assignment</title>
+                <meta
+                    name="description"
+                    content="Connecting classrooms with OnRoom"
+                />
+
+                {/* <!-- Google / Search Engine Tags --> */}
+                <meta itemProp="name" content="OnRoom | Assignment" />
+                <meta
+                    itemProp="description"
+                    content="Connecting classrooms with OnRoom"
+                />
+                <meta itemProp="image" content="meta.png" />
+
+                {/* <!-- Facebook Meta Tags --> */}
+                <meta
+                    property="og:url"
+                    content="https://portfolio-roshanrv.vercel.app"
+                />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="OnRoom | Assignment" />
+                <meta
+                    property="og:description"
+                    content="Connecting classrooms with OnRoom"
+                />
+                <meta property="og:image" content="meta.png" />
+
+                {/* <!-- Twitter Meta Tags --> */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="OnRoom | Assignment" />
+                <meta
+                    name="twitter:description"
+                    content="Connecting classrooms with OnRoom"
+                />
+                <meta name="twitter:image" content="meta.png" />
+            </Head>
+            <main className="flex flex-col gap-y-4 flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
+                {/*      Title    */}
+                <MainTitle
+                    backBtn
+                    title={`${assignment?.data.name} Assignment`}
+                >
+                    {/*   Due Date   */}
+                    <DueDate assignment={assignment?.data} user={user} />
+                    {/*    Submit Assignment Btn - Student  */}
+                    {isEnrolled &&
+                    assignment?.data.submissions &&
+                    assignment?.data.submissions.length === 0 ? (
+                        <ClickButton
+                            size={"logo"}
+                            variant={"secondary"}
+                            onClick={toggleFileSubmissionModal}
+                            disabled={isPastDueDate(assignment?.data.dueDate)}
+                        >
+                            <div className="flex items-center gap-x-2">
+                                <TiDocumentAdd className="text-3xl" />
+                                <h1 className="hidden lg:block">
+                                    Submit Assignment
+                                </h1>
+                            </div>
+                        </ClickButton>
+                    ) : (
+                        // Add/Edit/Delete Attachments  Btns- Teachers
+                        isOwner && (
+                            <div className="flex gap-x-4 items-center">
+                                <ClickButton
+                                    size={"logo"}
+                                    variant={"primary"}
+                                    onClick={toggleFileAttachmentModal}
+                                >
+                                    <div className="flex items-center gap-x-2    ">
+                                        <TiDocumentAdd className="text-3xl" />
+                                        <h1 className="hidden lg:block">
+                                            Add Assignment
+                                        </h1>
+                                    </div>
+                                </ClickButton>
+                                <ClickButton
+                                    size={"logo"}
+                                    variant={"secondary"}
+                                    onClick={toggleEditModal}
+                                >
+                                    <div className="flex items-center gap-x-2">
+                                        <HiOutlinePencilAlt className="text-2xl" />
+                                        <h1 className="hidden lg:block">
+                                            Edit
+                                        </h1>
+                                    </div>
+                                </ClickButton>
+                                <ClickButton
+                                    size={"logo"}
+                                    variant={"danger"}
+                                    onClick={toggleDeleteModal}
+                                >
+                                    <div className="flex items-center gap-x-2">
+                                        <FiTrash2 className="text-2xl" />
+                                        <h1 className="hidden lg:block">
+                                            Delete
+                                        </h1>
+                                    </div>
+                                </ClickButton>
+                            </div>
+                        )
+                    )}
+                </MainTitle>
+
+                {/*   Description   */}
+                <p className="text-gray-800 dark:text-gray-300 mb-10">
+                    {assignment?.data.description}
+                </p>
+                <h1 className="text-2xl text-dPri md:text-3xl font-semibold ">
+                    Assignment Files
+                </h1>
+                {/*      Attachments  - All   */}
+
+                <AssignmentTable
+                    attachments={assignment?.data.attachments}
+                    handleDownload={handleDownloadAttachment}
+                    handleView={handleViewAttachment}
+                    handleDelete={handleDeleteAttachment}
+                />
+
+                {/*      Submissions  - Students  */}
+                {isEnrolled && (
+                    <>
+                        <h1 className="text-2xl text-dPri md:text-3xl font-semibold ">
+                            Your Submission
+                        </h1>
+
+                        <SubmissionTable
+                            submissions={assignment?.data.submissions}
+                            handleDownload={handleDownloadAttachment}
+                            handleView={handleViewAttachment}
+                            handleDelete={handleDeleteAttachment}
+                        />
+                    </>
                 )}
-            </MainTitle>
 
-            {/*   Description   */}
-            <p className="text-gray-800 dark:text-gray-300 mb-10">
-                {assignment?.data.description}
-            </p>
-            <h1 className="text-2xl text-dPri md:text-3xl font-semibold ">
-                Assignment Files
-            </h1>
-            {/*      Attachments  - All   */}
+                {/*   Attachment File Upload Model   */}
+                {isFileAttachmentModal && (
+                    <Modal
+                        isOn={isFileAttachmentModal}
+                        toggleOn={toggleFileAttachmentModal}
+                    >
+                        <FileUploadModel
+                            toggleModal={toggleFileAttachmentModal}
+                            type={"attachment"}
+                        />
+                    </Modal>
+                )}
+                {/*   Attachment File Upload Model   */}
+                {isFileSubmissionModal && (
+                    <Modal
+                        isOn={isFileSubmissionModal}
+                        toggleOn={toggleFileSubmissionModal}
+                    >
+                        <FileUploadModel
+                            toggleModal={toggleFileSubmissionModal}
+                            type={"submission"}
+                        />
+                    </Modal>
+                )}
 
-            <AssignmentTable
-                attachments={assignment?.data.attachments}
-                handleDownload={handleDownloadAttachment}
-                handleView={handleViewAttachment}
-                handleDelete={handleDeleteAttachment}
-            />
+                {/*      Edit Classroom Modal    */}
+                {isEditModal && (
+                    <Modal isOn={isEditModal} toggleOn={toggleEditModal}>
+                        <EditAssignmentForm
+                            toggleOn={toggleEditModal}
+                            assignment={assignment?.data}
+                        />
+                    </Modal>
+                )}
+                {/* < /> */}
 
-            {/*      Submissions  - Students  */}
-            {isEnrolled && (
-                <>
-                    <h1 className="text-2xl text-dPri md:text-3xl font-semibold ">
-                        Your Submission
-                    </h1>
-
-                    <SubmissionTable
-                        submissions={assignment?.data.submissions}
-                        handleDownload={handleDownloadAttachment}
-                        handleView={handleViewAttachment}
-                        handleDelete={handleDeleteAttachment}
-                    />
-                </>
-            )}
-
-            {/*   Attachment File Upload Model   */}
-            {isFileAttachmentModal && (
-                <Modal
-                    isOn={isFileAttachmentModal}
-                    toggleOn={toggleFileAttachmentModal}
-                >
-                    <FileUploadModel
-                        toggleModal={toggleFileAttachmentModal}
-                        type={"attachment"}
-                    />
-                </Modal>
-            )}
-            {/*   Attachment File Upload Model   */}
-            {isFileSubmissionModal && (
-                <Modal
-                    isOn={isFileSubmissionModal}
-                    toggleOn={toggleFileSubmissionModal}
-                >
-                    <FileUploadModel
-                        toggleModal={toggleFileSubmissionModal}
-                        type={"submission"}
-                    />
-                </Modal>
-            )}
-
-            {/*      Edit Classroom Modal    */}
-            {isEditModal && (
-                <Modal isOn={isEditModal} toggleOn={toggleEditModal}>
-                    <EditAssignmentForm toggleOn={toggleEditModal} />
-                </Modal>
-            )}
-            {/* < /> */}
-
-            {/*   Delete Confirmation Modal  */}
-            {isDeleteModal && (
-                <Modal isOn={isDeleteModal} toggleOn={toggleDeleteModal}>
-                    <ConfirmationModal
-                        action="delete"
-                        name={assignment?.data.name}
-                        type={"assignment"}
-                        toggleConfirmationModal={toggleDeleteModal}
-                        handleAction={handleDeleteAssignment}
-                    />
-                </Modal>
-            )}
-        </main>
+                {/*   Delete Confirmation Modal  */}
+                {isDeleteModal && (
+                    <Modal isOn={isDeleteModal} toggleOn={toggleDeleteModal}>
+                        <ConfirmationModal
+                            action="delete"
+                            name={assignment?.data.name}
+                            type={"assignment"}
+                            toggleConfirmationModal={toggleDeleteModal}
+                            handleAction={handleDeleteAssignment}
+                        />
+                    </Modal>
+                )}
+            </main>
+        </>
     )
 }
 

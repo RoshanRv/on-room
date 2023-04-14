@@ -1,29 +1,35 @@
 import React, { useState } from "react"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import SelectRole from "@components/SelectRole/SelectRole"
-import { omit } from "lodash"
-
 import {
     SignUp1InputProps,
     SignUp2InputProps,
     signUp1Schema,
     signUp2Schema,
 } from "@schema/signup.schema"
-import SignUp1 from "@components/SignUp/SignUp1"
-import SignUp2 from "@components/SignUp/SignUp2"
-import axios, { AxiosError } from "axios"
 
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import useToast from "@store/useToast"
 import setErrorMsg from "@utils/setErrorMsg"
+import dynamic from "next/dynamic"
+import Spinner from "@components/Spinner"
+import Head from "next/head"
+
+const SelectRole = dynamic(() => import("@components/SelectRole/SelectRole"), {
+    loading: () => <Spinner />,
+})
+const SignUp1 = dynamic(() => import("@components/SignUp/SignUp1"), {
+    loading: () => <Spinner />,
+})
+const SignUp2 = dynamic(() => import("@components/SignUp/SignUp2"), {
+    loading: () => <Spinner />,
+})
 
 const DEFAULT_IMG =
     "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000"
 
-const signUp = () => {
+const signUp = async () => {
     const [role, setRole] = useState<Role>("")
     const [part, setPart] = useState(0)
     const [imgUrl, setImgUrl] = useState(DEFAULT_IMG)
@@ -31,7 +37,10 @@ const signUp = () => {
     const router = useRouter()
 
     const mutateFunc = async (data: Data) => {
+        const omit = (await import("lodash")).omit
         const filteredData = omit(data, ["confirmPassword"])
+
+        const axios = (await import("axios")).default
 
         return await axios.post(
             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`,
@@ -50,7 +59,7 @@ const signUp = () => {
             })
             router.push("/signin")
         },
-        onError(e: AxiosError) {
+        onError(e: any) {
             setToast({
                 msg: setErrorMsg(e.response!),
                 variant: "error",
@@ -58,6 +67,7 @@ const signUp = () => {
         },
     })
 
+    const useForm = (await import("react-hook-form")).useForm
     const {
         register,
         formState: { errors },
@@ -97,57 +107,95 @@ const signUp = () => {
 
         try {
             const user = await mutateAsync(data)
-
-            console.log(user)
         } catch (e) {
             console.log(e)
         }
     }
 
     return (
-        <main
-            ref={parent}
-            className="flex flex-col items-center justify-center flex-1 h-full py-2 bg-back md:px-10 md:py-6 bg gap-y-10 lg:gap-y-16"
-        >
-            {/*           Part - 0       */}
-            {part == 0 && (
-                <SelectRole
-                    role={role}
-                    setRole={setRole}
-                    handleNext={handleNext}
-                    page={"signup"}
+        <>
+            <Head>
+                {/* <!-- HTML Meta Tags --> */}
+                <title>OnRoom | Sign Up</title>
+                <meta
+                    name="description"
+                    content="Connecting classrooms with OnRoom"
                 />
-            )}
-            {/*         End Part - 0         */}
 
-            {/*      Part - 1    */}
-            {part == 1 && (
-                <SignUp1
-                    role={role}
-                    handleNext={handleNext}
-                    handleBack={handleBack}
-                    handleSubmit={handleSubmit}
-                    errors={errors}
-                    register={register}
+                {/* <!-- Google / Search Engine Tags --> */}
+                <meta itemProp="name" content="OnRoom | Sign Up" />
+                <meta
+                    itemProp="description"
+                    content="Connecting classrooms with OnRoom"
                 />
-            )}
-            {/*      End Part - 1    */}
+                <meta itemProp="image" content="meta.png" />
 
-            {/*      Part - 2    */}
-            {part == 2 && (
-                <SignUp2
-                    handleBack={handleBack}
-                    handleSubmit={handleSubmit2}
-                    errors={errors2}
-                    register={register2}
-                    reset={reset}
-                    imgUrl={imgUrl}
-                    setImgUrl={setImgUrl}
-                    handleSignUp={handleSignUp}
+                {/* <!-- Facebook Meta Tags --> */}
+                <meta
+                    property="og:url"
+                    content="https://portfolio-roshanrv.vercel.app"
                 />
-            )}
-            {/*      End Part - 2    */}
-        </main>
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="OnRoom | Sign Up" />
+                <meta
+                    property="og:description"
+                    content="Connecting classrooms with OnRoom"
+                />
+                <meta property="og:image" content="meta.png" />
+
+                {/* <!-- Twitter Meta Tags --> */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="OnRoom | Sign Up" />
+                <meta
+                    name="twitter:description"
+                    content="Connecting classrooms with OnRoom"
+                />
+                <meta name="twitter:image" content="meta.png" />
+            </Head>
+            <main
+                ref={parent}
+                className="flex flex-col items-center justify-center flex-1 h-full py-2 bg-gray-100 dark:bg-back md:px-10 md:py-6 bg gap-y-10 lg:gap-y-16"
+            >
+                {/*           Part - 0       */}
+                {part == 0 && (
+                    <SelectRole
+                        role={role}
+                        setRole={setRole}
+                        handleNext={handleNext}
+                        page={"signup"}
+                    />
+                )}
+                {/*         End Part - 0         */}
+
+                {/*      Part - 1    */}
+                {part == 1 && (
+                    <SignUp1
+                        role={role}
+                        handleNext={handleNext}
+                        handleBack={handleBack}
+                        handleSubmit={handleSubmit}
+                        errors={errors}
+                        register={register}
+                    />
+                )}
+                {/*      End Part - 1    */}
+
+                {/*      Part - 2    */}
+                {part == 2 && (
+                    <SignUp2
+                        handleBack={handleBack}
+                        handleSubmit={handleSubmit2}
+                        errors={errors2}
+                        register={register2}
+                        reset={reset}
+                        imgUrl={imgUrl}
+                        setImgUrl={setImgUrl}
+                        handleSignUp={handleSignUp}
+                    />
+                )}
+                {/*      End Part - 2    */}
+            </main>
+        </>
     )
 }
 

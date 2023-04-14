@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import omitEmptyValues from "@utils/omitEmptyValues"
 import axios from "axios"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import Image from "next/image"
 import Form from "@components/Form/Form"
@@ -20,7 +19,6 @@ const EditClassroomForm = ({
     const queryClient = useQueryClient()
     const searchParams = useSearchParams()
     const id = searchParams.get("id")
-    const [imgUrl, setImgUrl] = useState<string | undefined>()
 
     const { mutate } = useMutation({
         mutationFn: (data: Partial<ClassroomSchemaInput>) =>
@@ -38,7 +36,7 @@ const EditClassroomForm = ({
 
     const {
         register,
-        setValue,
+        watch,
         formState: { errors },
         handleSubmit,
     } = useForm<ClassroomSchemaInput>({
@@ -50,19 +48,14 @@ const EditClassroomForm = ({
         },
     })
 
-    useEffect(() => {
-        if (classroom) {
-            setValue("title", classroom?.title)
-            setValue("description", classroom?.description)
-            setValue("img", classroom?.img)
-            setImgUrl(classroom?.img)
-        }
-    }, [classroom])
+    const imgUrl = watch("img", classroom?.img)
 
     const handleEdit = (e: ClassroomSchemaInput) => {
         mutate(omitEmptyValues(e))
         toggleOn()
     }
+
+    const temp = {} as ClassroomSchemaInput
 
     return (
         <div>
@@ -80,69 +73,26 @@ const EditClassroomForm = ({
             </div>
             {/* Form */}
             <div className="flex flex-col mt-4 gap-y-6 ">
-                {/*     Title     */}
-                <div className="flex flex-col-reverse justify-end w-full ">
-                    {errors.title && (
-                        <p className="p-1 text-base text-red-500 capitalize ">
-                            {errors.title.message as string}
-                        </p>
-                    )}
-                    <input
-                        type="text"
-                        placeholder="Title"
-                        className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
-                        {...register("title")}
-                    />
-                    <h1 className="mb-1 text-sm transition-all text-dPri peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                        Title
-                    </h1>
-                </div>
-                {/*     Description    */}
-                <div className="flex flex-col-reverse justify-end w-full ">
-                    {errors.description && (
-                        <p className="p-1 overflow-auto text-base text-red-500 capitalize resize-none">
-                            {errors.description.message as string}
-                        </p>
-                    )}
-                    <textarea
-                        placeholder="Description"
-                        rows={1}
-                        className="w-full p-2 overflow-y-auto text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
-                        {...register("description")}
-                    />
-                    <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                        Description
-                    </h1>
-                </div>
-
                 <Form
+                    schemaType={temp}
                     errors={errors}
-                    inputs={["title", "description"]}
+                    inputs={[
+                        {
+                            inputName: "title",
+                            inputType: "text",
+                        },
+                        {
+                            inputName: "description",
+                            inputType: "textarea",
+                        },
+                        {
+                            inputName: "img",
+                            inputType: "url",
+                        },
+                    ]}
                     register={register}
-                    schemaType={ClassroomSchemaInput}
                 />
 
-                {/* Img and */}
-                <div className="flex items-end gap-x-2">
-                    <div className="flex flex-col-reverse justify-end w-full">
-                        {errors.img && (
-                            <p className="p-1 text-base text-red-500 capitalize ">
-                                {errors.img.message as string}
-                            </p>
-                        )}
-                        <input
-                            type="text"
-                            placeholder="imageUrl"
-                            className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
-                            {...register("img", {
-                                onChange: (e) => setImgUrl(e.target.value),
-                            })}
-                        />
-                        <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                            Image Url
-                        </h1>
-                    </div>
-                </div>
                 {/*    Add Btn  */}
                 <ClickButton onClick={handleSubmit(handleEdit)}>
                     <h1>Edit Classroom</h1>

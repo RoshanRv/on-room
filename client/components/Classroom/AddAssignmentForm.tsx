@@ -10,6 +10,7 @@ import {
     AssignmentSchemaInput,
     createAssignmentSchema,
 } from "@schema/assignment.schema"
+import Form from "@components/Form/Form"
 
 const AddAssignmentForm = ({
     toggleOn,
@@ -26,6 +27,8 @@ const AddAssignmentForm = ({
     } = useForm<AssignmentSchemaInput>({
         resolver: zodResolver(createAssignmentSchema),
     })
+
+    const temp = {} as AssignmentSchemaInput
 
     const queryClient = useQueryClient()
 
@@ -66,61 +69,29 @@ const AddAssignmentForm = ({
             </h1>
             {/* Form */}
             <div className="flex flex-col mt-4 gap-y-6 ">
-                {/*     Title     */}
-                <div className="flex flex-col-reverse justify-end w-full ">
-                    {errors.name && (
-                        <p className="p-1 text-base text-red-500 capitalize ">
-                            {errors.name.message as string}
-                        </p>
-                    )}
-                    <input
-                        type="text"
-                        placeholder="name"
-                        className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
-                        {...register("name")}
-                    />
-                    <h1 className="mb-1 text-sm transition-all text-dPri peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                        Name
-                    </h1>
-                </div>
-                {/*     Description    */}
-                <div className="flex flex-col-reverse justify-end w-full ">
-                    {errors.description && (
-                        <p className="p-1 overflow-auto text-base text-red-500 capitalize resize-none">
-                            {errors.description.message as string}
-                        </p>
-                    )}
-                    <textarea
-                        placeholder="Description"
-                        rows={1}
-                        className="w-full p-2 overflow-y-auto text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
-                        {...register("description")}
-                    />
-                    <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                        Description
-                    </h1>
-                </div>
+                <Form
+                    errors={errors}
+                    inputs={[
+                        {
+                            inputName: "name",
+                            inputType: "text",
+                        },
+                        {
+                            inputName: "description",
+                            inputType: "textarea",
+                        },
+                        {
+                            inputName: "dueDate",
+                            inputType: "date",
+                            options: {
+                                min: new Date().toISOString().slice(0, 10),
+                            },
+                        },
+                    ]}
+                    register={register}
+                    schemaType={temp}
+                />
 
-                {/* Due Date and */}
-                <div className="flex items-end gap-x-2">
-                    <div className="flex flex-col-reverse justify-end w-full">
-                        {errors.dueDate && (
-                            <p className="p-1 text-base text-red-500 capitalize ">
-                                {errors.dueDate.message as string}
-                            </p>
-                        )}
-                        <input
-                            type="date"
-                            placeholder="Date"
-                            className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-dPri/70 border-dPri/70 placeholder-shown:bg-transparent focus:bg-dPri/70 font-sm "
-                            min={new Date().toISOString().slice(0, 10)}
-                            {...register("dueDate")}
-                        />
-                        <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
-                            Due Date
-                        </h1>
-                    </div>
-                </div>
                 {/*    Add Btn  */}
                 <ClickButton
                     onClick={handleSubmit(handleAddAssignment)}

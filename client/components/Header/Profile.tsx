@@ -2,6 +2,7 @@ import useToast from "@store/useToast"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import setErrorMsg from "@utils/setErrorMsg"
 import axios, { AxiosError } from "axios"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React from "react"
@@ -42,12 +43,13 @@ const Profile = ({ user }: { user: UserProps }) => {
 
     return (
         <div className="relative  group ">
-            <div className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri">
+            <div className="w-12 h-12 border-2 rounded-full cursor-pointer border-dPri relative ">
                 {/* img */}
-                <img
+                <Image
                     src={user.img}
                     alt="profile_pic"
                     className="w-full h-full rounded-full"
+                    fill
                 />
                 {/*   Dropdown   */}
                 <div

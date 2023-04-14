@@ -1,18 +1,19 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import { useQuery } from "@tanstack/react-query"
 import React from "react"
 import Card from "./Card"
 
 const Announcement = ({ classroomId }: { classroomId: string | null }) => {
     const { data: announcements } = useQuery({
         queryKey: ["announcement"],
-        queryFn: () =>
-            axios.get<Announcement[]>(
+        queryFn: async () => {
+            const axios = (await import("axios")).default
+            return axios.get<Announcement[]>(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/announcement/${classroomId}`,
                 {
                     withCredentials: true,
                 }
-            ),
+            )
+        },
     })
 
     return (

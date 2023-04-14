@@ -36,8 +36,6 @@ const SubmissionTable = ({
         }
     }, [assignments])
 
-    console.log(assignmentList)
-
     // Fetches A Single File/Attachment By ID
     const { data: attachment, isStale } = useQuery({
         queryKey: ["attachment", submissionId],
@@ -127,8 +125,10 @@ const SubmissionTable = ({
                     className="p-2 bg-transparent border-b-2 border-dPri/80 outline-0 text-gray-800 dark:text-gray-300 w-full text-sm md:text-lg "
                 >
                     <option value={""}>Choose Assignment Name</option>
-                    {assignmentList.map((assignment) => (
-                        <option value={assignment}>{assignment}</option>
+                    {assignmentList.map((assignment, i) => (
+                        <option key={i} value={assignment}>
+                            {assignment}
+                        </option>
                     ))}
                 </select>
             </div>

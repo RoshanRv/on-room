@@ -6,7 +6,6 @@ import useActions from "@store/useActions"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import checkAnnouncementView from "@utils/checkAnnouncementView"
 import { formatDate } from "@utils/formatDate"
-import axios from "axios"
 import dynamic from "next/dynamic"
 import React, { useEffect, useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
@@ -44,14 +43,17 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
         }
     }, [user, announcement, isEnrolled])
 
-    const mutateFunc = async () =>
-        axios.put(
+    const mutateFunc = async () => {
+        const axios = (await import("axios")).default
+
+        return axios.put(
             `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/announcement/`,
             { announcementId: announcement.id },
             {
                 withCredentials: true,
             }
         )
+    }
 
     const { mutate } = useMutation({
         mutationFn: mutateFunc,
@@ -61,13 +63,16 @@ const Card = ({ announcement }: AnnoucementCardProp) => {
     })
 
     const { mutate: deleteAnnouncement } = useMutation({
-        mutationFn: () =>
-            axios.delete(
+        mutationFn: async () => {
+            const axios = (await import("axios")).default
+
+            return axios.delete(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/announcement/${announcement.id}`,
                 {
                     withCredentials: true,
                 }
-            ),
+            )
+        },
         onSuccess: () => {
             queryClient.invalidateQueries(["announcement", "announcements"])
         },

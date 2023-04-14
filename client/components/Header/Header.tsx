@@ -1,12 +1,11 @@
 import { LinkButton } from "@components/Button/Button"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
-import { QueryCache, useQuery, useMutation } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { queryClient } from "pages/_app"
 import useToggle from "@hooks/useToggle"
 import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import checkAnnouncementView from "@utils/checkAnnouncementView"
 import Notification from "./Notification"
 import { BiMenu } from "react-icons/bi"
@@ -23,7 +22,6 @@ export interface Announcements {
 }
 
 const Header = () => {
-    const router = useRouter()
     const pathname = usePathname()
 
     const [unviewedAnnouncements, setUnviewedAnnouncements] = useState<

@@ -76,7 +76,6 @@ const Chatroom: FC<Prop> = ({}) => {
             inputRef.current.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") {
                     const msg = inputRef.current?.value
-                    console.log(msg)
 
                     handleSendMsg(msg)
                 }

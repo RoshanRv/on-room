@@ -3,6 +3,7 @@ import useToast from "@store/useToast"
 import { useMutation } from "@tanstack/react-query"
 import setErrorMsg from "@utils/setErrorMsg"
 import axios, { AxiosError } from "axios"
+import Image from "next/image"
 import { UserDetailsType } from "pages/profile"
 import React, { useState } from "react"
 
@@ -99,11 +100,12 @@ const UpdateCard = ({ user, userDetails, setUserDetails }: UpdateCardProps) => {
                     </h1>
                 </div>
                 {/*       DP   */}
-                <div className="rounded-full border-2 w-28 h-20 border-dPri overflow-hidden">
-                    <img
+                <div className="rounded-full border-2 w-28 h-20 border-dPri overflow-hidden relative ">
+                    <Image
                         src={userDetails.img}
                         alt=""
                         className="w-full h-full"
+                        fill
                     />
                 </div>
             </div>

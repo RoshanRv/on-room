@@ -3,7 +3,6 @@ import React from "react"
 import { HiOutlineDocumentDownload } from "react-icons/hi"
 import { FiEye } from "react-icons/fi"
 import useActions from "@store/useActions"
-import { shallow } from "zustand/shallow"
 import { BiTrash } from "react-icons/bi"
 import EmptyWrapper from "@components/EmptyWrapper/EmptyWrapper"
 

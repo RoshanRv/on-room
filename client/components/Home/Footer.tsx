@@ -7,10 +7,10 @@ const Footer = () => {
         <footer
             className={`bg-white dark:bg-black p-12 pb-4 border-t-2 border-dPri`}
         >
-            <div className="flex justify-around items-center">
+            <div className="flex flex-col md:flex-row gap-4 justify-around items-center">
                 <Link
                     href="/"
-                    className={`text-black dark:text-white font-bold hover:text-dPri dark:hover:text-dPri transition-colors duration-200 text-5xl`}
+                    className={`text-black dark:text-white font-bold hover:text-dPri dark:hover:text-dPri transition-colors duration-200 text-3xl md:text-5xl`}
                 >
                     OnRoom
                 </Link>

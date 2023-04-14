@@ -36,7 +36,7 @@ const Section = ({ title, subtitle, imageSrc, reverse = false }: any) => {
     )
 
     return (
-        <section className="flex flex-col md:flex-row items-around justify-around py-12  px-20">
+        <section className="flex flex-col md:flex-row items-around justify-around py-12  gap-y-6 px-20">
             {reverse ? content : image}
             {reverse ? image : content}
         </section>

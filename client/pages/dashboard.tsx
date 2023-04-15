@@ -92,9 +92,9 @@ const dashboard = () => {
                     />
                     <meta name="twitter:image" content="meta.png" />
                 </Head>
-                <main className="flex flex-col flex-1 h-full px-8 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
+                <main className="flex bg flex-col flex-1 h-full px-8 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
                     {/*         Heading and Add Classroom Btn   */}
-                    <MainTitle title="Your Classroom">
+                    <MainTitle inverse title="Your Classroom">
                         {/*       Add Class btn is only shown to teacher   */}
 
                         {userRole === "teacher" && (

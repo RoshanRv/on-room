@@ -29,7 +29,7 @@ const Section = ({ title, subtitle, imageSrc, reverse = false }: any) => {
             <p className="text-lg mb-8 text-gray-800 dark:text-gray-200 ">
                 {subtitle}
             </p>
-            <LinkButton variant={"primary"} link={"/signup"}>
+            <LinkButton variant={"primary"} link={"signup"}>
                 <h1>Get Started</h1>
             </LinkButton>
         </div>

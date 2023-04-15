@@ -10,9 +10,7 @@ interface ClassroomTeacherProp extends ClassroomProps {
     teacher: TeacherProps
 }
 
-const browseClassroom = async () => {
-    const axios = (await import("axios")).default
-
+const browseClassroom = () => {
     const {
         data: classrooms,
         isError,
@@ -20,6 +18,8 @@ const browseClassroom = async () => {
     } = useQuery({
         queryKey: ["classrooms"],
         queryFn: async () => {
+            const axios = (await import("axios")).default
+
             return axios.get<ClassroomTeacherProp[]>(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom`,
                 {
@@ -33,14 +33,17 @@ const browseClassroom = async () => {
     const toast = useToast((state) => state.setToast)
 
     const { mutate } = useMutation({
-        mutationFn: (id: string) =>
-            axios.post(
+        mutationFn: async (id: string) => {
+            const axios = (await import("axios")).default
+
+            return axios.post(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/classroom/enroll`,
                 { id },
                 {
                     withCredentials: true,
                 }
-            ),
+            )
+        },
 
         onSuccess: () =>
             toast({
@@ -103,9 +106,9 @@ const browseClassroom = async () => {
                 />
                 <meta name="twitter:image" content="meta.png" />
             </Head>
-            <main className="flex flex-col flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
+            <main className="bg flex flex-col flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
                 {/*         Heading and Add Classroom Btn   */}
-                <MainTitle title="Find Classrooms" />
+                <MainTitle inverse title="Find Classrooms" />
 
                 {/*       Classes       */}
                 <EmptyWrapper

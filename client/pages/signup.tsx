@@ -15,6 +15,7 @@ import setErrorMsg from "@utils/setErrorMsg"
 import dynamic from "next/dynamic"
 import Spinner from "@components/Spinner"
 import Head from "next/head"
+import { useForm } from "react-hook-form"
 
 const SelectRole = dynamic(() => import("@components/SelectRole/SelectRole"), {
     loading: () => <Spinner />,
@@ -29,7 +30,7 @@ const SignUp2 = dynamic(() => import("@components/SignUp/SignUp2"), {
 const DEFAULT_IMG =
     "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000"
 
-const signUp = async () => {
+const signUp = () => {
     const [role, setRole] = useState<Role>("")
     const [part, setPart] = useState(0)
     const [imgUrl, setImgUrl] = useState(DEFAULT_IMG)
@@ -67,7 +68,6 @@ const signUp = async () => {
         },
     })
 
-    const useForm = (await import("react-hook-form")).useForm
     const {
         register,
         formState: { errors },

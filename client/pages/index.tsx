@@ -71,7 +71,7 @@ const Home: NextPage = () => {
                             tincidunt sodales.
                         </p>
                         <div className="mt-8">
-                            <LinkButton variant={"secondary"} link={"/signup"}>
+                            <LinkButton variant={"secondary"} link={"signup"}>
                                 <h1>Get Started</h1>
                             </LinkButton>
                         </div>

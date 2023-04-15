@@ -7,9 +7,16 @@ interface Props {
     children?: ReactNode
     backBtn?: boolean
     sub?: boolean
+    inverse?: boolean
 }
 
-const MainTitle = ({ title, children, backBtn, sub }: Props) => {
+const MainTitle = ({
+    title,
+    children,
+    backBtn,
+    sub,
+    inverse = false,
+}: Props) => {
     const router = useRouter()
     return (
         <div className="flex items-baseline justify-between pb-4 border-b border-dPri flex-wrap gap-y-2 ">
@@ -25,9 +32,11 @@ const MainTitle = ({ title, children, backBtn, sub }: Props) => {
                 )}
                 {/*   Title   */}
                 <h1
-                    className={` ${
+                    className={`  ${
                         sub ? "text-xl lg:text-3xl" : "text-2xl lg:text-4xl"
-                    }  font-semibold  text-dPri`}
+                    }  font-semibold ${
+                        inverse ? "text-gray-100 dark:text-back" : "text-dPri"
+                    }  `}
                 >
                     {title}
                 </h1>

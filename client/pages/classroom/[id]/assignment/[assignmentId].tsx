@@ -59,7 +59,7 @@ const SubmissionTable = dynamic(
     }
 )
 
-const Assignment = async () => {
+const Assignment = () => {
     const { user } = useUser()
     const { isOn: isEditModal, toggleOn: toggleEditModal } = useToggle()
     const { isOn: isDeleteModal, toggleOn: toggleDeleteModal } = useToggle()
@@ -78,16 +78,17 @@ const Assignment = async () => {
     const [mode, setMode] = useState<"submission" | "attachment" | "">("")
     const router = useRouter()
 
-    const axios = (await import("axios")).default
-
     //  Fetches Assignment Details
     const { data: assignment } = useQuery({
         queryKey: ["assignment", assignmentId],
-        queryFn: async () =>
-            await axios.get<AssignmentProps>(
+        queryFn: async () => {
+            const axios = (await import("axios")).default
+
+            return await axios.get<AssignmentProps>(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/assignment/${assignmentId}`,
                 { withCredentials: true }
-            ),
+            )
+        },
         enabled: !!assignmentId,
     })
 
@@ -116,14 +117,17 @@ const Assignment = async () => {
     // Fetches A Single File/Attachment By ID
     const { data: attachment, isStale } = useQuery({
         queryKey: ["attachment", attachmentId],
-        queryFn: () =>
-            axios.get(
+        queryFn: async () => {
+            const axios = (await import("axios")).default
+
+            return axios.get(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/${mode}/${attachmentId}`,
                 {
                     withCredentials: true,
                     responseType: "blob",
                 }
-            ),
+            )
+        },
         enabled: !!attachmentId && !!mode,
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -143,13 +147,16 @@ const Assignment = async () => {
     })
 
     const { mutate } = useMutation({
-        mutationFn: () =>
-            axios.delete(
+        mutationFn: async () => {
+            const axios = (await import("axios")).default
+
+            return axios.delete(
                 `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/assignment/${assignmentId}`,
                 {
                     withCredentials: true,
                 }
-            ),
+            )
+        },
 
         onSuccess: () => {
             router.push(`/classroom/${classroomId}`)
@@ -212,6 +219,8 @@ const Assignment = async () => {
         fileMode: Exclude<typeof mode, "">
     ) => {
         try {
+            const axios = (await import("axios")).default
+
             axios
                 .delete(
                     `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/${fileMode}/${attachmentId}`,

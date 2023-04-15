@@ -183,7 +183,7 @@ const Classroom = () => {
                 />
                 <meta name="twitter:image" content="meta.png" />
             </Head>
-            <main className="flex flex-col gap-y-4 flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12">
+            <main className="flex flex-col gap-y-4 flex-1 h-full px-3 py-4 bg-gray-100 md:py-10 dark:bg-back md:px-8 lg:px-12  ">
                 {/*      Title    */}
                 <MainTitle backBtn title={`${classroom?.data.title} Classroom`}>
                     {/*    Enroll/Unenroll Btn - Students  */}

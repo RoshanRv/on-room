@@ -11,6 +11,8 @@ import Notification from "./Notification"
 import { BiMenu } from "react-icons/bi"
 import { AiOutlineClose } from "react-icons/ai"
 import Profile from "./Profile"
+import LOGO from "@public/logo.png"
+import Image from "next/image"
 
 export interface Announcements {
     id: string
@@ -87,9 +89,13 @@ const Header = () => {
             <div>
                 {/*   Logo   */}
                 <Link href={"/"}>
-                    <h1 className="lg:text-4xl text-2xl md:text-3xl font-bold text-gray-700 dark:text-white dark:text-shadow-sm ">
-                        On-Room
-                    </h1>
+                    <div className="flex items-center gap-x-2">
+                        <Image height={10} width={60} src={LOGO} alt="Logo" />
+                        <div className="lg:text-2xl text-xl md:text-2xl font-bold text-gray-700 dark:text-white dark:text-shadow-sm hover:text-dPri dark:hover:text-dPri transition-all ">
+                            <h1>On</h1>
+                            <h1>Room</h1>
+                        </div>
+                    </div>
                 </Link>
             </div>
             {/*    Sign In And Sign Up - Lap  */}

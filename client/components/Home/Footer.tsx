@@ -1,6 +1,8 @@
 import { LinkButton } from "@components/Button/Button"
 import Link from "next/link"
 import { FaGithub, FaTwitter, FaLinkedin, FaHeart } from "react-icons/fa"
+import Image from "next/image"
+import LOGO from "@public/logo.png"
 
 const Footer = () => {
     return (
@@ -12,20 +14,26 @@ const Footer = () => {
                     href="/"
                     className={`text-black dark:text-white font-bold hover:text-dPri dark:hover:text-dPri transition-colors duration-200 text-3xl md:text-5xl`}
                 >
-                    OnRoom
+                    <div className="flex items-center gap-x-2">
+                        <Image height={20} width={80} src={LOGO} alt="Logo" />
+                        <div className="lg:text-3xl text-xl md:text-2xl font-bold text-black dark:text-white dark:text-shadow-sm hover:text-dPri dark:hover:text-dPri transition-all ">
+                            <h1>On</h1>
+                            <h1>Room</h1>
+                        </div>
+                    </div>
                 </Link>
                 <div className="flex justify-center md:justify-start gap-x-10">
                     <LinkButton
                         size={"small"}
                         variant={"primary"}
-                        link={"/signup"}
+                        link={"signup"}
                     >
                         <h1>Sign Up</h1>
                     </LinkButton>
                     <LinkButton
                         size={"small"}
                         variant={"secondary"}
-                        link={"/signin"}
+                        link={"signin"}
                     >
                         <h1>Sign In</h1>
                     </LinkButton>

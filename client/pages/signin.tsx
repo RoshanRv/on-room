@@ -11,6 +11,9 @@ import dynamic from "next/dynamic"
 import Spinner from "@components/Spinner"
 import { useForm } from "react-hook-form"
 import Head from "next/head"
+import axios from "axios"
+import useLoading from "@store/useLoading"
+import { useEffect } from "react"
 
 const SelectRole = dynamic(() => import("@components/SelectRole/SelectRole"), {
     loading: () => <Spinner />,
@@ -76,6 +79,12 @@ const signin = () => {
             })
         },
     })
+
+    const setIsLoading = useLoading((s) => s.setIsLoading)
+
+    useEffect(() => {
+        setIsLoading(isLoading)
+    }, [isLoading])
 
     const handleSignIn = async (e: SignInInputProps) => {
         const data = { ...e, role }
@@ -159,3 +168,29 @@ const signin = () => {
 }
 
 export default signin
+
+export async function getServerSideProps({ req, res }: { req: any; res: any }) {
+    try {
+        const { data } = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/me`,
+            {
+                withCredentials: true,
+                headers: {
+                    Cookie: req.headers.cookie,
+                },
+            }
+        )
+
+        return {
+            redirect: { destination: "/dashboard", permanent: false },
+        }
+    } catch (e) {
+        console.log(e)
+
+        const data = { hehe: "heh" }
+
+        return {
+            props: { data },
+        }
+    }
+}

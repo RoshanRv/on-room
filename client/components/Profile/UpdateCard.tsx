@@ -116,7 +116,7 @@ const UpdateCard = ({ user, userDetails, setUserDetails }: UpdateCardProps) => {
                     type="email"
                     placeholder="email"
                     readOnly
-                    className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-transparent border-dPri/70 placeholder-shown:bg-transparent focus:bg-transparent font-sm "
+                    className="w-full p-2 overflow-hidden text-gray-600 dark:text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-transparent border-dPri/70 placeholder-shown:bg-transparent focus:bg-transparent font-sm "
                     value={user.email}
                 />
                 <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">
@@ -152,7 +152,7 @@ const UpdateCard = ({ user, userDetails, setUserDetails }: UpdateCardProps) => {
                     type="text"
                     placeholder="role"
                     readOnly
-                    className="w-full p-2 overflow-hidden text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-transparent border-dPri/70 placeholder-shown:bg-transparent focus:bg-transparent font-sm "
+                    className="w-full p-2 overflow-hidden text-gray-600 dark:text-white transition-all border-b-2 rounded-t-sm peer placeholder:text-transparent outline-0 bg-transparent border-dPri/70 placeholder-shown:bg-transparent focus:bg-transparent font-sm "
                     value={user.role}
                 />
                 <h1 className="mb-1 text-sm transition-all peer-placeholder-shown:text-dPri/80 peer-focus:text-dPri text-dPri peer-focus:text-sm peer-placeholder-shown:text-lg peer-focus:mb-1 peer-placeholder-shown:-mb-8 ">

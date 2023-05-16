@@ -76,8 +76,16 @@ const Header = () => {
         if (user?.data.role === "teacher") setUnviewedAnnouncements([])
     }, [announcements, user])
 
-    const { isOn: isDark, toggleOn: toggleDark } = useToggle()
+    // const { isOn: isDark, toggleOn: toggleDark } = useToggle()
+    const [isDark, setIsDark] = useState(false)
     const { isOn: isNav, toggleOn: toggleNav } = useToggle()
+
+    useEffect(() => {
+        const isDark = JSON.parse(localStorage.getItem("isDark") || '""')
+            ? true
+            : false
+        setIsDark(isDark)
+    }, [])
 
     useEffect(() => {
         if (isDark) document.documentElement.classList.add("dark")
@@ -85,7 +93,11 @@ const Header = () => {
     }, [isDark])
 
     return (
-        <header className="top-0 left-0 z-50 flex items-center justify-between w-full px-3 py-2 bg-white shadow-md md:px-8 lg:px-16 dark:bg-back md:py-4 shadow-black/30 ">
+        <header
+            className={`top-0 left-0 z-50 flex items-center justify-between w-full px-3 py-2 bg-white shadow-md md:px-8 lg:px-16 dark:bg-back md:py-4 shadow-black/30 ${
+                isNav && "fixed "
+            } `}
+        >
             <div>
                 {/*   Logo   */}
                 <Link href={"/"}>
@@ -101,16 +113,9 @@ const Header = () => {
             {/*    Sign In And Sign Up - Lap  */}
             <div
                 className={`${
-                    isNav ? "left-0" : "left-full"
-                } flex flex-col lg:flex-row gap-y-4 items-start  lg:items-center lg:justify-center text-xl font-semibold text-dPri gap-x-10 fixed lg:static dark:bg-back bg-gray-100 lg:bg-transparent  w-full lg:w-auto h-screen lg:h-auto top-0 left-0 p-16 lg:p-0 transition-all `}
+                    isNav ? "left-0" : "left-full "
+                } flex flex-col lg:flex-row gap-y-4 items-start  lg:items-center lg:justify-center text-xl font-semibold text-dPri gap-x-10 fixed lg:static dark:bg-back bg-gray-100 lg:bg-transparent  w-full lg:w-auto h-screen lg:h-auto top-[4.75rem] left-0 p-16 lg:p-0 transition-all `}
             >
-                {/* Close Btn  - Mobile */}
-                <button
-                    onClick={toggleNav}
-                    className="text-dPri font-semibold text-2xl absolute top-5 right-5 lg:hidden"
-                >
-                    <AiOutlineClose />
-                </button>
                 {!isSuccess ? (
                     <>
                         <LinkButton
@@ -172,7 +177,12 @@ const Header = () => {
                 )}
                 {/*    Light/Dark      */}
                 <button
-                    onClick={toggleDark}
+                    onClick={() =>
+                        setIsDark((e) => {
+                            localStorage.setItem("isDark", JSON.stringify(!e))
+                            return !e
+                        })
+                    }
                     className=" text-dPri hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-lg "
                 >
                     {isDark ? (
@@ -196,7 +206,7 @@ const Header = () => {
                     </>
                 )}
                 <button onClick={toggleNav} className=" ">
-                    <BiMenu />
+                    {!isNav ? <BiMenu /> : <AiOutlineClose />}
                 </button>
             </div>
         </header>

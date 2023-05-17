@@ -12,7 +12,7 @@ import { shallow } from "zustand/shallow"
 
 const toastClass = cva(
     [
-        "w-10/12 pt-4 top-[92vh] sm:w-6/12 md:w-4/12 lg:w-3/12 px-2 md:px-4 py-2 md:py-3 text-base md:text-lg   shadow-md shadow-black/60 absolute left-1/2 -translate-x-1/2 text-center rounded-md text-white transition-all",
+        "w-10/12 pt-4 top-[92vh] sm:w-6/12 md:w-4/12 lg:w-3/12 px-2 md:px-4 py-2 md:py-3 text-base md:text-lg   shadow-md shadow-black/60 fixed left-1/2 -translate-x-1/2 text-center rounded-md text-white transition-all",
     ],
     {
         variants: {

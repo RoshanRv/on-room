@@ -1,6 +1,5 @@
 import { createUserSchemaType } from "@schema/users.schema"
-import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
+import prisma from "@src/client"
 
 export const createUser = async (userData: createUserSchemaType["body"]) => {
     try {

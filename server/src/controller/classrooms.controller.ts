@@ -5,7 +5,7 @@ import {
     getClassroomByIdSchemaType,
     unEnrollClassroomSchemaType,
     updateClassroomByIdSchemaType,
-} from "@schema/classroom.schema"
+} from "../schema/classroom.schema"
 import {
     createClassroom,
     deleteClassroom,
@@ -16,7 +16,7 @@ import {
     getEnrolledClassroomByStudentId,
     unEnrollClassroom,
     updateClassroomById,
-} from "@service/classrooms.services"
+} from "../service/classrooms.services"
 import { Request, Response } from "express"
 import { omit } from "lodash"
 

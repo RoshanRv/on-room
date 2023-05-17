@@ -1,8 +1,8 @@
 import {
     createAssignmentSchemaType,
     updateAssignmentSchemaType,
-} from "@schema/assignments.schema"
-import prisma from "@src/client"
+} from "../schema/assignments.schema"
+import prisma from "../client"
 
 export const createAssignment = async (
     data: createAssignmentSchemaType["body"]

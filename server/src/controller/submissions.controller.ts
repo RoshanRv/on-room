@@ -4,13 +4,13 @@ import {
     getSubmissionsByClassroomIdSchemaType,
     getSubmissionSchemaType,
     updateSubmissionSchemaType,
-} from "@schema/submissions.schema"
+} from "../schema/submissions.schema"
 import {
     createSubmission,
     deleteSubmission,
     getSubmissionsByClassroomId,
     updateSubmission,
-} from "@service/submissions.services"
+} from "../service/submissions.services"
 import { Request, Response } from "express"
 import path from "path"
 import fs from "fs"

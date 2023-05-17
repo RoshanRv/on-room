@@ -2,12 +2,12 @@ import {
     createAttachmentSchemaType,
     downloadAttachmentSchemaType,
     getAttachmentAssignmentIdSchemaType,
-} from "@schema/attachments.schema"
+} from "../schema/attachments.schema"
 import {
     createAttachments,
     deleteAttachmentById,
     getAttachmentAssignmentId,
-} from "@service/attachments.services"
+} from "../service/attachments.services"
 import { Request, Response } from "express"
 import path from "path"
 import fs from "fs"

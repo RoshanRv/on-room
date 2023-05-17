@@ -4,14 +4,14 @@ import {
     getAssignmentByIdSchemaType,
     getAssignmentsByClassroomIdSchemaType,
     updateAssignmentSchemaType,
-} from "@schema/assignments.schema"
+} from "../schema/assignments.schema"
 import {
     createAssignment,
     deleteAssignment,
     getAssignmentById,
     getAssignmentsByClassroomId,
     updateAssignment,
-} from "@service/assignments.services"
+} from "../service/assignments.services"
 import { Request, Response } from "express"
 
 export const createAssignmentHandler = async (

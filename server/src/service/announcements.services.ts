@@ -1,5 +1,5 @@
-import { createAnnouncementSchemaType } from "@schema/announcements.schema"
-import prisma from "@src/client"
+import { createAnnouncementSchemaType } from "../schema/announcements.schema"
+import prisma from "../client"
 
 export const createAnnouncement = async (
     data: createAnnouncementSchemaType["body"]

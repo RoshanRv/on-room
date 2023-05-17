@@ -1,8 +1,8 @@
 import {
     accessTokenOptions,
     generateAccessToken,
-} from "@controller/sessions.contoller"
-import { verifyToken } from "@utils/jwt"
+} from "../controller/sessions.contoller"
+import { verifyToken } from "../utils/jwt"
 import { NextFunction, Request, Response } from "express"
 
 const deserializeUser = async (

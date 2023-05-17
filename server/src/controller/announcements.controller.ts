@@ -3,14 +3,14 @@ import {
     createAnnouncementSchemaType,
     deleteAnnouncementSchemaType,
     getAnnouncementsSchemaType,
-} from "@schema/announcements.schema"
+} from "../schema/announcements.schema"
 import {
     connectAnnouncement,
     createAnnouncement,
     deleteAnnouncement,
     getAnnouncements,
     getAnnouncementsFromEnrolledClassroom,
-} from "@service/announcements.services"
+} from "../service/announcements.services"
 import { Request, Response } from "express"
 
 export const createAnnouncementHandler = async (

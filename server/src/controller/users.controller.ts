@@ -3,14 +3,14 @@ import {
     createUserSchemaType,
     findStudentsByClassroomType,
     updateUserSchemaType,
-} from "@schema/users.schema"
+} from "../schema/users.schema"
 import {
     createUser,
     findStudentsByClassroom,
     findUserByEmail,
     getAllStudentsExceptEnrolled,
     updateUserById,
-} from "@service/users.services"
+} from "../service/users.services"
 import { hashSync } from "bcryptjs"
 import { omit } from "lodash"
 

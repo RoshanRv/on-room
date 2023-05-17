@@ -1,5 +1,5 @@
-import { updateSubmissionSchemaType } from "@schema/submissions.schema"
-import prisma from "@src/client"
+import { updateSubmissionSchemaType } from "../schema/submissions.schema"
+import prisma from "../client"
 
 export const getSubmissionsByClassroomId = async (classroomId: string) => {
     try {

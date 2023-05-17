@@ -1,5 +1,5 @@
 import { sign, verify } from "jsonwebtoken"
-import { createUserSchemaType } from "@schema/users.schema"
+import { createUserSchemaType } from "../schema/users.schema"
 import config from "config"
 
 type PayloadType = Omit<createUserSchemaType["body"], "password"> & {

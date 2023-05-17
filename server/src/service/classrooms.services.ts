@@ -1,7 +1,7 @@
-import { updateClassroomByIdSchemaType } from "@schema/classroom.schema"
+import { updateClassroomByIdSchemaType } from "../schema/classroom.schema"
 import { Response } from "express"
 import { omit } from "lodash"
-import prisma from "@src/client"
+import prisma from "../client"
 
 interface ClassroomBody {
     title: string

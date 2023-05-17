@@ -1,5 +1,5 @@
-import { createUserSchemaType } from "@schema/users.schema"
-import prisma from "@src/client"
+import { createUserSchemaType } from "../schema/users.schema"
+import prisma from "../client"
 
 export const createUser = async (userData: createUserSchemaType["body"]) => {
     try {

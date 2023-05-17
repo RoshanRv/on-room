@@ -1,26 +1,26 @@
 import { Express, Request, Response } from "express"
-import validateInput from "@middleware/validateInput"
+import validateInput from "./middleware/validateInput"
 import {
     createUserSchema,
     findStudentsByClassroomSchema,
     updateUserSchema,
-} from "@schema/users.schema"
+} from "./schema/users.schema"
 import {
     createUserHandler,
     findStudentsByClassroomHandler,
     getAllStudentsExceptEnrolledHander,
     updateUserHandler,
-} from "@controller/users.controller"
-import { createSessionSchema } from "@schema/sessions.schema"
+} from "./controller/users.controller"
+import { createSessionSchema } from "./schema/sessions.schema"
 import {
     createSessionHandler,
     deleteSessionHandler,
     getCurrentUserHandler,
-} from "@controller/sessions.contoller"
+} from "./controller/sessions.contoller"
 import requireUser, {
     requireStudent,
     requireTeacher,
-} from "@middleware/requireUser"
+} from "./middleware/requireUser"
 import {
     createClassroomSchema,
     deleteClassroomSchema,
@@ -28,7 +28,7 @@ import {
     getClassroomByIdSchema,
     unEnrollClassroomSchema,
     updateClassroomByIdSchema,
-} from "@schema/classroom.schema"
+} from "./schema/classroom.schema"
 import {
     createClassroomHandler,
     deleteClassroomHandler,
@@ -38,62 +38,62 @@ import {
     getMyClassroomHandler,
     unEnrollClassroomHandler,
     updateClassroomByIdHandler,
-} from "@controller/classrooms.controller"
+} from "./controller/classrooms.controller"
 import {
     createAssignmentSchema,
     deleteAssignmentSchema,
     getAssignmentByIdSchema,
     getAssignmentsByClassroomIdSchema,
     updateAssignmentSchema,
-} from "@schema/assignments.schema"
+} from "./schema/assignments.schema"
 import {
     createAssignmentHandler,
     deleteAssignmentHandler,
     getAssignmentByIdHandler,
     getAssignmentsByClassroomIdHandler,
     updateAssignmentHandler,
-} from "@controller/assignments.controller"
+} from "./controller/assignments.controller"
 import {
     connectAnnouncementSchema,
     createAnnouncementSchema,
     getAnnouncementsSchema,
-} from "@schema/announcements.schema"
+} from "./schema/announcements.schema"
 import {
     connectAnnouncementHandler,
     createAnnouncementHandler,
     deleteAnnouncementHandler,
     getAnnouncementsFromEnrolledClassroomHandler,
     getAnnouncementsHandler,
-} from "@controller/announcements.controller"
+} from "./controller/announcements.controller"
 
 import path from "path"
 import {
     createAttachmentSchema,
     getAttachmentAssignmentIdSchema,
     getAttachmentByIdSchema,
-} from "@schema/attachments.schema"
+} from "./schema/attachments.schema"
 import {
     createAttachmentsHandler,
     deleteAttachmentByIdHandler,
     getAttachmentAssignmentIdHandler,
     getAttachmentByIdHandler,
-} from "@controller/attachments.controller"
-import { createAttachments } from "@service/attachments.services"
+} from "./controller/attachments.controller"
+import { createAttachments } from "./service/attachments.services"
 import {
     createSubmissionSchema,
     deleteSubmissionSchema,
     getSubmissionsByClassroomIdSchema,
     getSubmissionSchema,
     updateSubmissionSchema,
-} from "@schema/submissions.schema"
+} from "./schema/submissions.schema"
 import {
     createSubmissionHandler,
     deleteSubmissionHandler,
     getSubmissionByIdHandler,
     getSubmissionsHandler,
     updateSubmissionHandler,
-} from "@controller/submissions.controller"
-import sendEmail from "@controller/email.controller"
+} from "./controller/submissions.controller"
+import sendEmail from "./controller/email.controller"
 
 const routes = (app: Express) => {
     app.get("/healthcheck", (req: Request, res: Response) => {

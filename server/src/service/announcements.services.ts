@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client"
 import { createAnnouncementSchemaType } from "@schema/announcements.schema"
-const prisma = new PrismaClient()
+import prisma from "@src/client"
 
 export const createAnnouncement = async (
     data: createAnnouncementSchemaType["body"]

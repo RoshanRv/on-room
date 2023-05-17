@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client"
 import { updateClassroomByIdSchemaType } from "@schema/classroom.schema"
 import { Response } from "express"
-const prisma = new PrismaClient()
 import { omit } from "lodash"
+import prisma from "@src/client"
 
 interface ClassroomBody {
     title: string

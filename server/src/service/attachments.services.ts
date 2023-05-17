@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client"
-import { createAttachmentSchemaType } from "@schema/attachments.schema"
-const prisma = new PrismaClient()
+import prisma from "@src/client"
 
 interface attachmentsType {
     filename: string

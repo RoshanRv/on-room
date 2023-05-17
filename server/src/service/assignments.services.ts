@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client"
 import {
     createAssignmentSchemaType,
     updateAssignmentSchemaType,
 } from "@schema/assignments.schema"
-const prisma = new PrismaClient()
+import prisma from "@src/client"
 
 export const createAssignment = async (
     data: createAssignmentSchemaType["body"]

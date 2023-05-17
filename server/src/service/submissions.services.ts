@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client"
 import { updateSubmissionSchemaType } from "@schema/submissions.schema"
-const prisma = new PrismaClient()
+import prisma from "@src/client"
 
 export const getSubmissionsByClassroomId = async (classroomId: string) => {
     try {

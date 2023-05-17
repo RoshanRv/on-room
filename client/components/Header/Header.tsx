@@ -196,7 +196,7 @@ const Header = () => {
 
             {/*     Mobile Nav   */}
             <div className="flex gap-x-4 lg:hidden text-2xl text-dPri -z-10">
-                {user && (
+                {isSuccess && user && (
                     <>
                         {" "}
                         <Profile user={user.data} />{" "}

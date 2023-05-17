@@ -1,6 +1,7 @@
 import { ClickButton } from "@components/Button/Button"
 import Form from "@components/Form/Form"
 import { SignInInputProps } from "@schema/signin.schema"
+import useLoading from "@store/useLoading"
 import React from "react"
 import { FieldErrorsImpl } from "react-hook-form/dist/types/errors"
 import {
@@ -27,6 +28,8 @@ const SignIn = ({
     handleSubmit,
 }: SignInProps) => {
     const temp = {} as SignInInputProps
+
+    const isLoading = useLoading((s) => s.isLoading)
     return (
         <div className="relative flex flex-col w-11/12 p-6 px-10 text-center bg-gray-200 rounded-md shadow-md dark:bg-gray-800 shadow-black md:w-7/12 lg:w-5/12 xl:w-4/12 gap-y-6">
             {/* back btn */}
@@ -60,7 +63,11 @@ const SignIn = ({
                 />
 
                 {/*      btn    */}
-                <ClickButton onClick={handleSubmit(handleSignIn)} width>
+                <ClickButton
+                    isLoading={isLoading}
+                    onClick={handleSubmit(handleSignIn)}
+                    width
+                >
                     <h1>Sign In</h1>
                 </ClickButton>
             </div>

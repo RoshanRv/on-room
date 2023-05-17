@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -17,6 +17,7 @@ import Spinner from "@components/Spinner"
 import Head from "next/head"
 import { useForm } from "react-hook-form"
 import axios from "axios"
+import useLoading from "@store/useLoading"
 
 const SelectRole = dynamic(() => import("@components/SelectRole/SelectRole"), {
     loading: () => <Spinner />,
@@ -39,8 +40,7 @@ const signUp = () => {
     const router = useRouter()
 
     const mutateFunc = async (data: Data) => {
-        const omit = (await import("lodash")).omit
-        const filteredData = omit(data, ["confirmPassword"])
+        const { confirmPassword, ...filteredData } = data
 
         const axios = (await import("axios")).default
 
@@ -89,6 +89,12 @@ const signUp = () => {
         },
         resolver: zodResolver(signUp2Schema),
     })
+
+    const setIsLoading = useLoading((s) => s.setIsLoading)
+
+    useEffect(() => {
+        setIsLoading(isLoading)
+    }, [isLoading])
 
     const handleBack = () => {
         setPart((e) => e - 1)

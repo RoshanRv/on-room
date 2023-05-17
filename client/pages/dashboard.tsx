@@ -13,7 +13,8 @@ import Spinner from "@components/Spinner"
 import axios from "axios"
 import Link from "next/link"
 import Head from "next/head"
-
+import useLoading from "@store/useLoading"
+import { useEffect } from "react"
 const AddClassroomForm = dynamic(
     () => import("@components/Dashboard/AddClassroomForm"),
     {
@@ -32,6 +33,7 @@ const dashboard = () => {
 
     const {
         data: classrooms,
+        isLoading,
         isError,
         isSuccess,
     } = useQuery({
@@ -48,6 +50,11 @@ const dashboard = () => {
         retry: 1,
     })
     const { isOn, toggleOn } = useToggle()
+    const setIsLoading = useLoading((state) => state.setIsLoading)
+
+    useEffect(() => {
+        setIsLoading(isLoading)
+    }, [isLoading])
 
     if (isError) router.push("/signin")
 

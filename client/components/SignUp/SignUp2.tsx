@@ -10,6 +10,7 @@ import { BiReset } from "react-icons/bi"
 import { SignUp2InputProps } from "@schema/signup.schema"
 import Image from "next/image"
 import Form from "@components/Form/Form"
+import useLoading from "@store/useLoading"
 
 const DEFAULT_IMG =
     "https://img.freepik.com/free-icon/user_318-790139.jpg?w=2000"
@@ -36,6 +37,8 @@ const SignUp2 = ({
     reset,
 }: SignUp2Props) => {
     const temp = {} as SignUp2InputProps
+
+    const isLoading = useLoading((s) => s.isLoading)
 
     return (
         <div className="relative flex flex-col w-11/12 p-6 px-10 text-center bg-gray-200 dark:bg-gray-800 rounded-md shadow-md shadow-black md:w-7/12 lg:w-5/12 xl:w-4/12 gap-y-6">
@@ -105,7 +108,11 @@ const SignUp2 = ({
                 {/*     Img URL     */}
 
                 {/*      btn    */}
-                <ClickButton onClick={handleSubmit(handleSignUp)} width>
+                <ClickButton
+                    isLoading={isLoading}
+                    onClick={handleSubmit(handleSignUp)}
+                    width
+                >
                     <h1>Sign Up</h1>
                 </ClickButton>
             </div>

@@ -8,6 +8,7 @@ import { ClickButton } from "@components/Button/Button"
 import omitEmptyValues from "@utils/omitEmptyValues"
 import Image from "next/image"
 import Form from "@components/Form/Form"
+import useLoading from "@store/useLoading"
 
 const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
     const {
@@ -52,6 +53,8 @@ const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
         toggleOn()
     }
 
+    const isLoading = useLoading((s) => s.isLoading)
+
     const temp = {} as ClassroomSchemaInput
 
     return (
@@ -92,7 +95,10 @@ const AddClassroomForm = ({ toggleOn }: { toggleOn: () => void }) => {
                 />
 
                 {/*    Add Btn  */}
-                <ClickButton onClick={handleSubmit(handleAddClassroom)}>
+                <ClickButton
+                    isLoading={isLoading}
+                    onClick={handleSubmit(handleAddClassroom)}
+                >
                     <h1>Add Classroom</h1>
                 </ClickButton>
             </div>

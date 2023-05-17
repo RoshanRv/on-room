@@ -2,7 +2,7 @@ import { FieldValues, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import React, { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { ClickButton } from "@components/Button/Button"
 import { omit } from "lodash"
 import omitEmptyValues from "@utils/omitEmptyValues"
@@ -11,6 +11,8 @@ import {
     createAssignmentSchema,
 } from "@schema/assignment.schema"
 import Form from "@components/Form/Form"
+import useToast from "@store/useToast"
+import setErrorMsg from "@utils/setErrorMsg"
 
 const AddAssignmentForm = ({
     toggleOn,
@@ -44,10 +46,22 @@ const AddAssignmentForm = ({
         )
     }
 
+    const { setToast } = useToast(({ setToast }) => ({ setToast }))
+
     const { mutate } = useMutation({
         mutationFn: mutateFunc,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["assignment"] })
+            setToast({
+                msg: "Assignment Added",
+                variant: "success",
+            })
+            queryClient.invalidateQueries({ queryKey: ["classroom"] })
+        },
+        onError: (e: AxiosError) => {
+            setToast({
+                msg: setErrorMsg(e.response!),
+                variant: "error",
+            })
         },
     })
 

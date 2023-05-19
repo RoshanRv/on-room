@@ -4,18 +4,7 @@ const withPWA = require("next-pwa")({
     register: true,
 })
 
-// module.exports = withPWA({
-//     reactStrictMode: true,
-//     images: {
-//         remotePatterns: [
-//             {
-//                 hostname: "*",
-//             },
-//         ],
-//     },
-// })
-
-module.exports = {
+module.exports = withPWA({
     reactStrictMode: true,
     images: {
         remotePatterns: [
@@ -24,4 +13,4 @@ module.exports = {
             },
         ],
     },
-}
+})
